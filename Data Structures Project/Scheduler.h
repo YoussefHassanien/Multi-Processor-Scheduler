@@ -74,5 +74,3 @@ public:
 	void Set_Last_Child_ID(int x);        //Setter for the last child ID
 };
 #endif
-//el wa7ed rabak howa el wa7ed
-//aloooooooooooo
