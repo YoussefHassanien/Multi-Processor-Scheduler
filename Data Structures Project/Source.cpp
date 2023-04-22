@@ -11,6 +11,6 @@ int main()
 	delete S;
 	S = NULL;
 
-
+	
 	return 0;
 }

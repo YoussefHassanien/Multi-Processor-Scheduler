@@ -1,11 +1,5 @@
 ﻿  FCFS.cpp
-  IO.cpp
-  Process.cpp
-  Processor.cpp
   RR.cpp
-  Scheduler.cpp
   SJF.cpp
-  Source.cpp
-  UI_Info.cpp
   Generating Code...
   Data Structures Project.vcxproj -> C:\Users\Doha ElBeltagy\Desktop\Courses\Spring2023\Data Structure\Project\Phase2\Data-Structure-Project\x64\Debug\Data Structures Project.exe

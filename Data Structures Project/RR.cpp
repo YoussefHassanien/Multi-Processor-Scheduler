@@ -21,11 +21,20 @@ void RoundRobin::deleteprocess(Process*& p)
 //Schedueling algorithm
 void RoundRobin::ScheduleAlgo()
 {
+
 	if (RDY_List.isEmpty() && !RUNNING)
 		return;
 	Process* tmp=nullptr;
+	Process* temp = nullptr;
+	RDY_List.peek(temp);
+
+	if (!isbusy && temp->GetAT() == s->getTimeStep())
+	{
+		return;
+	}
+
 	//sets a process as running if the processor is idle
-	if (!isbusy)
+	if (!isbusy && temp->GetAT()< s->getTimeStep())
 	{
 
 		deleteprocess(tmp);

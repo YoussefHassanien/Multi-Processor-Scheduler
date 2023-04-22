@@ -253,12 +253,10 @@ void Scheduler::simulation()
 		for (int i = 0; i < LastProcessID; i++)
 		{
 			AddtoRdyLists(counter);
-
 		}
 
 		for (int i = 0; i < Processor_Count; i++)
 		{
-
 			PArr[i]->ScheduleAlgo();
 		}
 		random = generaterandom(1, 100);

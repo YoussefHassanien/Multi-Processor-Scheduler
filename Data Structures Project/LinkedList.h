@@ -270,6 +270,14 @@ public:
 		else
 			return false;
 	}
+
+	bool peek(T& value) {
+		if (isEmpty())
+			return false;
+		
+		value = Head->getItem();
+		return true;
+	}
 	
 
 };

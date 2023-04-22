@@ -88,9 +88,16 @@ void FCFS::ScheduleAlgo()
 		return;
    //sets a process as running if the processor is idle
 	Process* tmp =nullptr;
-	if (!isbusy)
+	Process* temp=nullptr;
+	RDYList.peek(temp);
+
+	if (!isbusy && temp->GetAT() == s->getTimeStep())
 	{
-		
+		return;
+	}
+
+	if (!isbusy && temp->GetAT() < s->getTimeStep())
+	{
 		deleteprocess(tmp);
 		RUNNING = tmp;
 		isbusy = true;                                  //Set the processor as busy
@@ -107,7 +114,9 @@ void FCFS::ScheduleAlgo()
 			s->DecrementRunningCount();
 			return;
 	}
+
 	else
+
 	{
 		int random = s->generaterandom(1,100);
 		if (random >= 1 && random <= 15)
@@ -135,11 +144,6 @@ void FCFS::ScheduleAlgo()
 		else
 			RUNNING->DecrementCT();
 	}
-		
-
-	
-
-
 }
 
 

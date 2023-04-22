@@ -89,13 +89,13 @@ public:
 
 	//Assigns the parameter "FrontEntry" to the first item of the queue 
 	//without removing it from the queue.
-	Processor* peek(T& frntEntry)  const
+	T peek(T& frntEntry)  const
 	{
 		if (isEmpty())
-			return false;
+			return NULL;
 
 		frntEntry = backPtr->getNext()->getItem();
-		return backPtr->getNext();
+		return backPtr->getNext()->getItem();
 
 	}
 

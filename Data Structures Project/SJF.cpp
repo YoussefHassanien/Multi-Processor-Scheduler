@@ -24,12 +24,22 @@ void SJF::deleteprocess(Process*& p)
 
 //Schedueling algorithm
 void SJF:: ScheduleAlgo()
+
 {
-	if (RDY_List.isEmpty()&& !RUNNING)
+	
+	if (RDY_List.isEmpty())
 		return;
 	Process* tmp=nullptr;
+	Process* temp = nullptr;
+	RDY_List.peek(temp);
 	//sets a process as running if the processor is idle
-	if (!isbusy)
+
+	if (!isbusy && temp->GetAT() == s->getTimeStep())
+	{
+		return;
+	}
+
+	if (!isbusy && !RUNNING && temp->GetAT() < s->getTimeStep())
 	{
 		deleteprocess(tmp);
 		RUNNING = tmp;
