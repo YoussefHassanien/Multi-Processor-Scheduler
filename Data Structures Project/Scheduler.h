@@ -1,0 +1,76 @@
+#ifndef SCHEDULER_H
+#define SCHEDULER_H
+#pragma once
+using namespace std;
+class Processor;
+class UI_Info;
+#include<iostream>
+#include <fstream>
+#include<string>
+#include "Process.h"
+#include "LinkedList.h"
+#include "Processor.h"
+#include "LinkedQueue.h"
+#include "SIGKILL.h"
+#include "UI_Info.h"
+#include<random>
+class Scheduler
+{
+private:
+	string FLName;                         //File name
+	Processor* PArr[500];                  //Array of processors pointers 
+	int ForkProb;                          //Forking probability
+	LinkedQueue<Process*> newlist;         //NEW list
+	LinkedList<Process*>blocklist;         //BLK list
+	LinkedList<Process*>terminatedlist;    //TRM list
+	int Processor_Count;                   //Total count of processors
+	SIGKILL* SigKillarr[500];              //Array of signal kill pointers 
+	int timestep;                          //Time step
+	int timeSlice;                         //Time slice
+	int LastProcessID;                     //processes count for all processes in the program
+	int ChildID;                           //Final Processes count after forking +1 
+	int TerminatedProcesses;               //counter for all terminated processes
+	UI_Info UI;                            //Pointer to the UI info class
+	int BLKCount;                          //Number of processes in the BLK list
+	int RunningCount;                      //Number of processes currently in the running state
+	int counter;                           //Counter to add to RdyLists of processors 
+	int AvgWT;                             //Average Waiting time of all Processes
+	int AvgRT;                             //Average Response time of all Processes
+	int AvgTRT;                            //Average Turnaround Time of all Processes
+	int AvgRTF;                            //Average RTF time of all Processes
+	int MigPercent;                        //Percentage of Process Migration due to RTF and MaxW
+	int StealPercent;                      //Percentage of Process moved by Work Steal
+	int KillPercent;                       //Percentage of Process Kill
+	int ForkPercent;                       //Percentage of Process Fork
+	int AvgUtil;                           //Average Utilization for all Processors
+	int StealLimitPercent; //This percentage should be less than 40% and if it exeeds this percentage the stealing between processor should start
+
+
+public:
+	Scheduler();                          //Constructor 
+	~Scheduler();                         //Destructor
+	void setfilename(string& s);          //Setter for the file name
+	void readfileparameters();            //Function to read the input file
+	void addtonewlist(Process* p);        //Adds a process to the NEW list 
+	void addtoblocklist(Process*& p);     //Adds a process to the BLK list
+	void addToTrm(Process*& p);           //Adds a process to the terminated list
+	int getprocessorcount();              //Getter for the total number of processors 
+	void incrementprocessorcount();       //increments the count of processors once a new processor is declared
+	int generaterandom(int min, int max); //Generates a random number between a max and a min value
+	int getForkProb();                    //Getter for the forking probability
+	int getChildID();                     //Getter for the child ID
+	void incrementChildID();              //Increments the child ID by one
+	int getTimeStep();                    //Getter for the timestep
+	bool AllIsTerminated();               //checks that all ready lists are empty and all processors are idle
+	void simulation();                    //Simulation function
+	void AddtoRdyLists(int& counter);     //Moves the process from NEW list to RDY list
+	void PrintProcessorList();            //Prints the processor list
+	int getBLKCount();                    //Getter for the count of blocked processes
+	void incrementRunningCount();         //Increments the number of running processes by one 
+	void DecrementRunningCount();         //Decrements the number of running processes by one 
+	void PrintBLKList();                  //Prints the BLK list
+	void PrintTRMList();                  //Prints the TRM list
+	void PrintRunningList();              //Prints the running processes
+	void Set_Last_Child_ID(int x);        //Setter for the last child ID
+};
+#endif
