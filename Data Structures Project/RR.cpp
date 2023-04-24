@@ -62,33 +62,6 @@ void RoundRobin::ScheduleAlgo()
 		s->DecrementRunningCount();
 		return;
 	}
-	else 
-	{
-		int random = s->generaterandom(1,100);
-		if (random >= 1 && random <= 15)
-		{
-			s->addtoblocklist(RUNNING);        //add to BLK list
-			s->DecrementRunningCount();
-			RUNNING = NULL;
-			isbusy = false;                    //Set the processor as idle
-		}
-		else if (random >= 20 && random <= 30)
-		{
-			AddToRdy(RUNNING);               //add to RDY list
-			s->DecrementRunningCount();
-			RUNNING = NULL;
-			isbusy = false;                  //Set the processor as idle
-		}
-		else if (random >= 50 && random <= 60)
-		{ 
-			s->addToTrm(RUNNING);              //add to TRM list
-			s->DecrementRunningCount();
-			RUNNING = NULL;
-			isbusy = false;                     //Set the processor as idle
-		}
-		else
-			RUNNING->DecrementCT();
-	}
 	
 	
 }
