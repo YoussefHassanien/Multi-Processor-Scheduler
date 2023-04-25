@@ -44,6 +44,7 @@ private:
 	int ForkPercent;                       //Percentage of Process Fork
 	int AvgUtil;                           //Average Utilization for all Processors
 	int StealLimitPercent; //This percentage should be less than 40% and if it exeeds this percentage the stealing between processor should start
+	int ShortestListIdx;                   //Index of the processor with the shortest ready list
 
 
 public:
@@ -72,5 +73,7 @@ public:
 	void PrintTRMList();                  //Prints the TRM list
 	void PrintRunningList();              //Prints the running processes
 	void Set_Last_Child_ID(int x);        //Setter for the last child ID
+	void Set_ShortestListIdx();           //Setter for the Shortest List Index
+	int Get_ShortestLlistIdx();           //Getter for the Shortest List Index
 };
 #endif
