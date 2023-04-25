@@ -2,6 +2,7 @@
 #include<iostream>
 #include"IO.h"
 #include "Scheduler.h"
+#include"BinaryTree.h"
 using namespace std;
 class Scheduler;
 class Process
@@ -18,7 +19,7 @@ private:
 		;
 	Scheduler* s;
 	IO** IOArr = new IO*[N]; //Array of pointers to the IOs of the Process
-	Process* ChildPtr; //A Pointer to the Process Child if it forked
+	BinaryTree<Process>* ChildsTree; //A Tree of the forked childs
 	bool Orph;
 	enum State
 	{

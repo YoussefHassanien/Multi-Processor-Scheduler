@@ -10,7 +10,7 @@ Process::Process(int at, int id, int ct, int n)
 	{
 		IOArr = new IO*[N];
 	}
-	ChildPtr = NULL;
+	ChildsTree->Insert(ID);
 	Orph = false;
 	S = New;
 	
@@ -54,10 +54,10 @@ void Process::SetN(int n)
 {
 	N = n;
 }
-void Process::SetChildPtr(Process* Ptr)
-{
-	ChildPtr = Ptr;
-}
+//void Process::SetChildPtr(Process* Ptr)
+//{
+//	ChildPtr = Ptr;
+//}
 void Process::DecrementCT()
 {
 	CT--;
@@ -122,10 +122,10 @@ int Process::GetN()
 {
 	return N;
 }
-Process* Process::GetChildPtr()
-{
-	return ChildPtr;
-}
+//Process* Process::GetChildPtr()
+//{
+//	return ChildPtr;
+//}
 bool Process::GetOrph()
 {
 	return Orph;
@@ -142,11 +142,11 @@ void Process::AddIO(IO *Arr[])
 		IOArr[i] = Arr[i];
 	}
 }
-void Process::AddChild(int t, int rct)
-{
-	ChildPtr = new Process(t, s->getChildID(), rct, 0);
-	s->incrementChildID();
-}
+//void Process::AddChild(int t, int rct)
+//{
+//	ChildPtr = new Process(t, s->getChildID(), rct, 0);
+//	s->incrementChildID();
+//}
 Process::~Process()
 {
 	for (int i = 0; i < N; i++)
@@ -154,8 +154,8 @@ Process::~Process()
 		delete IOArr;
 	}
 	IOArr = NULL;
-	delete ChildPtr;
-	ChildPtr = NULL;
+	//delete ChildPtr;
+	//ChildPtr = NULL;
 }
 
 ostream& operator<<(ostream& output, Process& p)
