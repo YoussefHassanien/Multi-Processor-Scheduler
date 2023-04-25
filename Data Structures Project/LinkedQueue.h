@@ -15,6 +15,7 @@ private:
 
 	Node<T>* backPtr;  //Pointer to the fornt(first) element of the queue
 	Node<T>* frontPtr; //Pointer to the back(last) element of the queue
+	int NodesCounter;
 
 public:
 
@@ -41,10 +42,16 @@ public:
 	{
 		Node<T>* newNodePtr = new Node<T>(newEntry);
 		// Insert the new node
-		if (isEmpty())	//special case if this is the first node to insert
+		if (isEmpty())	//special case if this is the first node to insert	
+		{
 			frontPtr = newNodePtr; // The queue is empty
+			NodesCounter++;
+		}
 		else
+		{
 			backPtr->setNext(newNodePtr); // The queue was not empty
+			NodesCounter++;
+		}
 
 		backPtr = newNodePtr; // New node is the last node now
 		return true;
@@ -69,7 +76,7 @@ public:
 
 		// Free memory reserved for the dequeued node
 		delete nodeToDeletePtr;
-
+		NodesCounter--;
 		return true;
 
 	}
@@ -88,12 +95,10 @@ public:
 	}
 	void Print()
 	{
-
-		while (isEmpty() == 0)  //while the queue is not empty
-		{
-			T x;
-			dequeue(x);
-			cout << *x << ", ";
+		Node<T>* curPtr = frontPtr;
+		for (int i = 0; i < NodesCounter; i++) {
+			cout << *curPtr->getItem() << ", ";
+			curPtr = curPtr->getNext();
 		}
 	}
 

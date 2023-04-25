@@ -1,4 +1,5 @@
-﻿  Process.cpp
+﻿  FCFS.cpp
+  Process.cpp
 D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\BinaryTree.h(34,24): error C2676: binary '<': 'T' does not define this operator or a conversion to a type acceptable to the predefined operator
           with
           [
@@ -93,5 +94,10 @@ D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structur
               T=Process
           ]
 D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\Process.cpp(13,12): message : see reference to class template instantiation 'BinaryTree<Process>' being compiled
+  Processor.cpp
+  RR.cpp
+  Scheduler.cpp
+  SJF.cpp
+  Source.cpp
   UI_Info.cpp
   Generating Code...
