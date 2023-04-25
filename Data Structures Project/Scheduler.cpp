@@ -363,3 +363,17 @@ void Scheduler::Set_Last_Child_ID(int x)
 	ChildID = x + 1;
 }
 
+void Scheduler::Set_ShortestListIdx()
+{
+	ShortestListIdx = 0;
+	for (int i = 1; i < Processor_Count; i++)
+	{
+		if (PArr[i]->GetTotalCT() < PArr[ShortestListIdx]->GetTotalCT())
+			ShortestListIdx = i;
+	}
+}
+
+int Scheduler::Get_ShortestLlistIdx()
+{
+	return ShortestListIdx;
+}
