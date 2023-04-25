@@ -43,6 +43,3 @@ void UI_Info::PrintInteractiveMode()
 	cout << endl<<"PRESS ANY KEY TO MOVE TO NEXT STEP !" << endl;
 	system("pause");
 }
-
-
-//etneen ya el 7asan yal 7oseen 

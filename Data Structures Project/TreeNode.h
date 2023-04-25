@@ -49,12 +49,12 @@ public:
 		return Data;
 	}
 	// Getter for Left
-	TreeNode<T>*& GetLeft() const
+	TreeNode<T>*& GetLeft() 
 	{
 		return Left;
 	}
 	// Getter for Right
-	TreeNode<T>*& GetRight() const
+	TreeNode<T>*& GetRight() 
 	{
 		return Right;
 	}

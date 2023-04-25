@@ -10,7 +10,7 @@ Process::Process(int at, int id, int ct, int n)
 	{
 		IOArr = new IO*[N];
 	}
-	ChildsTree->Insert(ID);
+	//ChildsTree->Insert(ID);
 	Orph = false;
 	S = New;
 	

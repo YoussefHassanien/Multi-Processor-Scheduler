@@ -31,10 +31,10 @@ private:
         if (Root == nullptr)
             Root = new TreeNode<T>(value);
 
-        else if (value < node->GetData()) 
+   /*     else if (value < node->GetData()) 
         {
             InsertBT(node->GetLeft(), value);
-        }
+        }*/
         else 
         {
             InsertBT(node->GetRight(), value);   

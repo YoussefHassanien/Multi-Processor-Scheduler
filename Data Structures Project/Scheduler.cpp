@@ -171,14 +171,14 @@ void Scheduler::addtonewlist(Process* p)
 //Adds a process to the BLK list 
 void Scheduler::addtoblocklist(Process*& p)
 {
-	blocklist.InsertEnd(p);
+	blocklist.enqueue(p);
 	BLKCount++;
 }
 
 //Adds a process to the TRM list 
 void Scheduler::addToTrm(Process*& p)
 {
-	terminatedlist.InsertEnd(p);
+	terminatedlist.dequeue(p);
 	TerminatedProcesses++;
 }
 
@@ -259,23 +259,23 @@ void Scheduler::simulation()
 		{
 			PArr[i]->ScheduleAlgo();
 		}
-		random = generaterandom(1, 100);
-		if (random < 10 && !blocklist.isEmpty()) 
-		{
-			blocklist.DeleteFirst(TopBlock);
-			if (TopBlock!=NULL)
-			{
-				int randProcessor = generaterandom(0, Processor_Count - 1);
-				PArr[randProcessor]->AddToRdy(TopBlock);
-				BLKCount--;
-			}
-		}
+		//random = generaterandom(1, 100);
+		//if (random < 10 && !blocklist.isEmpty()) 
+		//{
+		//	blocklist.dequeue(TopBlock);
+		//	if (TopBlock!=NULL)
+		//	{
+		//		int randProcessor = generaterandom(0, Processor_Count - 1);
+		//		PArr[randProcessor]->AddToRdy(TopBlock);
+		//		BLKCount--;
+		//	}
+		//}
 
-		int TermRand = generaterandom(1, (ChildID-1));
-		for (int i = 0; i < Processor_Count; i++)
-		{
-			PArr[i]->RandomTermination(TermRand);
-		}
+		//int TermRand = generaterandom(1, (ChildID-1));
+		//for (int i = 0; i < Processor_Count; i++)
+		//{
+		//	PArr[i]->RandomTermination(TermRand);
+		//}
 
 		UI.PrintInteractiveMode();
 		timestep++;
@@ -336,14 +336,14 @@ void Scheduler::DecrementRunningCount()
 void Scheduler::PrintBLKList()
 {
 	cout << BLKCount << " BLK: ";
-	blocklist.PrintList();
+	blocklist.Print();
 }
 
 //Prints the TRM list
 void Scheduler::PrintTRMList()
 {
 	cout << TerminatedProcesses << " TRM: ";
-	terminatedlist.PrintList();
+	terminatedlist.Print();
 }
 
 //Prints the running processes  

@@ -19,7 +19,7 @@ private:
 		;
 	Scheduler* s;
 	IO** IOArr = new IO*[N]; //Array of pointers to the IOs of the Process
-	BinaryTree<Process>* ChildsTree; //A Tree of the forked childs
+	//BinaryTree<Process>* ChildsTree; //A Tree of the forked childs
 	bool Orph;
 	enum State
 	{
@@ -50,13 +50,13 @@ public:
 	int GetTRT();                                                    //Getter for the Turnarround time
 	int GetWT();                                                     //Getter for the Wait Time
 	int GetN();
-	void AddChild(int t, int rct);                                   //Create a new child
+	//void AddChild(int t, int rct);                                   //Create a new child
 	void AddIO(IO* Arr[]);                                           //Adds IO
 	bool GetOrph();                                                  //Getter for the orphan
-	Process* GetChildPtr();                                          //Returns a pointer to the child
+	//Process* GetChildPtr();                                          //Returns a pointer to the child
 	void SetOrph(bool orph);                                         //Setter for the orphan
 	void SetS(int s);
-	void SetChildPtr(Process* Ptr);                                  //Setter for the child pointer
+	//void SetChildPtr(Process* Ptr);                                  //Setter for the child pointer
 	void PrintProcessInfo();                                         //Prints the Processes info
 	void DecrementCT();                                              //decrements the CT by one 
 	 friend ostream& operator<<(ostream& output,Process &p);         //Operator overloading

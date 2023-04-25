@@ -21,8 +21,8 @@ private:
 	Processor* PArr[500];                  //Array of processors pointers 
 	int ForkProb;                          //Forking probability
 	LinkedQueue<Process*> newlist;         //NEW list
-	LinkedList<Process*>blocklist;         //BLK list
-	LinkedList<Process*>terminatedlist;    //TRM list
+	LinkedQueue<Process*>blocklist;         //BLK list
+	LinkedQueue<Process*>terminatedlist;    //TRM list
 	int Processor_Count;                   //Total count of processors
 	SIGKILL* SigKillarr[500];              //Array of signal kill pointers 
 	int timestep;                          //Time step
