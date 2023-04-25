@@ -22,6 +22,8 @@ class Process;
 		int TotalIT; //the total time of the idle state duration of the processor
 		int PLoad; //Processor Load perecentage 
 		int PUtil; //Processor Utilization Percentage
+		int TotalCT; //Sum of the CT of all processes in the ready list
+		
 
 	public:
 
@@ -43,6 +45,8 @@ class Process;
 		int GetTotalIT();                   //Getter for the total time of the idle state duration of the processor
 		int GetPLoad();                     // Getter for the Processor Load perecentage 
 		int GetPUtil();                     // Getter for the Processor Utilization Percentage
+		int GetTotalCT();                   //Getter for the total CT of all processes in the ready list
+		int SumCT();                        //Sums the CT of all processes in the ready queue
 		~Processor();                       //Destructor
 
 	};
