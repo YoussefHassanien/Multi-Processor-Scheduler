@@ -127,8 +127,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BinaryTree.h" />
     <ClInclude Include="CyclicQueue.h" />
     <ClInclude Include="FCFS.h" />
+    <ClInclude Include="TreeNode.h" />
     <ClInclude Include="UI_Info.h" />
     <ClInclude Include="IO.h" />
     <ClInclude Include="LinkedList.h" />
