@@ -17,6 +17,7 @@ public:
 	void Print_List();                              //Prints ready list processes
 	string Get_Processor_Type();                    //Returns the processor type 
 	int GetRDYListCount();                          //Returns the number of processes in the ready list
+	void RRtoSJF_Migration();                       //Controls the process migration from RR processor to SJF processor
 	~RoundRobin();                                  //Destructor
 
 };
