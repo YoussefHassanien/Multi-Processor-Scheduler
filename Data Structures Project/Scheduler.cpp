@@ -54,17 +54,17 @@ void Scheduler::readfileparameters()
 		string fcfs;
 		InFile >> fcfs;
 		int intfcfs = stoi(fcfs);
-
+                FCFS_ProcessorsCnt = intfcfs;
 
 		string sjf;
 		InFile >> sjf;
 		int intsjf = stoi(sjf);
-
+                SJF_ProcessorsCnt = intsjf;
 
 		string rr;
 		InFile >> rr;
 		int intrr = stoi(rr);
-
+                RR_ProcessorsCnt = intrr;
 
 		string timeslice;
 		InFile >> timeslice;
@@ -72,6 +72,7 @@ void Scheduler::readfileparameters()
 		string RTF;
 		InFile >> RTF;
 		int intRTF = stoi(RTF);
+		inRTF = intRTF;
 		string MaxW;
 		InFile >> MaxW;
 		int intMaxW = stoi(MaxW);
@@ -262,6 +263,19 @@ void Scheduler::simulation()
 		for (int i = 0; i < Processor_Count; i++) 
 		{
 
+			
+			//Process migration 
+			
+			if (FCFS* FCFSptr = dynamic_cast<FCFS*>(PArr[i]))  // the current processor is a FCFS processor
+			{
+				//FCFSptr->FCFStoRR_Migration
+			}
+			else if (RoundRobin* RRptr = dynamic_cast<RoundRobin*>(PArr[i])) // the current processor is a RR processor 
+			{
+				RRptr->RRtoSJF_Migration();
+			}
+
+			
 			PArr[i]->ScheduleAlgo(); //rdy to run and run to rdy
 
 			//Run to TRM
