@@ -122,10 +122,6 @@ int Process::GetN()
 {
 	return N;
 }
-void Process::GetFirstIO(IO*& ioTemp)
-{
-	IOq.peek(ioTemp);
-}
 //Process* Process::GetChildPtr()
 //{
 //	return ChildPtr;
@@ -140,11 +136,31 @@ void Process::PrintProcessInfo()
 	cout << TT << " " << " " << " " << " " << " " << ID << " " << " " << " " << " " << " " << AT << " " << " " << " " << " " << " " << CT << " " << " " << " " << " " << " " << " hena feeh IOD" << " " << " " << " " << " " << " " << WT << " " << " " << " " << " " << " " << RT << " " << " " << " " << " " << " " << TRT << endl;
 }
 
-void Process::AddIO(LinkedQueue<IO*> ioq)
+void Process::AddIO(LinkedQueue<IO*>* ioq)
 {
-	IOq = ioq; //needs copy constructor
+	IOqueue = ioq;
 }
 
+void Process::GetFirstIO(IO*& ioTemp)
+{
+	IOqueue->peek(ioTemp);
+}
+
+bool Process::CheckIO_D()
+{
+	IO* tempIO;
+	IOqueue->peek(tempIO);
+	if (tempIO->Duration==0)
+	{
+		IOqueue->dequeue(tempIO);
+		return true;
+	}
+	else
+	{
+		tempIO->Duration--;
+		return false;
+	}
+}
 
 //void Process::AddChild(int t, int rct)
 //{
@@ -161,6 +177,7 @@ Process::~Process()
 	IOArr = NULL;*/
 	//delete ChildPtr;
 	//ChildPtr = NULL;
+	delete IOqueue;
 }
 
 ostream& operator<<(ostream& output, Process& p)

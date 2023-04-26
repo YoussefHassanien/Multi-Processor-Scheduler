@@ -21,6 +21,11 @@ Process* Processor::getRunning()
 	return RUNNING;
 }
 
+void Processor::SetRunning(Process* proc)
+{
+	RUNNING = proc;
+}
+
 //sets the processor running state
 void Processor::setisbusy(bool b)
 {

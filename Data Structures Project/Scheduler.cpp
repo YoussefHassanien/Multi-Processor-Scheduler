@@ -95,7 +95,7 @@ void Scheduler::readfileparameters()
 			p->SetID(stoi(PID));
 			p->SetCT(stoi(CT));
 			p->SetN(stoi(N));
-			LinkedQueue<IO*> IOq;
+			LinkedQueue<IO*>* IOq= new LinkedQueue<IO*>;
 			//IO** IOarr = new IO*[stoi(N)];
 			for (int i = 0; i < stoi(N); i++)
 			{
@@ -115,7 +115,7 @@ void Scheduler::readfileparameters()
 				IO* io= new IO;
 				io->SetDuration(intIO_D);
 				io->SetRequest(intIO_R);
-				IOq.enqueue(io);
+				IOq->enqueue(io);
 				//IOarr[i] = io;
 				continue;
 
@@ -180,7 +180,7 @@ void Scheduler::addtoblocklist(Process*& p)
 //Adds a process to the TRM list 
 void Scheduler::addToTrm(Process*& p)
 {
-	terminatedlist.dequeue(p);
+	terminatedlist.enqueue(p);
 	TerminatedProcesses++;
 }
 
@@ -247,7 +247,7 @@ void Scheduler::simulation()
 {
 
 	int random;
-	Process* TopBlock=NULL;
+	Process* TempProc;;
 	IO* ioTemp;
 	readfileparameters();
 	while (!AllIsTerminated())
@@ -262,29 +262,45 @@ void Scheduler::simulation()
 		{
 
 			PArr[i]->ScheduleAlgo(); //rdy to run and run to rdy
+
+			//Run to TRM
 			if (PArr[i]->getRunning()) {
 				Process* CurrentRunning = PArr[i]->getRunning(); //moves to terminated if ct =0
 				if (CurrentRunning->GetCT() == 0)
 				{
 					addToTrm(CurrentRunning);
-					CurrentRunning = nullptr;
+					PArr[i]->SetRunning(nullptr);
 					PArr[i]->setisbusy(false);
 					DecrementRunningCount();
 					continue;
 				}
 
-				if (CurrentRunning->GetN() != 0)
+				//Run to BLK
+				if (CurrentRunning->GetN() != 0) //checks if the current process needs IO
 				{
-					CurrentRunning->GetFirstIO(ioTemp);
-					if (ioTemp->GetRequest() == timestep)
-					{
-						addtoblocklist(CurrentRunning);
-						CurrentRunning = nullptr;
-						PArr[i]->setisbusy(false);
-						DecrementRunningCount();
-						continue;
+					CurrentRunning->GetFirstIO(ioTemp); 
+					if (ioTemp!=nullptr) {
+						if (ioTemp->GetRequest() == timestep) //checks if the IO_R equals the current timestep
+						{
+							addtoblocklist(CurrentRunning);
+							PArr[i]->SetRunning(nullptr);
+							PArr[i]->setisbusy(false);
+							DecrementRunningCount();
+							continue;
+						}
 					}
 				}
+				//BLK to RDY
+				//if (!blocklist.isEmpty()) //check BLK list
+				//{
+				//	blocklist.peek(TempProc);
+				//	if (TempProc->CheckIO_D())  //CheckIO_D needs further modifications
+				//	{
+				//		//check for the shortest ready queue
+				//		//dequeue form block & enqueue the process in the ready queue
+				//	} 
+
+				//}
 			}
 
 		}
@@ -412,18 +428,5 @@ int Scheduler::Get_ShortestLlistIdx()
 //for (int i = 0; i < Processor_Count; i++)
 //{
 //	PArr[i]->RandomTermination(TermRand);
-void Scheduler::Set_ShortestListIdx()
-{
-	ShortestListIdx = 0;
-	for (int i = 1; i < Processor_Count; i++)
-	{
-		if (PArr[i]->GetTotalCT() < PArr[ShortestListIdx]->GetTotalCT())
-			ShortestListIdx = i;
-	}
-}
-
-int Scheduler::Get_ShortestLlistIdx()
-{
-	return ShortestListIdx;
-}
 //}
+

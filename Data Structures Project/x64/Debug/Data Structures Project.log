@@ -1,12 +1,4 @@
-﻿  FCFS.cpp
-  IO.cpp
-  Process.cpp
-  Processor.cpp
-  RR.cpp
-  Scheduler.cpp
+﻿  Scheduler.cpp
 C:\Users\Doha ElBeltagy\Desktop\Courses\Spring2023\Data Structure\Project\Phase2\Data-Structure-Project\Data Structures Project\Scheduler.cpp(249,6): warning C4101: 'random': unreferenced local variable
-  SJF.cpp
-  Source.cpp
-  UI_Info.cpp
-  Generating Code...
+C:\Users\Doha ElBeltagy\Desktop\Courses\Spring2023\Data Structure\Project\Phase2\Data-Structure-Project\Data Structures Project\Scheduler.cpp(250,11): warning C4101: 'TempProc': unreferenced local variable
   Data Structures Project.vcxproj -> C:\Users\Doha ElBeltagy\Desktop\Courses\Spring2023\Data Structure\Project\Phase2\Data-Structure-Project\x64\Debug\Data Structures Project.exe

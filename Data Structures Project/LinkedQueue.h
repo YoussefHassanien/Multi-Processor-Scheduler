@@ -15,9 +15,11 @@ private:
 
 	Node<T>* backPtr;  //Pointer to the fornt(first) element of the queue
 	Node<T>* frontPtr; //Pointer to the back(last) element of the queue
-	int NodesCounter;
+	
 
 public:
+
+	int NodesCounter;
 
 	//Default constructor 
 	//sets backPtr and frontPtr to NULL
@@ -28,7 +30,7 @@ public:
 
 	}
 
-
+	
 	//Checks whether the linked list is empty oe not
 	bool isEmpty() const
 	{
@@ -116,7 +118,7 @@ public:
 	LinkedQueue(const LinkedQueue<T>& LQ)
 	{
 		Node<T>* NodePtr = LQ.frontPtr;
-		if (!NodePtr) //LQ is empty
+		if (!NodePtr) //LQ is empty 
 		{
 			frontPtr = backPtr = nullptr;
 			return;
@@ -140,3 +142,28 @@ public:
 //end LinkedQueue
 
 #endif
+
+//another copy constructor
+	//LinkedQueue(const LinkedQueue<T>& queue)
+	//{
+	//	Node<T>* temp = queue.frontPtr;
+	//	Node<T>* newFront;
+	//	Node<T>* newBack;
+	//	//LinkedQueue<T>* newQueue = new LinkedQueue<T>;
+	//	while(temp)
+	//	{
+	//		Node<T>* newNodePtr = new Node<T>(temp->getItem());
+	//		if (isEmpty())	//special case if this is the first node to insert	
+	//		{
+	//			newFront = newNodePtr; // The queue is empty
+	//			NodesCounter++;
+	//		}
+	//		else
+	//		{
+	//			newBack->setNext(newNodePtr); // The queue was not empty
+	//			NodesCounter++;
+	//		}
+	//		backPtr = newNodePtr;
+	//		temp = temp->getNext();
+	//	}
+	//}

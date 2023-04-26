@@ -26,16 +26,11 @@ void RoundRobin::ScheduleAlgo()
 		return;
 
 	Process* tmp=nullptr;
-	Process* temp = nullptr;
-	RDY_List.peek(temp);
-
-	if (!isbusy && temp->GetAT() == s->getTimeStep())
-	{
-		return;
-	}
+	/*Process* temp = nullptr;
+	RDY_List.peek(temp);*/
 
 	//sets a process as running if the processor is idle
-	if (!isbusy && temp->GetAT()< s->getTimeStep())
+	if (!isbusy)
 	{
 		deleteprocess(tmp);
 		RUNNING = tmp;
@@ -43,23 +38,18 @@ void RoundRobin::ScheduleAlgo()
 		s->incrementRunningCount();
 		return;
 	}
+	else
+	{
+		stepscounter++;
+	}
 
-	//if the process's CPU time is over
-	//if (RUNNING->GetCT() == 0) // could be less than 0
-	//{
-	//	s->addToTrm(RUNNING);                     //add to TRM list
-	//	RUNNING = NULL;
-	//	isbusy = false;                          //Set the processor as idle
-	//	s->DecrementRunningCount();
-	//	return;
-	//}
-
-	else if  (s->getTimeStep() % Time_Slice == 0)   //the current timestep is the Round Robin timeslice
+	if  (stepscounter==Time_Slice)   //the current timestep is the Round Robin timeslice
 	{
 		RDY_List.enqueue(RUNNING);               //The process goes back to the beginning of the RDY list
 		RUNNING = NULL;
 		isbusy = false;                          //Set the processor as idle
 		s->DecrementRunningCount();
+		stepscounter = 0;
 		return;
 	}
 	

@@ -19,7 +19,7 @@ private:
 		, N // Number of Times the process requests I/O
 		;
 	Scheduler* s;
-	LinkedQueue<IO*> IOq;
+	LinkedQueue<IO*>* IOqueue= new LinkedQueue<IO*>;
 	//IO** IOArr = new IO*[N]; //Array of pointers to the IOs of the Process
 	//BinaryTree<Process>* ChildsTree; //A Tree of the forked childs
 	bool Orph;
@@ -53,8 +53,9 @@ public:
 	int GetWT();                                                     //Getter for the Wait Time
 	int GetN();
 	void GetFirstIO(IO*& ioTemp);
+	bool CheckIO_D();
 	//void AddChild(int t, int rct);                                   //Create a new child
-	void AddIO(LinkedQueue<IO*> ioq);
+	void AddIO(LinkedQueue<IO*>* ioq);
 	bool GetOrph();                                                  //Getter for the orphan
 	//Process* GetChildPtr();                                          //Returns a pointer to the child
 	void SetOrph(bool orph);                                         //Setter for the orphan

@@ -4,9 +4,9 @@
 class RoundRobin :public Processor
 {
 private:
-	CyclicQueue<Process*> RDY_List;                 //RDY list
+	LinkedQueue<Process*> RDY_List;                 //RDY list
 	int Time_Slice;                                 //time slice
-	
+	int stepscounter = 0;
 
 public:
 	RoundRobin(Scheduler* Sptr,int id,int ts);      //constructor

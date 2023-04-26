@@ -92,12 +92,8 @@ void FCFS::ScheduleAlgo()
 	if (RDYList.isEmpty() && !RUNNING) // if there is nothing in the ready list and no process is running
 		return;
 
-	if (!isbusy && RDYPeek->GetAT() == s->getTimeStep())
-	{
-		return;
-	}
 
-	if (!isbusy && RDYPeek->GetAT() < s->getTimeStep()) //sets a process as running if the processor is idle
+	if (!isbusy) //sets a process as running if the processor is idle
 	{
 		deleteprocess(tmp);
 		RUNNING = tmp;
