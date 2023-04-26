@@ -115,6 +115,10 @@ int Process::GetN()
 {
 	return N;
 }
+int Process::GetRunningFor()
+{
+	return RunningFor;
+}
 bool Process::GetOrph()
 {
 	return Orph;
