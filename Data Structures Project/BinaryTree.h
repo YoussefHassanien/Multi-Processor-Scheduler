@@ -33,6 +33,10 @@ public:
     {
         DeleteNode(Root, value);
     }
+    ~BinaryTree()
+    {
+        Destroy();
+    }
 private:
     // The Private Insert Function
     void InsertBT(TreeNode<T>*& root, T value) 
