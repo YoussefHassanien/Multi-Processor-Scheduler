@@ -69,6 +69,25 @@ int Processor::GetPUtil()
 	return PUtil;
 }
 
+int Processor::GetTotalCT()
+{
+	return TotalCT;
+}
+
+int Processor::SumCT()
+{
+	int sum = 0;
+	Process* p;
+	for (int i = 0; i < processescount; i++)
+	{
+		deleteprocess(p);
+		sum += p->GetCT();
+		AddToRdy(p);
+	}
+	TotalCT = sum;
+	return (TotalCT);
+}
+
 //Destructor
 Processor::~Processor()
 {

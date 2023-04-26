@@ -381,7 +381,20 @@ void Scheduler::Set_Last_Child_ID(int x)
 	ChildID = x + 1;
 }
 
+void Scheduler::Set_ShortestListIdx()
+{
+	ShortestListIdx = 0;
+	for (int i = 1; i < Processor_Count; i++)
+	{
+		if (PArr[i]->GetTotalCT() < PArr[ShortestListIdx]->GetTotalCT())
+			ShortestListIdx = i;
+	}
+}
 
+int Scheduler::Get_ShortestLlistIdx()
+{
+	return ShortestListIdx;
+}
 
 //random = generaterandom(1, 100);
 //if (random < 10 && !blocklist.isEmpty()) 
@@ -399,4 +412,18 @@ void Scheduler::Set_Last_Child_ID(int x)
 //for (int i = 0; i < Processor_Count; i++)
 //{
 //	PArr[i]->RandomTermination(TermRand);
+void Scheduler::Set_ShortestListIdx()
+{
+	ShortestListIdx = 0;
+	for (int i = 1; i < Processor_Count; i++)
+	{
+		if (PArr[i]->GetTotalCT() < PArr[ShortestListIdx]->GetTotalCT())
+			ShortestListIdx = i;
+	}
+}
+
+int Scheduler::Get_ShortestLlistIdx()
+{
+	return ShortestListIdx;
+}
 //}
