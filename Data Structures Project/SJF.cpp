@@ -30,16 +30,12 @@ void SJF:: ScheduleAlgo()
 	if (RDY_List.isEmpty())
 		return;
 	Process* tmp=nullptr;
-	Process* temp = nullptr;
-	RDY_List.peek(temp);
+	/*Process* temp = nullptr;
+	RDY_List.peek(temp);*/
+	
+
 	//sets a process as running if the processor is idle
-
-	if (!isbusy && temp->GetAT() == s->getTimeStep())
-	{
-		return;
-	}
-
-	if (!isbusy && !RUNNING && temp->GetAT() < s->getTimeStep())
+	if (!isbusy && !RUNNING)
 	{
 		deleteprocess(tmp);
 		RUNNING = tmp;
@@ -47,15 +43,9 @@ void SJF:: ScheduleAlgo()
 		s->incrementRunningCount();
 		return;
 	}
-
-	//if the process's CPU time is over
-	if (RUNNING->GetCT() == 0)
+	else if (isbusy) 
 	{
-		s->addToTrm(RUNNING);                      //add to TRM list
-		RUNNING = NULL;
-		isbusy = false;                            //Set the processor as idle
-		s->DecrementRunningCount();
-		return;
+		RUNNING->DecrementCT();
 	}
 
 

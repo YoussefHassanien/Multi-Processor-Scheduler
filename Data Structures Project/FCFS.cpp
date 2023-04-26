@@ -84,19 +84,16 @@ int FCFS::GetRDYListCount()
 //Schedueling algorithm
 void FCFS::ScheduleAlgo()
 {
-	if (RDYList.isEmpty()&& !RUNNING)
-		return;
-   //sets a process as running if the processor is idle
-	Process* tmp =nullptr;
-	Process* temp=nullptr;
-	RDYList.peek(temp);
+	Process* tmp = nullptr;
+	Process* RDYPeek = nullptr;
 
-	if (!isbusy && temp->GetAT() == s->getTimeStep())
-	{
-		return;
-	}
+	RDYList.peek(RDYPeek);
 
-	if (!isbusy && temp->GetAT() < s->getTimeStep())
+	if (RDYList.isEmpty() && !RUNNING) // if there is nothing in the ready list and no process is running
+		return;
+
+
+	if (!isbusy) //sets a process as running if the processor is idle
 	{
 		deleteprocess(tmp);
 		RUNNING = tmp;
@@ -104,15 +101,9 @@ void FCFS::ScheduleAlgo()
 		s->incrementRunningCount();
 		return;
 	}
-
-	//if the process's CPU time is over
-	if (RUNNING->GetCT() == 0)
+	else if (isbusy && RUNNING->GetCT() != 0) 
 	{
-			s->addToTrm(RUNNING);                       //add to TRM list
-			RUNNING = NULL;
-			isbusy = false;                             //Set the processor as idle
-			s->DecrementRunningCount();
-			return;
+		RUNNING->DecrementCT();
 	}
 
 }
@@ -124,4 +115,3 @@ FCFS::~FCFS()
 	
 }
 
-//123

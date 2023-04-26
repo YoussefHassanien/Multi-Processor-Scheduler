@@ -6,10 +6,10 @@ Process::Process(int at, int id, int ct, int n)
 	SetID(id);
 	SetCT(ct);
 	SetN(n);
-	if (n)
+	/*if (n)
 	{
 		IOArr = new IO*[N];
-	}
+	}*/
 	//ChildsTree->Insert(ID);
 	Orph = false;
 	S = New;
@@ -133,29 +133,51 @@ bool Process::GetOrph()
 void Process::PrintProcessInfo()
 {
 	cout << "TT" << " " << " " << " " << " " << " " << "PID" << " " << " " << " " << " " << " " << "AT" << " " << " " << " " << " " << " " << "CT" << " " << " " << " " << " " << " " << "IO_D" << " " << " " << " " << " " << " " << "WT" << " " << " " << " " << " " << " " << "RT" << " " << " " << " " << " " << " " << "TRT" << endl;
-	cout << TT << " " << " " << " " << " " << " " << ID << " " << " " << " " << " " << " " << AT << " " << " " << " " << " " << " " << CT << " " << " " << " " << " " << " " << IOArr[0]->GetDuration() << " " << " " << " " << " " << " " << WT << " " << " " << " " << " " << " " << RT << " " << " " << " " << " " << " " << TRT << endl;
+	cout << TT << " " << " " << " " << " " << " " << ID << " " << " " << " " << " " << " " << AT << " " << " " << " " << " " << " " << CT << " " << " " << " " << " " << " " << " hena feeh IOD" << " " << " " << " " << " " << " " << WT << " " << " " << " " << " " << " " << RT << " " << " " << " " << " " << " " << TRT << endl;
 }
-void Process::AddIO(IO *Arr[])
+
+void Process::AddIO(LinkedQueue<IO*>* ioq)
 {
-	for (int i = 0; i < N; i++)
+	IOqueue = ioq;
+}
+
+void Process::GetFirstIO(IO*& ioTemp)
+{
+	IOqueue->peek(ioTemp);
+}
+
+bool Process::CheckIO_D()
+{
+	IO* tempIO;
+	IOqueue->peek(tempIO);
+	if (tempIO->Duration==0)
 	{
-		IOArr[i] = Arr[i];
+		IOqueue->dequeue(tempIO);
+		return true;
+	}
+	else
+	{
+		tempIO->Duration--;
+		return false;
 	}
 }
+
 //void Process::AddChild(int t, int rct)
 //{
 //	ChildPtr = new Process(t, s->getChildID(), rct, 0);
 //	s->incrementChildID();
 //}
+
 Process::~Process()
 {
-	for (int i = 0; i < N; i++)
+	/*for (int i = 0; i < N; i++)
 	{
 		delete IOArr;
 	}
-	IOArr = NULL;
+	IOArr = NULL;*/
 	//delete ChildPtr;
 	//ChildPtr = NULL;
+	delete IOqueue;
 }
 
 ostream& operator<<(ostream& output, Process& p)

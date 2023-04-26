@@ -21,6 +21,11 @@ Process* Processor::getRunning()
 	return RUNNING;
 }
 
+void Processor::SetRunning(Process* proc)
+{
+	RUNNING = proc;
+}
+
 //sets the processor running state
 void Processor::setisbusy(bool b)
 {
@@ -67,6 +72,25 @@ int Processor::GetPLoad()
 int Processor::GetPUtil()
 {
 	return PUtil;
+}
+
+int Processor::GetTotalCT()
+{
+	return TotalCT;
+}
+
+int Processor::SumCT()
+{
+	int sum = 0;
+	Process* p;
+	for (int i = 0; i < processescount; i++)
+	{
+		deleteprocess(p);
+		sum += p->GetCT();
+		AddToRdy(p);
+	}
+	TotalCT = sum;
+	return (TotalCT);
 }
 
 //Destructor

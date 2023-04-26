@@ -22,6 +22,7 @@ class Process;
 		int TotalIT; //the total time of the idle state duration of the processor
 		int PLoad; //Processor Load perecentage 
 		int PUtil; //Processor Utilization Percentage
+		int TotalCT; //Sum of the CT of all processes in the ready list
 
 	public:
 
@@ -31,6 +32,7 @@ class Process;
 		virtual void ScheduleAlgo() = 0;                           //Schedueling algorithm
 		void setisbusy(bool b);                                    //sets the processor running state
 		Process* getRunning();                                     //gets the process in running state
+		void SetRunning(Process* proc);
 		bool getisbusy();                                          //returns the processor's running state
 		int Getprocessescount();                                   //Getter for the processes count in the ready list
 		virtual bool RandomTermination(int id)=0;                  //Picks a process randomly to terminate it
@@ -43,6 +45,8 @@ class Process;
 		int GetTotalIT();                   //Getter for the total time of the idle state duration of the processor
 		int GetPLoad();                     // Getter for the Processor Load perecentage 
 		int GetPUtil();                     // Getter for the Processor Utilization Percentage
+		int GetTotalCT();                   //Getter for the total CT of all processes in the ready list
+		int SumCT();                        //Sums the CT of all processes in the ready queue
 		~Processor();                       //Destructor
 
 	};

@@ -95,7 +95,8 @@ void Scheduler::readfileparameters()
 			p->SetID(stoi(PID));
 			p->SetCT(stoi(CT));
 			p->SetN(stoi(N));
-			IO** IOarr = new IO*[stoi(N)];
+			LinkedQueue<IO*>* IOq= new LinkedQueue<IO*>;
+			//IO** IOarr = new IO*[stoi(N)];
 			for (int i = 0; i < stoi(N); i++)
 			{
 				string openbracket;
@@ -114,11 +115,12 @@ void Scheduler::readfileparameters()
 				IO* io= new IO;
 				io->SetDuration(intIO_D);
 				io->SetRequest(intIO_R);
-				IOarr[i] = io;
+				IOq->enqueue(io);
+				//IOarr[i] = io;
 				continue;
 
 			}
-			p->AddIO(IOarr);
+			p->AddIO(IOq);
 			addtonewlist(p);
 		}
 		int i = 0;
@@ -178,7 +180,7 @@ void Scheduler::addtoblocklist(Process*& p)
 //Adds a process to the TRM list 
 void Scheduler::addToTrm(Process*& p)
 {
-	terminatedlist.dequeue(p);
+	terminatedlist.enqueue(p);
 	TerminatedProcesses++;
 }
 
@@ -245,37 +247,63 @@ void Scheduler::simulation()
 {
 
 	int random;
-	Process* TopBlock=NULL;
+	Process* TempProc;;
+	IO* ioTemp;
 	readfileparameters();
 	while (!AllIsTerminated())
 	{
 
-		for (int i = 0; i < LastProcessID; i++)
+		for (int i = 0; i < LastProcessID; i++) //tamam
 		{
 			AddtoRdyLists(counter);
 		}
 
-		for (int i = 0; i < Processor_Count; i++)
+		for (int i = 0; i < Processor_Count; i++) 
 		{
-			PArr[i]->ScheduleAlgo();
-		}
-		//random = generaterandom(1, 100);
-		//if (random < 10 && !blocklist.isEmpty()) 
-		//{
-		//	blocklist.dequeue(TopBlock);
-		//	if (TopBlock!=NULL)
-		//	{
-		//		int randProcessor = generaterandom(0, Processor_Count - 1);
-		//		PArr[randProcessor]->AddToRdy(TopBlock);
-		//		BLKCount--;
-		//	}
-		//}
 
-		//int TermRand = generaterandom(1, (ChildID-1));
-		//for (int i = 0; i < Processor_Count; i++)
-		//{
-		//	PArr[i]->RandomTermination(TermRand);
-		//}
+			PArr[i]->ScheduleAlgo(); //rdy to run and run to rdy
+
+			//Run to TRM
+			if (PArr[i]->getRunning()) {
+				Process* CurrentRunning = PArr[i]->getRunning(); //moves to terminated if ct =0
+				if (CurrentRunning->GetCT() == 0)
+				{
+					addToTrm(CurrentRunning);
+					PArr[i]->SetRunning(nullptr);
+					PArr[i]->setisbusy(false);
+					DecrementRunningCount();
+					continue;
+				}
+
+				//Run to BLK
+				if (CurrentRunning->GetN() != 0) //checks if the current process needs IO
+				{
+					CurrentRunning->GetFirstIO(ioTemp); 
+					if (ioTemp!=nullptr) {
+						if (ioTemp->GetRequest() == timestep) //checks if the IO_R equals the current timestep
+						{
+							addtoblocklist(CurrentRunning);
+							PArr[i]->SetRunning(nullptr);
+							PArr[i]->setisbusy(false);
+							DecrementRunningCount();
+							continue;
+						}
+					}
+				}
+				//BLK to RDY
+				if (!blocklist.isEmpty()) //check BLK list
+				{
+					blocklist.peek(TempProc);
+					if (TempProc->CheckIO_D())  //CheckIO_D needs further modifications
+					{
+						//check for the shortest ready queue
+						//dequeue form block & enqueue the process in the ready queue
+					} 
+
+				}
+			}
+
+		}
 
 		UI.PrintInteractiveMode();
 		timestep++;
@@ -283,7 +311,6 @@ void Scheduler::simulation()
 
 
 }
-
 
 
 //Moves the process from NEW list to RDY list
@@ -305,6 +332,7 @@ void Scheduler::AddtoRdyLists(int& counter)
 
 }
 
+
 //Prints the processor list
 void Scheduler::PrintProcessorList()
 {
@@ -314,11 +342,13 @@ void Scheduler::PrintProcessorList()
 	}
 }
 
+
 //Getter for the count of blocked processes
 int Scheduler::getBLKCount()
 {
 	return BLKCount;
 }
+
 
 //Increments the number of running processes by one 
 void Scheduler::incrementRunningCount()
@@ -326,11 +356,13 @@ void Scheduler::incrementRunningCount()
 	RunningCount++;
 }
 
+
 //Decrements the number of running processes by one 
 void Scheduler::DecrementRunningCount()
 {
 	RunningCount--;
 }
+
 
 //Prints the BLK list
 void Scheduler::PrintBLKList()
@@ -339,12 +371,14 @@ void Scheduler::PrintBLKList()
 	blocklist.Print();
 }
 
+
 //Prints the TRM list
 void Scheduler::PrintTRMList()
 {
 	cout << TerminatedProcesses << " TRM: ";
 	terminatedlist.Print();
 }
+
 
 //Prints the running processes  
 void Scheduler::PrintRunningList()
@@ -362,4 +396,37 @@ void Scheduler::Set_Last_Child_ID(int x)
 {
 	ChildID = x + 1;
 }
+
+void Scheduler::Set_ShortestListIdx()
+{
+	ShortestListIdx = 0;
+	for (int i = 1; i < Processor_Count; i++)
+	{
+		if (PArr[i]->GetTotalCT() < PArr[ShortestListIdx]->GetTotalCT())
+			ShortestListIdx = i;
+	}
+}
+
+int Scheduler::Get_ShortestLlistIdx()
+{
+	return ShortestListIdx;
+}
+
+//random = generaterandom(1, 100);
+//if (random < 10 && !blocklist.isEmpty()) 
+//{
+//	blocklist.dequeue(TopBlock);
+//	if (TopBlock!=NULL)
+//	{
+//		int randProcessor = generaterandom(0, Processor_Count - 1);
+//		PArr[randProcessor]->AddToRdy(TopBlock);
+//		BLKCount--;
+//	}
+//}
+
+//int TermRand = generaterandom(1, (ChildID-1));
+//for (int i = 0; i < Processor_Count; i++)
+//{
+//	PArr[i]->RandomTermination(TermRand);
+//}
 
