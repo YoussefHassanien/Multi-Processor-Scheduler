@@ -291,16 +291,16 @@ void Scheduler::simulation()
 					}
 				}
 				//BLK to RDY
-				//if (!blocklist.isEmpty()) //check BLK list
-				//{
-				//	blocklist.peek(TempProc);
-				//	if (TempProc->CheckIO_D())  //CheckIO_D needs further modifications
-				//	{
-				//		//check for the shortest ready queue
-				//		//dequeue form block & enqueue the process in the ready queue
-				//	} 
+				if (!blocklist.isEmpty()) //check BLK list
+				{
+					blocklist.peek(TempProc);
+					if (TempProc->CheckIO_D())  //CheckIO_D needs further modifications
+					{
+						//check for the shortest ready queue
+						//dequeue form block & enqueue the process in the ready queue
+					} 
 
-				//}
+				}
 			}
 
 		}
