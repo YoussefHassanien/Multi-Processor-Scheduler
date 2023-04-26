@@ -25,6 +25,9 @@ private:
 	LinkedQueue<Process*>blocklist;        //BLK list
 	LinkedQueue<Process*>terminatedlist;   //TRM list
 	int Processor_Count;                   //Total count of processors
+	int FCFS_ProcessorsCnt;                //Count of the FCFS processors
+	int RR_ProcessorsCnt;                  //Count of the RR processors 
+	int SJF_ProcessorsCnt;                 //Count of the SJF processors
 	SIGKILL* SigKillarr[500];              //Array of signal kill pointers 
 	int timestep;                          //Time step
 	int timeSlice;                         //Time slice
