@@ -49,14 +49,14 @@ void SJF:: ScheduleAlgo()
 	}
 
 	//if the process's CPU time is over
-	if (RUNNING->GetCT() == 0)
-	{
-		s->addToTrm(RUNNING);                      //add to TRM list
-		RUNNING = NULL;
-		isbusy = false;                            //Set the processor as idle
-		s->DecrementRunningCount();
-		return;
-	}
+	//if (RUNNING->GetCT() == 0)
+	//{
+	//	s->addToTrm(RUNNING);                      //add to TRM list
+	//	RUNNING = NULL;
+	//	isbusy = false;                            //Set the processor as idle
+	//	s->DecrementRunningCount();
+	//	return;
+	//}
 
 
 }

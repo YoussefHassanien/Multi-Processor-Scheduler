@@ -17,12 +17,13 @@ class UI_Info;
 class Scheduler
 {
 private:
+
 	string FLName;                         //File name
 	Processor* PArr[500];                  //Array of processors pointers 
 	int ForkProb;                          //Forking probability
 	LinkedQueue<Process*> newlist;         //NEW list
-	LinkedQueue<Process*>blocklist;         //BLK list
-	LinkedQueue<Process*>terminatedlist;    //TRM list
+	LinkedQueue<Process*>blocklist;        //BLK list
+	LinkedQueue<Process*>terminatedlist;   //TRM list
 	int Processor_Count;                   //Total count of processors
 	SIGKILL* SigKillarr[500];              //Array of signal kill pointers 
 	int timestep;                          //Time step
@@ -43,7 +44,7 @@ private:
 	int KillPercent;                       //Percentage of Process Kill
 	int ForkPercent;                       //Percentage of Process Fork
 	int AvgUtil;                           //Average Utilization for all Processors
-	int StealLimitPercent; //This percentage should be less than 40% and if it exeeds this percentage the stealing between processor should start
+	int StealLimitPercent;                 //This percentage should be less than 40% and if it exeeds this percentage the stealing between processor should start
 
 
 public:

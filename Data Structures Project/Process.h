@@ -3,6 +3,7 @@
 #include"IO.h"
 #include "Scheduler.h"
 #include"BinaryTree.h"
+#include"LinkedQueue.h"
 using namespace std;
 class Scheduler;
 class Process
@@ -18,7 +19,8 @@ private:
 		, N // Number of Times the process requests I/O
 		;
 	Scheduler* s;
-	IO** IOArr = new IO*[N]; //Array of pointers to the IOs of the Process
+	LinkedQueue<IO*> IOq;
+	//IO** IOArr = new IO*[N]; //Array of pointers to the IOs of the Process
 	//BinaryTree<Process>* ChildsTree; //A Tree of the forked childs
 	bool Orph;
 	enum State
@@ -50,8 +52,9 @@ public:
 	int GetTRT();                                                    //Getter for the Turnarround time
 	int GetWT();                                                     //Getter for the Wait Time
 	int GetN();
+	void GetFirstIO(IO*& ioTemp);
 	//void AddChild(int t, int rct);                                   //Create a new child
-	void AddIO(IO* Arr[]);                                           //Adds IO
+	void AddIO(LinkedQueue<IO*> ioq);
 	bool GetOrph();                                                  //Getter for the orphan
 	//Process* GetChildPtr();                                          //Returns a pointer to the child
 	void SetOrph(bool orph);                                         //Setter for the orphan

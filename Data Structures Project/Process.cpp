@@ -6,10 +6,10 @@ Process::Process(int at, int id, int ct, int n)
 	SetID(id);
 	SetCT(ct);
 	SetN(n);
-	if (n)
+	/*if (n)
 	{
 		IOArr = new IO*[N];
-	}
+	}*/
 	//ChildsTree->Insert(ID);
 	Orph = false;
 	S = New;
@@ -122,6 +122,10 @@ int Process::GetN()
 {
 	return N;
 }
+void Process::GetFirstIO(IO*& ioTemp)
+{
+	IOq.peek(ioTemp);
+}
 //Process* Process::GetChildPtr()
 //{
 //	return ChildPtr;
@@ -133,27 +137,28 @@ bool Process::GetOrph()
 void Process::PrintProcessInfo()
 {
 	cout << "TT" << " " << " " << " " << " " << " " << "PID" << " " << " " << " " << " " << " " << "AT" << " " << " " << " " << " " << " " << "CT" << " " << " " << " " << " " << " " << "IO_D" << " " << " " << " " << " " << " " << "WT" << " " << " " << " " << " " << " " << "RT" << " " << " " << " " << " " << " " << "TRT" << endl;
-	cout << TT << " " << " " << " " << " " << " " << ID << " " << " " << " " << " " << " " << AT << " " << " " << " " << " " << " " << CT << " " << " " << " " << " " << " " << IOArr[0]->GetDuration() << " " << " " << " " << " " << " " << WT << " " << " " << " " << " " << " " << RT << " " << " " << " " << " " << " " << TRT << endl;
+	cout << TT << " " << " " << " " << " " << " " << ID << " " << " " << " " << " " << " " << AT << " " << " " << " " << " " << " " << CT << " " << " " << " " << " " << " " << " hena feeh IOD" << " " << " " << " " << " " << " " << WT << " " << " " << " " << " " << " " << RT << " " << " " << " " << " " << " " << TRT << endl;
 }
-void Process::AddIO(IO *Arr[])
+
+void Process::AddIO(LinkedQueue<IO*> ioq)
 {
-	for (int i = 0; i < N; i++)
-	{
-		IOArr[i] = Arr[i];
-	}
+	IOq = ioq; //needs copy constructor
 }
+
+
 //void Process::AddChild(int t, int rct)
 //{
 //	ChildPtr = new Process(t, s->getChildID(), rct, 0);
 //	s->incrementChildID();
 //}
+
 Process::~Process()
 {
-	for (int i = 0; i < N; i++)
+	/*for (int i = 0; i < N; i++)
 	{
 		delete IOArr;
 	}
-	IOArr = NULL;
+	IOArr = NULL;*/
 	//delete ChildPtr;
 	//ChildPtr = NULL;
 }
