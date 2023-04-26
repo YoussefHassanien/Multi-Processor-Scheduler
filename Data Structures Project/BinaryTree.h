@@ -18,48 +18,71 @@ public:
     {
          InsertBT(Root, value);
     }
-
     // Search for a value in the tree
     bool Search(T value) 
     {
         return SearchBT(Root, value);
     }
-private:
-    // Helper function to insert a node with the given value
-    void InsertBT(TreeNode<T>*& node, T value) 
+    // Destroy the whole tree
+    void Destroy()
     {
-        if (Root == nullptr)
+        DestroyTree(Root);
+    }
+    // Delete a specific node and all its children
+    void Delete(T value)
+    {
+        DeleteNode(Root, value);
+    }
+private:
+    // The Private Insert Function
+    void InsertBT(TreeNode<T>*& root, T value) 
+    {
+        if (!Root)
+        {
             Root = new TreeNode<T>(value);
-
-   /*     else if (value < node->GetData()) 
-        {
-            InsertBT(node->GetLeft(), value);
-        }*/
-        else 
-        {
-            InsertBT(node->GetRight(), value);   
-        }
+            return;
+        } 
+        
+        InsertBT(root->GetLeft(), value);
+        InsertBT(root->GetRight(), value);   
     }
 
-    // Helper function to search for a value in the tree
-    bool SearchBT(TreeNode<T>* node, T value)
+    // The Private Search Function
+    bool SearchBT(TreeNode<T>* root, T value)
     {
-        if (node == nullptr) 
+        if (!root)  return false;
+        else if (value == *root->GetData()) return true;     
+        SearchBT(root->GetLeft(), value);
+        SearchBT(root->GetRight(), value);
+    }
+    // The Private Destroy Function
+    void DestroyTree(TreeNode<T>*& root)
+    {
+        if (root)
         {
-            return false;
+            DestroyTree(root->GetLeft());
+            DestroyTree(root->GetRight());
+            delete root;
+            root = nullptr;
         }
-        else if (value == node->GetData()) 
+    }
+    // The Private Delete Function
+    void DeleteNode(TreeNode<T>*& root,T value)
+    {
+        if (!root) return;
+        if (SearchBT(root, value))
         {
-            return true;
+            if (value == *root->GetData())
+                DestroyTree(root);
+            
+            else
+            {
+                DeleteNode(root->GetLeft(), value);
+                DeleteNode(root->GetRight(), value);
+            }
+    
         }
-        else if (value < node->GetData()) 
-        {
-            return SearchBT(node->GetLeft(), value);
-        }
-        else 
-        {
-            return SearchBT(node->GetRight(), value);
-        }
+
     }
 };
 #endif

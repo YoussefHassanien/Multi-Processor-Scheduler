@@ -163,3 +163,14 @@ ostream& operator<<(ostream& output, Process& p)
 	output << p.ID;
 	return output;
 }
+
+
+bool operator==(Process& p1, Process& p2)
+{
+	return (p1.GetID()==p2.GetID()) ;
+}
+
+bool operator==(int value, Process& p)
+{
+	return (value==p.GetID());
+}
