@@ -26,6 +26,7 @@ Scheduler::Scheduler(): UI(this)
 	ForkPercent = 0;
 	AvgUtil = 0;
 	StealLimitPercent = 0;
+	inRTF=0;
 }
 
 //destructor
