@@ -46,6 +46,10 @@ private:
 	int AvgUtil;                           //Average Utilization for all Processors
 	int StealLimitPercent; //This percentage should be less than 40% and if it exeeds this percentage the stealing between processor should start
 	int ShortestListIdx;                   //Index of the processor with the shortest ready list
+	int ShortestFCFSListIdx;               //Index of the FCFS processor with the shortest ready list
+	int ShortestSJFListIdx;                //Index of the SJF processor with the shortest ready list
+	int ShortestRRListIdx;                 //Index of the RR processor with the shortest ready list
+	int inRTF;                             //RTF read from the input file
 
 
 public:
@@ -76,5 +80,13 @@ public:
 	void Set_Last_Child_ID(int x);        //Setter for the last child ID
 	void Set_ShortestListIdx();           //Setter for the Shortest List Index
 	int Get_ShortestLlistIdx();           //Getter for the Shortest List Index
+	int Get_ShortestFCFS();               //Getter for the Shortest FCFS List Index
+	void Set_ShortestSJF();               //Setter for the Shortest SJF List Index
+	int Get_ShortestSJF();                //Getter for the Shortest SJF List Index
+	void Set_ShortestRR();                //Setter for the Shortest RR List Index
+	int Get_ShortestRR();                 //Getter for the Shortest RR List Index
+	void FromRRtoShortestSJF(Process*p);  //Takes the running process from the RR processor and inserts it in the shortest SJF RDY queue
+	void FromFCFStoShortestRR(Process* p);//Takes the running process from the FCFS processor and inserts it in the shortest RR RDY queue
+	int GetRTF();                         //Getter for the RTF
 };
 #endif
