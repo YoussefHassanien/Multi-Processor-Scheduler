@@ -17,6 +17,7 @@ private:
 		, TRT // Turnaround Duration
 		, WT // Waiting Time
 		, N // Number of Times the process requests I/O
+		,RunningFor//How long the process has been running so far
 		;
 	Scheduler* s;
 	LinkedQueue<IO*>* IOqueue; //IOs Queue for each process
@@ -51,6 +52,7 @@ public:
 	int GetTRT();                                                    //Getter for the Turnarround time
 	int GetWT();                                                     //Getter for the Wait Time
 	int GetN();                                                      //Getter for the number of IOs
+	int GetRunningFor();                                             //Getter for how long the process has been running so far
 	void GetFirstIO(IO*& ioTemp);                                    //Getter for the front IO in the IOs queue
 	BinaryTree<Process*>* GetChildsTree();                           //Getter for the ChildsTree
 	bool CheckIO_D();
