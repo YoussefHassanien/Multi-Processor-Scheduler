@@ -52,6 +52,7 @@ public:
 	int GetWT();                                                     //Getter for the Wait Time
 	int GetN();                                                      //Getter for the number of IOs
 	void GetFirstIO(IO*& ioTemp);                                    //Getter for the front IO in the IOs queue
+	BinaryTree<Process*>* GetChildsTree();                           //Getter for the ChildsTree
 	bool CheckIO_D();
 	void AddChilds(Process*child1,Process*child2);                   //Add 2 Childs to the Childs Tree
 	void AddIO(LinkedQueue<IO*>* ioq);                               //Getter for the Orphan boolean

@@ -135,6 +135,11 @@ void Process::GetFirstIO(IO*& ioTemp)
 	IOqueue->peek(ioTemp);
 }
 
+BinaryTree<Process*>* Process::GetChildsTree()
+{
+	return ChildsTree;
+}
+
 bool Process::CheckIO_D()
 {
 	IO* tempIO;
