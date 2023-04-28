@@ -23,6 +23,7 @@ public:
 	void Print_List();                              //Prints ready list processes
 	string Get_Processor_Type();                    //Returns the processor type
 	int GetRDYListCount();                          //Returns the number of processes in the ready list
+	void FCFStoRR_Migration();                      //Controls the process migration from FCFS processor to RR processor
 	~FCFS();                                        //Destructor
 	         
 };
