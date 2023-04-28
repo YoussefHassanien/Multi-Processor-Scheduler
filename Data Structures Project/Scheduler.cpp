@@ -268,7 +268,7 @@ void Scheduler::simulation()
 			
 			if (FCFS* FCFSptr = dynamic_cast<FCFS*>(PArr[i]))  // the current processor is a FCFS processor
 			{
-				//FCFSptr->FCFStoRR_Migration
+				FCFSptr->FCFStoRR_Migration();
 			}
 			else if (RoundRobin* RRptr = dynamic_cast<RoundRobin*>(PArr[i])) // the current processor is a RR processor 
 			{
