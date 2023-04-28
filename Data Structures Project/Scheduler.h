@@ -53,6 +53,7 @@ private:
 	int ShortestSJFListIdx;                //Index of the SJF processor with the shortest ready list
 	int ShortestRRListIdx;                 //Index of the RR processor with the shortest ready list
 	int inRTF;                             //RTF read from the input file
+	int inMaxW;                            //MaxW read from the input file
 
 
 public:
