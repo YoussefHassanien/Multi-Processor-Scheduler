@@ -64,6 +64,7 @@ public:
 	void PrintProcessInfo();                                         //Prints the Processes info
 	void DecrementCT();                                              //decrements the CT by one 
 	void IncrementRunningFor();                                      //Increments RunningFor by one 
+	int WTsofar();                                                   //Calculates the WT so far
 	friend ostream& operator<<(ostream& output,Process &p);          //<< Operator overloading
     friend bool operator ==(Process& p1,Process&p2);                 //== Operator Overloading 
 	friend bool operator==(int value,Process& p);                    //== Operator Overloading when the Process ID is sent instead of 2 Processes
