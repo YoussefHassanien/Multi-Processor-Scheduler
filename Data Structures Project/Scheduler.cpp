@@ -427,6 +427,70 @@ int Scheduler::Get_ShortestLlistIdx()
 	return ShortestListIdx;
 }
 
+
+//Setter for the Shortest FCFS List Index
+void Scheduler::Set_ShortestFCFS()
+{
+	ShortestFCFSListIdx = 0;
+	for (int i = 0; i < SJF_ProcessorsCnt; i++)
+		if (PArr[i]->SumCT() < PArr[ShortestFCFSListIdx]->SumCT())
+			ShortestFCFSListIdx = i;
+}
+
+//Getter for the Shortest FCFS List Index
+int Scheduler::Get_ShortestFCFS()
+{
+	return ShortestFCFSListIdx;
+}
+
+//Setter for the Shortest SJF List Index
+void Scheduler::Set_ShortestSJF()
+{
+	ShortestSJFListIdx = FCFS_ProcessorsCnt;
+	for (int i = FCFS_ProcessorsCnt; i < RR_ProcessorsCnt; i++)
+		if (PArr[i]->SumCT() < PArr[ShortestSJFListIdx]->SumCT())
+			ShortestSJFListIdx = i;
+}
+
+//Getter for the Shortest SJF List Index
+int Scheduler::Get_ShortestSJF()
+{
+	return ShortestSJFListIdx;
+}
+
+//Setter for the Shortest RR List Index
+void Scheduler::Set_ShortestRR()
+{
+	ShortestRRListIdx = SJF_ProcessorsCnt;
+	for (int i = SJF_ProcessorsCnt; i < RR_ProcessorsCnt; i++)
+		if (PArr[i]->SumCT() < PArr[ShortestRRListIdx]->SumCT())
+			ShortestRRListIdx = i;
+}
+
+//Getter for the Shortest RR List Index
+int Scheduler::Get_ShortestRR()
+{
+	return ShortestRRListIdx;
+}
+
+//Takes the running process from the RR processor and inserts it in the shortest SJF RDY queue
+void Scheduler::FromRRtoShortestSJF(Process* p)
+{
+	PArr[ShortestSJFListIdx]->AddToRdy(p);
+}
+
+//Takes the running process from the RR processor and inserts it in the shortest SJF RDY queue
+void Scheduler::FromFCFStoShortestRR(Process* p)
+{
+	PArr[ShortestRRListIdx]->AddToRdy(p);
+}
+
+//Getter for RTF 
+int Scheduler::GetRTF()
+{
+	return inRTF;
+}
+
 //random = generaterandom(1, 100);
 //if (random < 10 && !blocklist.isEmpty()) 
 //{
