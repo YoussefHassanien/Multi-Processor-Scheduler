@@ -92,5 +92,6 @@ public:
 	void FromRRtoShortestSJF(Process*p);  //Takes the running process from the RR processor and inserts it in the shortest SJF RDY queue
 	void FromFCFStoShortestRR(Process* p);//Takes the running process from the FCFS processor and inserts it in the shortest RR RDY queue
 	int GetRTF();                         //Getter for the RTF
+	int GetMaxW();                        //Getter for the MaxW
 };
 #endif
