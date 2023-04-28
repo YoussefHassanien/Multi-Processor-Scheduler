@@ -46,6 +46,7 @@ void SJF:: ScheduleAlgo()
 	else if (isbusy) 
 	{
 		RUNNING->DecrementCT();
+		RUNNING->IncrementRunningFor();
 	}
 
 
