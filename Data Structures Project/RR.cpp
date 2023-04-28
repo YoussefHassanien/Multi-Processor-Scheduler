@@ -42,6 +42,7 @@ void RoundRobin::ScheduleAlgo()
 	{
 		stepscounter++;
 		RUNNING->DecrementCT();
+		RUNNING->IncrementRunningFor();
 	}
 
 	if  (stepscounter==Time_Slice)   //the current timestep is the Round Robin timeslice
