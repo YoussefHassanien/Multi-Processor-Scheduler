@@ -76,6 +76,7 @@ void Scheduler::readfileparameters()
 		string MaxW;
 		InFile >> MaxW;
 		int intMaxW = stoi(MaxW);
+		inMaxW = intMaxW;
 		string STL;
 		InFile >> STL;
 		int intSTL = stoi(STL);
