@@ -104,6 +104,7 @@ void FCFS::ScheduleAlgo()
 	else if (isbusy && RUNNING->GetCT() != 0) 
 	{
 		RUNNING->DecrementCT();
+		RUNNING->IncrementRunningFor();
 	}
 
 }
