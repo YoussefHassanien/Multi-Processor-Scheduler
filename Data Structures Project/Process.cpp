@@ -56,6 +56,10 @@ void Process::DecrementCT()
 	CT--;
 }
 
+void Process::IncrementRunningFor()
+{
+	RunningFor++;
+}
 
 void Process::SetS(int s)
 {
