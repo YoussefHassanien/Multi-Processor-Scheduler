@@ -27,6 +27,7 @@ Scheduler::Scheduler(): UI(this)
 	AvgUtil = 0;
 	StealLimitPercent = 0;
 	inRTF=0;
+	inMaxW=0;
 }
 
 //destructor
@@ -76,6 +77,7 @@ void Scheduler::readfileparameters()
 		string MaxW;
 		InFile >> MaxW;
 		int intMaxW = stoi(MaxW);
+		inMaxW=intMaxW;
 		inMaxW = intMaxW;
 		string STL;
 		InFile >> STL;
@@ -492,6 +494,11 @@ int Scheduler::GetRTF()
 	return inRTF;
 }
 
+//Getter for MaxW
+int Scheduler::GetMaxW()
+{
+	return inMaxW;
+}
 //random = generaterandom(1, 100);
 //if (random < 10 && !blocklist.isEmpty()) 
 //{
