@@ -61,6 +61,11 @@ void Process::IncrementRunningFor()
 	RunningFor++;
 }
 
+int Process::WTsofar()
+{
+	return (s->getTimeStep()-AT-RunningFor);
+}
+
 void Process::SetS(int s)
 {
 	switch (s)
