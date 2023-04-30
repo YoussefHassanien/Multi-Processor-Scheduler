@@ -2,9 +2,9 @@
   Process.cpp
   Processor.cpp
   RR.cpp
-  SJF.cpp
   Scheduler.cpp
-D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\Scheduler.cpp(249,6): warning C4101: 'random': unreferenced local variable
+D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\Scheduler.cpp(254,6): warning C4101: 'random': unreferenced local variable
+  SJF.cpp
   Source.cpp
   UI_Info.cpp
   Generating Code...

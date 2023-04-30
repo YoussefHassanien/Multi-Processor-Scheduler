@@ -84,6 +84,7 @@ public:
 	void Set_Last_Child_ID(int x);        //Setter for the last child ID
 	void Set_ShortestListIdx();           //Setter for the Shortest List Index
 	int Get_ShortestLlistIdx();           //Getter for the Shortest List Index
+	void Set_ShortestFCFS();              //Setter for the Shortest FCFS List Index 
 	int Get_ShortestFCFS();               //Getter for the Shortest FCFS List Index
 	void Set_ShortestSJF();               //Setter for the Shortest SJF List Index
 	int Get_ShortestSJF();                //Getter for the Shortest SJF List Index
