@@ -5,12 +5,23 @@ using namespace std;
 #include "UI_Info.h"
 int main()
 {
-	Scheduler* S=new Scheduler;
-	S->simulation();
-	system("pause");
-	delete S;
-	S = NULL;
-
-	
+	//Scheduler* S=new Scheduler;
+	//S->simulation();
+	//system("pause");
+	//delete S;
+	//S = NULL;
+	Process* p1=new Process(1, 1, 10);
+	Process* p2=new Process(1, 2, 10);
+	Process* p3=new Process(1, 3, 10);
+	Process* p4=new Process(1, 4, 10);
+	Process* p5=new Process(1, 5, 10);
+	Process* p6=new Process(1, 6, 10);
+	Process* p7=new Process(1, 7, 10);
+	p1->AddChilds(p2, p3);
+	p2->AddChilds(p4, p5);
+	p3->AddChilds(p6, p7);
+	p1->GetChildsTree()->Delete(p7);
+	p1->GetChildsTree()->Delete(p6);
+	p1->GetChildsTree()->Print();
 	return 0;
 }

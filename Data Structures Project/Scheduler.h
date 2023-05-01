@@ -20,19 +20,22 @@ private:
 
 	string FLName;                         //File name
 	Processor* PArr[500];                  //Array of processors pointers 
-	int ForkProb;                          //Forking probability
 	LinkedQueue<Process*> newlist;         //NEW list
 	LinkedQueue<Process*>blocklist;        //BLK list
 	LinkedQueue<Process*>terminatedlist;   //TRM list
+	LinkedList<Process*>FamilyList;        // a list of pointers to the parent and its children and grandchildren
 	int Processor_Count;                   //Total count of processors
 	int FCFS_ProcessorsCnt;                //Count of the FCFS processors
 	int RR_ProcessorsCnt;                  //Count of the RR processors 
 	int SJF_ProcessorsCnt;                 //Count of the SJF processors
 	SIGKILL* SigKillarr[500];              //Array of signal kill pointers 
-	int timestep;                          //Time step
-	int timeSlice;                         //Time slice
+	int TimeStep;                          //Time step
+	int TimeSlice;                         //Time slice
 	int LastProcessID;                     //processes count for all processes in the program
-	int ChildID;                           //Final Processes count after forking +1 
+	int RTF;                               //RTF read from the input file
+	int MaxW;                              //MaxW read from the input file
+	int ForkProb;                          //Forking probability read from the input file
+	int STL;                               //The Time at which the stealing action occurs  
 	int TerminatedProcesses;               //counter for all terminated processes
 	UI_Info UI;                            //Pointer to the UI info class
 	int BLKCount;                          //Number of processes in the BLK list
@@ -47,13 +50,11 @@ private:
 	int KillPercent;                       //Percentage of Process Kill
 	int ForkPercent;                       //Percentage of Process Fork
 	int AvgUtil;                           //Average Utilization for all Processors
-	int StealLimitPercent; //This percentage should be less than 40% and if it exeeds this percentage the stealing between processor should start
+	int StealLimitPercent;                 //This percentage should be less than 40% and if it exeeds this percentage the stealing between processor should start
 	int ShortestListIdx;                   //Index of the processor with the shortest ready list
 	int ShortestFCFSListIdx;               //Index of the FCFS processor with the shortest ready list
 	int ShortestSJFListIdx;                //Index of the SJF processor with the shortest ready list
 	int ShortestRRListIdx;                 //Index of the RR processor with the shortest ready list
-	int inRTF;                             //RTF read from the input file
-	int inMaxW;                            //MaxW read from the input file
 
 
 public:
@@ -68,8 +69,6 @@ public:
 	void incrementprocessorcount();       //increments the count of processors once a new processor is declared
 	int generaterandom(int min, int max); //Generates a random number between a max and a min value
 	int getForkProb();                    //Getter for the forking probability
-	int getChildID();                     //Getter for the child ID
-	void incrementChildID();              //Increments the child ID by one
 	int getTimeStep();                    //Getter for the timestep
 	bool AllIsTerminated();               //checks that all ready lists are empty and all processors are idle
 	void simulation();                    //Simulation function
@@ -81,7 +80,6 @@ public:
 	void PrintBLKList();                  //Prints the BLK list
 	void PrintTRMList();                  //Prints the TRM list
 	void PrintRunningList();              //Prints the running processes
-	void Set_Last_Child_ID(int x);        //Setter for the last child ID
 	void Set_ShortestListIdx();           //Setter for the Shortest List Index
 	int Get_ShortestLlistIdx();           //Getter for the Shortest List Index
 	void Set_ShortestFCFS();              //Setter for the Shortest FCFS List Index 
@@ -94,5 +92,7 @@ public:
 	void FromFCFStoShortestRR(Process* p);//Takes the running process from the FCFS processor and inserts it in the shortest RR RDY queue
 	int GetRTF();                         //Getter for the RTF
 	int GetMaxW();                        //Getter for the MaxW
+	void IntiateForking(Process* running);//The Function that checks if the running process in the FCFS will fork or not then makes all the necessary operations if it will
+	//void AddtoFCFS_RDY(int Processor_id); //Adds the forked process to the right FCFS ready queue
 };
 #endif

@@ -8,11 +8,9 @@ class FCFS : public Processor
 private:
 	LinkedList<Process*> RDYList;                   //RDY list
 	LinkedList<int> RDYListIDs;                     //list of ID of processes in the RDY list
-	LinkedList<Process*>FamilyList;                 // a list of pointers to the parent and its children and grandchildren
-	int Fork_Prob;
 
 public:
-	FCFS(Scheduler* Sptr,int id=0,int prob=0);      //constructor
+	FCFS(Scheduler* Sptr,int id=0);      //constructor
 	void AddToRdy(Process* p);                      //Adds a process to the processor ready list
 	void deleteprocess(Process*& p);                //deletes a give process when it moves to another queue or to being blocked
 	void ScheduleAlgo();                            //Schedueling algorithm

@@ -28,7 +28,7 @@ class Process;
 
 		Processor(Scheduler* Sptr);                                //Constructor
 		virtual void AddToRdy(Process* p) = 0;                     //Adds a process to the processor ready list
-		virtual void deleteprocess(Process*& p) = 0;   //deletes a give process when it moves to another queue or to being blocked 
+		virtual void deleteprocess(Process*& p) = 0;   //deletes a given process when it moves to another queue or to being blocked 
 		virtual void ScheduleAlgo() = 0;                           //Schedueling algorithm
 		void setisbusy(bool b);                                    //sets the processor running state
 		Process* getRunning();                                     //gets the process in running state

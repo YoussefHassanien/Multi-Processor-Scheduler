@@ -33,6 +33,11 @@ public:
     {
         DeleteNode(Root, value);
     }
+    //Prints the whole tree
+    void Print()
+    {
+        PrintBT(Root);
+    }
     ~BinaryTree()
     {
         Destroy();
@@ -44,18 +49,21 @@ private:
         if (!Root)
         {
             Root = new TreeNode<T>(value);
-            return;
+           
         } 
-        
-        InsertBT(root->GetLeft(), value);
-        InsertBT(root->GetRight(), value);   
+        else 
+        {
+            InsertBT(root->GetLeft(), value);
+            InsertBT(root->GetRight(), value);
+        }
+   
     }
 
     // The Private Search Function
     bool SearchBT(TreeNode<T>* root, T value)
     {
         if (!root)  return false;
-        else if (value == *root->GetData()) return true;     
+        else if (value == root->GetData()) return true;     
         SearchBT(root->GetLeft(), value);
         SearchBT(root->GetRight(), value);
     }
@@ -76,7 +84,7 @@ private:
         if (!root) return;
         if (SearchBT(root, value))
         {
-            if (value == *root->GetData())
+            if (value == root->GetData())
                 DestroyTree(root);
             
             else
@@ -87,6 +95,13 @@ private:
     
         }
 
+    }
+    void PrintBT(TreeNode<T>* root)
+    {
+        if (!root) return;
+        PrintBT(root->GetLeft());
+        PrintBT(root->GetRight());
+        cout << *root->GetData() << endl;
     }
 };
 #endif
