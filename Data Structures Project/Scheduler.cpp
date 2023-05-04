@@ -303,7 +303,7 @@ void Scheduler::simulation()
 			}
 
 		}
-
+		WorkStealing();
 		UI.PrintInteractiveMode();
 		TimeStep++;
 	}
@@ -486,6 +486,34 @@ void Scheduler::IntiateForking(Process*running)
 			running->AddChildren(child1, child2);
 		}
 	}
+}
+
+void Scheduler::Set_LongestListIdx()
+{
+	LongestListIdx = 0;
+	for (int i = 1; i < Processor_Count; i++)
+	{
+		if (PArr[i]->GetTotalCT() < PArr[LongestListIdx]->GetTotalCT())
+			LongestListIdx = i;
+	}
+}
+
+void Scheduler::WorkStealing()
+{
+		float Steal_Limit;
+		Process* p = NULL;
+		Set_ShortestListIdx(); //loops on the processors array to set the shortest index to the shortest list
+		Set_LongestListIdx(); //loops on the processors array to set the longest index to the longest list
+		Steal_Limit = (float)(PArr[LongestListIdx]->SumCT() - PArr[ShortestListIdx]->SumCT()) / PArr[LongestListIdx]->SumCT();
+		if (Steal_Limit < 0.4)
+			return;
+		if (TimeStep == 0 || TimeStep % STL != 0)
+			return;
+		PArr[LongestListIdx]->deleteprocess(p);
+		PArr[ShortestListIdx]->AddToRdy(p);
+		WorkStealing(); // calls the function recursively until one of the exit conditions is satisfied 
+
+	
 }
 
 
