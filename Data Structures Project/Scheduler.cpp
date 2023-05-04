@@ -313,7 +313,7 @@ void Scheduler::simulation()
 
 
 //Moves the process from NEW list to RDY list
-void Scheduler::AddtoRdyLists()
+void Scheduler::AddtoRdyLists(Process*p)
 {
 	if (p->GetAT() == TimeSlice)
 	{
