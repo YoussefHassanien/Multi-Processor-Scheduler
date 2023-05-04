@@ -234,9 +234,11 @@ void Scheduler::simulation()
 	readfileparameters();
 	while (!AllIsTerminated())
 	{
-
+                Process*p;
 		for (int i = 0; i < LastProcessID; i++) //tamam
 		{
+			for (int i = 0; i < Processor_Count; i++)
+				PArr[i]->AddToRdy(p);
 			AddtoRdyLists();
 		}
 
