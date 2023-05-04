@@ -234,13 +234,14 @@ void Scheduler::simulation()
 	readfileparameters();
 	while (!AllIsTerminated())
 	{
-                Process*p=nullptr;
+        
+		Process* p=nullptr;
 		for (int i = 0; i < LastProcessID; i++) //tamam
 		{
-			for (int i = 0; i < Processor_Count; i++)
-				PArr[i]->AddToRdy(p);
-			AddtoRdyLists();
+			newlist.peek(p);
+			AddtoRdyLists(p);
 		}
+		
 
 		for (int i = 0; i < Processor_Count; i++) 
 		{
@@ -314,9 +315,18 @@ void Scheduler::simulation()
 //Moves the process from NEW list to RDY list
 void Scheduler::AddtoRdyLists()
 {
-	Process* p=nullptr;
-	Set_ShortestListIdx();
-	PArr[ShortestListIdx]->AddToRdy(p);
+	if (p->GetAT() == TimeSlice)
+	{
+		newlist.dequeue(p);
+		for (int i = 0; i < Processor_Count; i++)
+		{
+			if (PArr[i]->SumCT() == 0)
+				PArr[i]->AddToRdy(p);
+		}
+		Set_ShortestListIdx();
+		PArr[ShortestListIdx]->AddToRdy(p);
+	}
+		
 
 }
 
