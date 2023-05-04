@@ -499,21 +499,5 @@ int Scheduler::GetMaxW()
 {
 	return inMaxW;
 }
-//random = generaterandom(1, 100);
-//if (random < 10 && !blocklist.isEmpty()) 
-//{
-//	blocklist.dequeue(TopBlock);
-//	if (TopBlock!=NULL)
-//	{
-//		int randProcessor = generaterandom(0, Processor_Count - 1);
-//		PArr[randProcessor]->AddToRdy(TopBlock);
-//		BLKCount--;
-//	}
-//}
 
-//int TermRand = generaterandom(1, (ChildID-1));
-//for (int i = 0; i < Processor_Count; i++)
-//{
-//	PArr[i]->RandomTermination(TermRand);
-//}
 
