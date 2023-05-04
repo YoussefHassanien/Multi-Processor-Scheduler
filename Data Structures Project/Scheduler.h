@@ -81,15 +81,13 @@ public:
 	void PrintTRMList();                  //Prints the TRM list
 	void PrintRunningList();              //Prints the running processes
 	void Set_ShortestListIdx();           //Setter for the Shortest List Index
-	int Get_ShortestLlistIdx();			  //Getter for the Shortest List Index
 	void Set_ShortestFCFS();			  //Setter for the Shortest FCFS List Index
-	int Get_ShortestLlistIdx();           //Getter for the Shortest List Index
-	void Set_ShortestFCFS();              //Setter for the Shortest FCFS List Index 
 	int Get_ShortestFCFS();               //Getter for the Shortest FCFS List Index
+	int Get_ShortestLlistIdx();           //Getter for the Shortest List Index 
 	void Set_ShortestSJF();               //Setter for the Shortest SJF List Index
 	int Get_ShortestSJF();                //Getter for the Shortest SJF List Index
-	void Set_ShortestRR();                //Setter for the Shortest RR List Index
 	int Get_ShortestRR();                 //Getter for the Shortest RR List Index
+	void Set_ShortestRR();                //Setter for the Shortest RR List Index 
 	void FromRRtoShortestSJF(Process*p);  //Takes the running process from the RR processor and inserts it in the shortest SJF RDY queue
 	void FromFCFStoShortestRR(Process* p);//Takes the running process from the FCFS processor and inserts it in the shortest RR RDY queue
 	int GetRTF();                         //Getter for the RTF

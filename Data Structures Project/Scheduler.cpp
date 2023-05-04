@@ -234,7 +234,7 @@ void Scheduler::simulation()
 	readfileparameters();
 	while (!AllIsTerminated())
 	{
-                Process*p;
+                Process*p=nullptr;
 		for (int i = 0; i < LastProcessID; i++) //tamam
 		{
 			for (int i = 0; i < Processor_Count; i++)
@@ -314,7 +314,7 @@ void Scheduler::simulation()
 //Moves the process from NEW list to RDY list
 void Scheduler::AddtoRdyLists()
 {
-	Process* p;
+	Process* p=nullptr;
 	Set_ShortestListIdx();
 	PArr[ShortestListIdx]->AddToRdy(p);
 
