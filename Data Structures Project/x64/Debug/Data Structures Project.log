@@ -4,9 +4,18 @@
   Processor.cpp
   RR.cpp
   Scheduler.cpp
+<<<<<<< HEAD
 C:\Users\Doha ElBeltagy\source\repos\Data-Structure-Project\Data Structures Project\Scheduler.cpp(254,6): warning C4101: 'random': unreferenced local variable
+=======
+D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\Scheduler.cpp(231,6): warning C4101: 'random': unreferenced local variable
+>>>>>>> 8030d642fdce49c7abd57bd377a005f2885c6ff6
   SJF.cpp
   Source.cpp
   UI_Info.cpp
   Generating Code...
+<<<<<<< HEAD
   Data Structures Project.vcxproj -> C:\Users\Doha ElBeltagy\Source\Repos\Data-Structure-Project\x64\Debug\Data Structures Project.exe
+=======
+D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\BinaryTree.h(69): warning C4715: 'BinaryTree<Process *>::SearchBT': not all control paths return a value
+  Data Structures Project.vcxproj -> D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\x64\Debug\Data Structures Project.exe
+>>>>>>> 8030d642fdce49c7abd57bd377a005f2885c6ff6

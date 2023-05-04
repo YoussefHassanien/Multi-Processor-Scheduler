@@ -8,9 +8,9 @@
 //Constructor
 Scheduler::Scheduler(): UI(this)
 {
-	timeSlice = 0;
+	TimeSlice = 0;
 	Processor_Count = 0;
-	timestep = 1;
+	TimeStep = 1;
 	ForkProb = 0;
 	TerminatedProcesses = 0;
 	BLKCount = 0;
@@ -26,8 +26,9 @@ Scheduler::Scheduler(): UI(this)
 	ForkPercent = 0;
 	AvgUtil = 0;
 	StealLimitPercent = 0;
-	inRTF=0;
-	inMaxW=0;
+	RTF=0;
+	MaxW=0;
+	STL = 0;
 }
 
 //destructor
@@ -54,43 +55,35 @@ void Scheduler::readfileparameters()
 		Process* p = NULL;
 		string fcfs;
 		InFile >> fcfs;
-		int intfcfs = stoi(fcfs);
-                FCFS_ProcessorsCnt = intfcfs;
+		FCFS_ProcessorsCnt = stoi(fcfs);
 
 		string sjf;
 		InFile >> sjf;
-		int intsjf = stoi(sjf);
-                SJF_ProcessorsCnt = intsjf;
+		SJF_ProcessorsCnt = stoi(sjf);
 
 		string rr;
 		InFile >> rr;
-		int intrr = stoi(rr);
-                RR_ProcessorsCnt = intrr;
+		RR_ProcessorsCnt = stoi(rr);
 
 		string timeslice;
 		InFile >> timeslice;
-		int inttimeslice = stoi(timeslice);
-		string RTF;
-		InFile >> RTF;
-		int intRTF = stoi(RTF);
-		inRTF = intRTF;
-		string MaxW;
-		InFile >> MaxW;
-		int intMaxW = stoi(MaxW);
-		inMaxW=intMaxW;
-		inMaxW = intMaxW;
-		string STL;
-		InFile >> STL;
-		int intSTL = stoi(STL);
+		TimeSlice = stoi(timeslice);
+		string rtf;
+		InFile >> rtf;
+		RTF = stoi(rtf);
+		string maxw;
+		InFile >> maxw;
+		MaxW = stoi(maxw);
+		string stl;
+		InFile >> stl;
+		STL = stoi(stl);
 		string Fork;
 		InFile >> Fork;
-		int forkprob = stoi(Fork);
+		ForkProb = stoi(Fork);
 		string processes;
 		InFile >> processes;
-		int processesno = stoi(processes);
-		LastProcessID = processesno;
-		Set_Last_Child_ID(LastProcessID);
-		for (int i = 0; i < processesno; i++)
+		LastProcessID = stoi(processes);
+		for (int i = 0; i < LastProcessID; i++)
 		{
 			//loop on the processes and read the data members of each
 			Process* p = new Process;
@@ -101,7 +94,6 @@ void Scheduler::readfileparameters()
 			p->SetCT(stoi(CT));
 			p->SetN(stoi(N));
 			LinkedQueue<IO*>* IOq= new LinkedQueue<IO*>;
-			//IO** IOarr = new IO*[stoi(N)];
 			for (int i = 0; i < stoi(N); i++)
 			{
 				string openbracket;
@@ -121,7 +113,6 @@ void Scheduler::readfileparameters()
 				io->SetDuration(intIO_D);
 				io->SetRequest(intIO_R);
 				IOq->enqueue(io);
-				//IOarr[i] = io;
 				continue;
 
 			}
@@ -145,21 +136,21 @@ void Scheduler::readfileparameters()
 			i++;
 			continue;
 		}
-		for (int i = 0; i < intfcfs; i++)
+		for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 		{
-			Processor* p = new FCFS(this,Processor_Count + 1, forkprob);
+			Processor* p = new FCFS(this,Processor_Count + 1);
 			PArr[Processor_Count] = p;
 			Processor_Count++;
 		}
-		for (int i = 0; i < intsjf; i++)
+		for (int i = 0; i < SJF_ProcessorsCnt; i++)
 		{
 			Processor* p = new SJF(this,Processor_Count + 1);
 			PArr[Processor_Count] = p;
 			Processor_Count++;
 		}
-		for (int i = 0; i < intrr; i++)
+		for (int i = 0; i < RR_ProcessorsCnt; i++)
 		{
-			Processor* p = new RoundRobin(this,Processor_Count + 1, inttimeslice);
+			Processor* p = new RoundRobin(this,Processor_Count + 1, TimeSlice);
 			PArr[Processor_Count] = p;
 			Processor_Count++;
 		}
@@ -214,36 +205,22 @@ int Scheduler::generaterandom(int min, int max)
 	//Generate and return the Rabdom Number
 	return dis(gen);
 }
-
-//Getter fo rth eforking probability
+//Getter for the forking probability
 int Scheduler::getForkProb()
 {
 	return ForkProb;
 }
-
-//Getter for the child ID
-int Scheduler::getChildID()
-{
-	return ChildID;
-}
-
-//Increments the child ID by one
-void Scheduler::incrementChildID()
-{
-	ChildID++;
-}
-
 //Getter for the timestep
 int Scheduler::getTimeStep()
 {
-	return timestep;
+	return TimeStep;
 }
 
 
 //Checks if all the processes are terminated
 bool Scheduler::AllIsTerminated()
 {
-	return TerminatedProcesses == (ChildID - 1);
+	return TerminatedProcesses == LastProcessID;
 
 }
 
@@ -298,7 +275,7 @@ void Scheduler::simulation()
 				{
 					CurrentRunning->GetFirstIO(ioTemp); 
 					if (ioTemp!=nullptr) {
-						if (ioTemp->GetRequest() == timestep) //checks if the IO_R equals the current timestep
+						if (ioTemp->GetRequest() == TimeStep) //checks if the IO_R equals the current timestep
 						{
 							addtoblocklist(CurrentRunning);
 							PArr[i]->SetRunning(nullptr);
@@ -325,7 +302,7 @@ void Scheduler::simulation()
 		}
 
 		UI.PrintInteractiveMode();
-		timestep++;
+		TimeStep++;
 	}
 
 
@@ -339,7 +316,7 @@ void Scheduler::AddtoRdyLists(int& counter)
 	if (!newlist.isEmpty())
 	{
 		newlist.peek(Temp);
-		if (Temp->GetAT() == timestep)
+		if (Temp->GetAT() == TimeStep)
 		{
 			newlist.dequeue(Temp);
 			int i1 = counter % Processor_Count;
@@ -409,13 +386,6 @@ void Scheduler::PrintRunningList()
 			cout << *PArr[i]->getRunning() << "(P" << i + 1 << "), ";
 	}
 }
-
-//Setter for the last child ID
-void Scheduler::Set_Last_Child_ID(int x)
-{
-	ChildID = x + 1;
-}
-
 void Scheduler::Set_ShortestListIdx()
 {
 	ShortestListIdx = 0;
@@ -492,13 +462,28 @@ void Scheduler::FromFCFStoShortestRR(Process* p)
 //Getter for RTF 
 int Scheduler::GetRTF()
 {
-	return inRTF;
+	return RTF;
 }
 
 //Getter for MaxW
 int Scheduler::GetMaxW()
 {
-	return inMaxW;
+	return MaxW;
+}
+void Scheduler::IntiateForking(Process*running)
+{
+	if (running)
+	{
+		int RandomForkProb = generaterandom(1, 100);
+		if (RandomForkProb > 0 && RandomForkProb <= ForkProb)
+		{
+			LastProcessID++;
+			Process* child1 = new Process(TimeStep, LastProcessID, running->GetCT());
+			LastProcessID++;
+			Process* child2 = new Process(TimeStep, LastProcessID, running->GetCT());
+			running->AddChilds(child1, child2);
+		}
+	}
 }
 
 

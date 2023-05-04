@@ -1,10 +1,9 @@
 #include "FCFS.h"
 
 //Constructor
-FCFS::FCFS(Scheduler*Sptr,int id,int prob): Processor(Sptr)
+FCFS::FCFS(Scheduler*Sptr,int id): Processor(Sptr)
 {
 	ID = id;
-	Fork_Prob = prob;
 }
 
 //adds a process in the ready list

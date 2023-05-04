@@ -17,7 +17,7 @@ private:
 		, TRT // Turnaround Duration
 		, WT // Waiting Time
 		, N // Number of Times the process requests I/O
-		,RunningFor//How long the process has been running so far
+		, RunningFor //How long the process has been running so far
 		;
 	Scheduler* s;
 	LinkedQueue<IO*>* IOqueue; //IOs Queue for each process
@@ -66,7 +66,7 @@ public:
 	void IncrementRunningFor();                                      //Increments RunningFor by one 
 	int WTsofar();                                                   //Calculates the WT so far
 	friend ostream& operator<<(ostream& output,Process &p);          //<< Operator overloading
-    friend bool operator ==(Process& p1,Process&p2);                 //== Operator Overloading 
+    friend bool operator ==(Process& p1,Process& p2);                 //== Operator Overloading 
 	friend bool operator==(int value,Process& p);                    //== Operator Overloading when the Process ID is sent instead of 2 Processes
 	~Process();                                                      //Destructor
 };

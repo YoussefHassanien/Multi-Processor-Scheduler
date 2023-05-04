@@ -7,6 +7,7 @@ Process::Process(int at, int id, int ct, int n)
 	SetCT(ct);
 	SetN(n);
 	IOqueue = new LinkedQueue<IO*>;
+	ChildsTree = new BinaryTree<Process*>;
 	ChildsTree->Insert(this);
 	Orph = false;
 	S = New;
@@ -192,10 +193,10 @@ ostream& operator<<(ostream& output, Process& p)
 
 bool operator==(Process& p1, Process& p2)
 {
-	return (p1.GetID()==p2.GetID()) ;
+	return p1.GetID()==p2.GetID() ;
 }
 
 bool operator==(int value, Process& p)
 {
-	return (value==p.GetID());
+	return value==p.GetID();
 }
