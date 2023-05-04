@@ -43,6 +43,7 @@ void SJF:: ScheduleAlgo()
 		s->incrementRunningCount();
 		return;
 	}
+
 	else if (isbusy) 
 	{
 		RUNNING->DecrementCT();

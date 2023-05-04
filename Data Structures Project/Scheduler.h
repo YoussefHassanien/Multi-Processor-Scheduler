@@ -72,7 +72,7 @@ public:
 	int getTimeStep();                    //Getter for the timestep
 	bool AllIsTerminated();               //checks that all ready lists are empty and all processors are idle
 	void simulation();                    //Simulation function
-	void AddtoRdyLists(int& counter);     //Moves the process from NEW list to RDY list
+	void AddtoRdyLists();                 //Moves the process from NEW list to RDY list
 	void PrintProcessorList();            //Prints the processor list
 	int getBLKCount();                    //Getter for the count of blocked processes
 	void incrementRunningCount();         //Increments the number of running processes by one 
@@ -81,6 +81,8 @@ public:
 	void PrintTRMList();                  //Prints the TRM list
 	void PrintRunningList();              //Prints the running processes
 	void Set_ShortestListIdx();           //Setter for the Shortest List Index
+	int Get_ShortestLlistIdx();			  //Getter for the Shortest List Index
+	void Set_ShortestFCFS();			  //Setter for the Shortest FCFS List Index
 	int Get_ShortestLlistIdx();           //Getter for the Shortest List Index
 	void Set_ShortestFCFS();              //Setter for the Shortest FCFS List Index 
 	int Get_ShortestFCFS();               //Getter for the Shortest FCFS List Index
