@@ -308,6 +308,7 @@ void Scheduler::simulation()
 						}
 					}
 				}
+
 				//BLK to RDY
 				if (!blocklist.isEmpty()) //check BLK list
 				{
