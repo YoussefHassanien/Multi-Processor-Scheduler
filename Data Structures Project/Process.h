@@ -21,7 +21,7 @@ private:
 		;
 	Scheduler* s;
 	LinkedQueue<IO*>* IOqueue; //IOs Queue for each process
-	BinaryTree<Process*>* ChildsTree; //A Tree of the forked childs
+	BinaryTree<Process*>* ChildrenTree; //A Tree of the forked childs
 	bool Orph;
 	enum State
 	{
@@ -54,9 +54,9 @@ public:
 	int GetN();                                                      //Getter for the number of IOs
 	int GetRunningFor();                                             //Getter for how long the process has been running so far
 	void GetFirstIO(IO*& ioTemp);                                    //Getter for the front IO in the IOs queue
-	BinaryTree<Process*>* GetChildsTree();                           //Getter for the ChildsTree
+	BinaryTree<Process*>* GetChildrenTree();                           //Getter for the ChildsTree
 	bool CheckIO_D();
-	void AddChilds(Process*child1,Process*child2);                   //Add 2 Childs to the Childs Tree
+	void AddChildren(Process*child1,Process*child2);                   //Add 2 Childs to the Childs Tree
 	void AddIO(LinkedQueue<IO*>* ioq);                               //Getter for the Orphan boolean
 	bool GetOrph();                                                  //Getter for the orphan
 	void SetOrph(bool orph);                                         //Setter for the orphan

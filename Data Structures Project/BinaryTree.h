@@ -46,17 +46,20 @@ private:
     // The Private Insert Function
     void InsertBT(TreeNode<T>*& root, T value) 
     {
-        if (!Root)
+        if (!root)
         {
-            Root = new TreeNode<T>(value);
-           
-        } 
-        else 
+            root = new TreeNode<T>(value);
+            return;
+        }
+        else if(!root->GetLeft())
         {
             InsertBT(root->GetLeft(), value);
+        }
+        else if (!root->GetRight())
+        {
             InsertBT(root->GetRight(), value);
         }
-   
+
     }
 
     // The Private Search Function

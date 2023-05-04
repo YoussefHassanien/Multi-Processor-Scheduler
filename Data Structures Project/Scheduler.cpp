@@ -480,7 +480,7 @@ void Scheduler::IntiateForking(Process*running)
 			Process* child1 = new Process(TimeStep, LastProcessID, running->GetCT());
 			LastProcessID++;
 			Process* child2 = new Process(TimeStep, LastProcessID, running->GetCT());
-			running->AddChilds(child1, child2);
+			running->AddChildren(child1, child2);
 		}
 	}
 }

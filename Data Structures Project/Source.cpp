@@ -17,11 +17,15 @@ int main()
 	Process* p5=new Process(1, 5, 10);
 	Process* p6=new Process(1, 6, 10);
 	Process* p7=new Process(1, 7, 10);
-	p1->AddChilds(p2, p3);
-	p2->AddChilds(p4, p5);
-	p3->AddChilds(p6, p7);
-	p1->GetChildsTree()->Delete(p7);
-	p1->GetChildsTree()->Delete(p6);
-	p1->GetChildsTree()->Print();
+	p1->AddChildren(p2, p3);
+	p2->AddChildren(p4, p5);
+	p3->AddChildren(p6, p7);
+	p1->GetChildrenTree()->Delete(p6);
+	p1->GetChildrenTree()->Delete(p7);
+	p1->GetChildrenTree()->Print();
+	//cout << endl;
+	//p2->GetChildsTree()->Print();
+	//cout << endl;
+	//p3->GetChildsTree()->Print();
 	return 0;
 }
