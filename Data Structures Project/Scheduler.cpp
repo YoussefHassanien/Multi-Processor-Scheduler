@@ -480,10 +480,9 @@ void Scheduler::IntiateForking(Process*running)
 		if (RandomForkProb > 0 && RandomForkProb <= ForkProb)
 		{
 			LastProcessID++;
-			Process* child1 = new Process(TimeStep, LastProcessID, running->GetCT());
-			LastProcessID++;
-			Process* child2 = new Process(TimeStep, LastProcessID, running->GetCT());
-			running->AddChildren(child1, child2);
+			Process* child = new Process(TimeStep, LastProcessID, running->GetCT());
+			child->SetParent(running);
+			running->AddChild(child);
 		}
 	}
 }

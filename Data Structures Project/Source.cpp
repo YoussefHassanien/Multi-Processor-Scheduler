@@ -17,9 +17,9 @@ int main()
 	Process* p5=new Process(1, 5, 10);
 	Process* p6=new Process(1, 6, 10);
 	Process* p7=new Process(1, 7, 10);
-	p1->AddChildren(p2, p3);
-	p2->AddChildren(p4, p5);
-	p3->AddChildren(p6, p7);
+	p1->AddChild(p2);
+	p1->AddChild(p3);
+	cout << *p1 << " " << *p1->GetFirstChild() << " " << *p1->GetSecondChild();
 	//cout << endl;
 	//p2->GetChildsTree()->Print();
 	//cout << endl;

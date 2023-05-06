@@ -6,12 +6,13 @@ Process::Process(int at, int id, int ct, int n)
 	SetID(id);
 	SetCT(ct);
 	SetN(n);
+	if(n)
 	IOqueue = new LinkedQueue<IO*>;
 	Parent = nullptr;
+	FirstChild = nullptr;
+	SecondChild = nullptr;
 	Orph = false;
-	S = New;
-	
-	
+
 	// Termination time should be sent when the process moves from the running queue to the termination queue inside a processor
 	// Response time should be calculated when the process moves from the ready queue to the running queue inside a processor
 	// Turnaround duration should be calculated when the termination time arrives
@@ -66,31 +67,14 @@ int Process::WTsofar()
 	return (s->getTimeStep()-AT-RunningFor);
 }
 
-void Process::SetS(int s)
-{
-	switch (s)
-	{
-	default:New;
-		S = New;
-		break;
-	case(1):
-		S = Rdy;
-		break;
-	case(2):
-		S = Run;
-		break;
-	case(3):
-		S = Blck;
-		break;
-	case(4):
-		S = Term;
-		break;
-
-	}
-}
 void Process::SetOrph(bool orph)
 {
 	Orph = orph;
+}
+void Process::SetParent(Process* parent)
+{
+	if(!Parent)
+	Parent = parent;
 }
 int Process::GetID()
 {
@@ -132,6 +116,18 @@ bool Process::GetOrph()
 {
 	return Orph;
 }
+Process* Process::GetParent()
+{
+	return Parent;
+}
+Process* Process::GetFirstChild()
+{
+	return FirstChild;
+}
+Process* Process::GetSecondChild()
+{
+	return SecondChild;
+}
 void Process::PrintProcessInfo()
 {
 	cout << "TT" << " " << " " << " " << " " << " " << "PID" << " " << " " << " " << " " << " " << "AT" << " " << " " << " " << " " << " " << "CT" << " " << " " << " " << " " << " " << "IO_D" << " " << " " << " " << " " << " " << "WT" << " " << " " << " " << " " << " " << "RT" << " " << " " << " " << " " << " " << "TRT" << endl;
@@ -165,10 +161,19 @@ bool Process::CheckIO_D()
 	}
 }
 
-void Process::AddChildren(Process*child1,Process*child2)
+bool Process::AddChild(Process*child)
 {
-	FirstChild = child1;
-	SecondChild = child2;
+	if (!FirstChild)
+	{
+		FirstChild = child;
+		return true;
+	}
+	else if (!SecondChild)
+	{
+		SecondChild = child;
+		return true;
+	}
+	return false;
 }
 
 Process::~Process()
