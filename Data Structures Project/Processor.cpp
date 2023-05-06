@@ -93,6 +93,7 @@ int Processor::SumCT()
 	return (TotalCT);
 }
 
+
 //Destructor
 Processor::~Processor()
 {

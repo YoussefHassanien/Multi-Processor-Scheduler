@@ -1,34 +1,18 @@
-<<<<<<< HEAD
-c:\users\doha elbeltagy\source\repos\data-structure-project\data structures project\x64\debug\fcfs.obj
-c:\users\doha elbeltagy\source\repos\data-structure-project\data structures project\x64\debug\io.obj
-c:\users\doha elbeltagy\source\repos\data-structure-project\data structures project\x64\debug\process.obj
-c:\users\doha elbeltagy\source\repos\data-structure-project\data structures project\x64\debug\processor.obj
-c:\users\doha elbeltagy\source\repos\data-structure-project\data structures project\x64\debug\rr.obj
-c:\users\doha elbeltagy\source\repos\data-structure-project\data structures project\x64\debug\sjf.obj
-c:\users\doha elbeltagy\source\repos\data-structure-project\data structures project\x64\debug\source.obj
-c:\users\doha elbeltagy\source\repos\data-structure-project\data structures project\x64\debug\ui_info.obj
-c:\users\doha elbeltagy\source\repos\data-structure-project\data structures project\x64\debug\vc143.idb
-c:\users\doha elbeltagy\source\repos\data-structure-project\data structures project\x64\debug\vc143.pdb
-c:\users\doha elbeltagy\source\repos\data-structure-project\data structures project\x64\debug\data str.701ed52e.tlog\cl.command.1.tlog
-=======
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\vc143.pdb
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\vc143.idb
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\ui_info.obj
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\source.obj
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\sjf.obj
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\scheduler.obj
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\rr.obj
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\processor.obj
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\process.obj
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\io.obj
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\fcfs.obj
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\data structures project.ilk
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\x64\debug\data structures project.exe
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\x64\debug\data structures project.pdb
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\data str.701ed52e.tlog\cl.command.1.tlog
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\data str.701ed52e.tlog\cl.read.1.tlog
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\data str.701ed52e.tlog\cl.write.1.tlog
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\data str.701ed52e.tlog\link.command.1.tlog
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\data str.701ed52e.tlog\link.read.1.tlog
-d:\education\data structure and algorithims\data structure project\data structure project (multi core processor)\data structures project\x64\debug\data str.701ed52e.tlog\link.write.1.tlog
->>>>>>> 8030d642fdce49c7abd57bd377a005f2885c6ff6
+c:\data struct\data-structure-project\data structures project\x64\debug\vc143.pdb
+c:\data struct\data-structure-project\data structures project\x64\debug\vc143.idb
+c:\data struct\data-structure-project\data structures project\x64\debug\ui_info.obj
+c:\data struct\data-structure-project\data structures project\x64\debug\source.obj
+c:\data struct\data-structure-project\data structures project\x64\debug\sjf.obj
+c:\data struct\data-structure-project\data structures project\x64\debug\scheduler.obj
+c:\data struct\data-structure-project\data structures project\x64\debug\rr.obj
+c:\data struct\data-structure-project\data structures project\x64\debug\processor.obj
+c:\data struct\data-structure-project\data structures project\x64\debug\process.obj
+c:\data struct\data-structure-project\data structures project\x64\debug\io.obj
+c:\data struct\data-structure-project\data structures project\x64\debug\fcfs.obj
+c:\data struct\data-structure-project\x64\debug\data structures project.exe
+c:\data struct\data-structure-project\data structures project\x64\debug\data str.701ed52e.tlog\cl.command.1.tlog
+c:\data struct\data-structure-project\data structures project\x64\debug\data str.701ed52e.tlog\cl.read.1.tlog
+c:\data struct\data-structure-project\data structures project\x64\debug\data str.701ed52e.tlog\cl.write.1.tlog
+c:\data struct\data-structure-project\data structures project\x64\debug\data str.701ed52e.tlog\link.command.1.tlog
+c:\data struct\data-structure-project\data structures project\x64\debug\data str.701ed52e.tlog\link.read.1.tlog
+c:\data struct\data-structure-project\data structures project\x64\debug\data str.701ed52e.tlog\link.write.1.tlog

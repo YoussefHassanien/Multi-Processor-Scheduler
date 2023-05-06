@@ -84,9 +84,6 @@ int FCFS::GetRDYListCount()
 void FCFS::ScheduleAlgo()
 {
 	Process* tmp = nullptr;
-	Process* RDYPeek = nullptr;
-
-	RDYList.peek(RDYPeek);
 
 	if (RDYList.isEmpty() && !RUNNING) // if there is nothing in the ready list and no process is running
 		return;

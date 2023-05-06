@@ -139,9 +139,9 @@ void Process::PrintProcessInfo()
 	cout << TT << " " << " " << " " << " " << " " << ID << " " << " " << " " << " " << " " << AT << " " << " " << " " << " " << " " << CT << " " << " " << " " << " " << " " << " hena feeh IOD" << " " << " " << " " << " " << " " << WT << " " << " " << " " << " " << " " << RT << " " << " " << " " << " " << " " << TRT << endl;
 }
 
-void Process::AddIO(LinkedQueue<IO*>* ioq)
+void Process::AddIO(IO* io)
 {
-	IOqueue = ioq;
+	IOqueue->enqueue(io);
 }
 
 void Process::GetFirstIO(IO*& ioTemp)

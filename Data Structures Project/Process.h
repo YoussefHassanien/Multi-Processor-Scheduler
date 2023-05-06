@@ -57,7 +57,7 @@ public:
 	BinaryTree<Process*>* GetChildrenTree();                           //Getter for the ChildsTree
 	bool CheckIO_D();
 	void AddChildren(Process*child1,Process*child2);                   //Add 2 Childs to the Childs Tree
-	void AddIO(LinkedQueue<IO*>* ioq);                               //Getter for the Orphan boolean
+	void AddIO(IO* io);                               //Getter for the Orphan boolean
 	bool GetOrph();                                                  //Getter for the orphan
 	void SetOrph(bool orph);                                         //Setter for the orphan
 	void SetS(int s);                                                //Setter for the Process State
