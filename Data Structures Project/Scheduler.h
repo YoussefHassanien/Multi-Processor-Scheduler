@@ -55,7 +55,7 @@ private:
 	int ShortestFCFSListIdx;               //Index of the FCFS processor with the shortest ready list
 	int ShortestSJFListIdx;                //Index of the SJF processor with the shortest ready list
 	int ShortestRRListIdx;                 //Index of the RR processor with the shortest ready list
-
+	int LongestListIdx;                   //Index of the processor with the Longest ready list
 
 public:
 	Scheduler();                          //Constructor 
@@ -94,5 +94,7 @@ public:
 	int GetMaxW();                        //Getter for the MaxW
 	void IntiateForking(Process* running);//The Function that checks if the running process in the FCFS will fork or not then makes all the necessary operations if it will
 	//void AddtoFCFS_RDY(int Processor_id); //Adds the forked process to the right FCFS ready queue
+	void Set_LongestListIdx();           //Setter for the Longest List Index
+	void WorkStealing();
 };
 #endif

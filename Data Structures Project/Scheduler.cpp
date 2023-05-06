@@ -112,11 +112,10 @@ void Scheduler::readfileparameters()
 				IO* io= new IO;
 				io->SetDuration(intIO_D);
 				io->SetRequest(intIO_R);
-				IOq->enqueue(io);
+				p->AddIO(io);
 				continue;
 
 			}
-			p->AddIO(IOq);
 			addtonewlist(p);
 		}
 		int i = 0;
@@ -236,10 +235,13 @@ void Scheduler::simulation()
 	{
         
 		Process* p=nullptr;
-		for (int i = 0; i < LastProcessID; i++) //tamam
+		for (int i = 0; i < LastProcessID; i++) 
 		{
-			newlist.peek(p);
-			AddtoRdyLists(p);
+			if (!newlist.isEmpty())
+			{
+				newlist.peek(p);
+				AddtoRdyLists(p);
+			}
 		}
 		
 
@@ -249,14 +251,14 @@ void Scheduler::simulation()
 			
 			//Process migration 
 			
-			if (FCFS* FCFSptr = dynamic_cast<FCFS*>(PArr[i]))  // the current processor is a FCFS processor
-			{
-				FCFSptr->FCFStoRR_Migration();
-			}
-			else if (RoundRobin* RRptr = dynamic_cast<RoundRobin*>(PArr[i])) // the current processor is a RR processor 
-			{
-				RRptr->RRtoSJF_Migration();
-			}
+			//if (FCFS* FCFSptr = dynamic_cast<FCFS*>(PArr[i]))  // the current processor is a FCFS processor
+			//{
+			//	FCFSptr->FCFStoRR_Migration();
+			//}
+			//else if (RoundRobin* RRptr = dynamic_cast<RoundRobin*>(PArr[i])) // the current processor is a RR processor 
+			//{
+			//	RRptr->RRtoSJF_Migration();
+			//}
 
 			
 			PArr[i]->ScheduleAlgo(); //rdy to run and run to rdy
@@ -278,32 +280,38 @@ void Scheduler::simulation()
 				{
 					CurrentRunning->GetFirstIO(ioTemp); 
 					if (ioTemp!=nullptr) {
-						if (ioTemp->GetRequest() == TimeStep) //checks if the IO_R equals the current timestep
+						if (ioTemp->GetRequest() == TimeStep) //checks if the IO_R equals the current timestep //add a data member that counts execution time
 						{
 							addtoblocklist(CurrentRunning);
 							PArr[i]->SetRunning(nullptr);
 							PArr[i]->setisbusy(false);
 							DecrementRunningCount();
-							continue;
 						}
 					}
 				}
 
-				//BLK to RDY
-				if (!blocklist.isEmpty()) //check BLK list
-				{
-					blocklist.peek(TempProc);
-					if (TempProc->CheckIO_D())  //CheckIO_D needs further modifications
-					{
-						//check for the shortest ready queue
-						//dequeue form block & enqueue the process in the ready queue
-					} 
-
-				}
+				
 			}
 
 		}
+		//BLK to RDY
+		if (!blocklist.isEmpty()) //check BLK list
+		{
+			for (int i = 0; i < BLKCount; i++)
+			{
+				blocklist.dequeue(TempProc);
+				if (TempProc->CheckIO_D())  //CheckIO_D needs further modifications
+				{
+					Set_ShortestListIdx();
+					PArr[ShortestListIdx]->AddToRdy(TempProc);
+					BLKCount--;
+				}
+				else
+					blocklist.enqueue(TempProc);
+			}
 
+		}
+		WorkStealing();
 		UI.PrintInteractiveMode();
 		TimeStep++;
 	}
@@ -315,18 +323,30 @@ void Scheduler::simulation()
 //Moves the process from NEW list to RDY list
 void Scheduler::AddtoRdyLists(Process*p)
 {
+<<<<<<< HEAD
 	if (p->GetAT() == TimeStep)
 	{
 		newlist.dequeue(p);
 		for (int i = 0; i < Processor_Count; i++)
+=======
+	if (p) {
+		if (p->GetAT() == TimeStep)
+>>>>>>> f9fd989a6981ec1623eb17254de2d98bd59504ad
 		{
-			if (PArr[i]->SumCT() == 0)
-				PArr[i]->AddToRdy(p);
+			newlist.dequeue(p);
+
+			for (int i = 0; i < Processor_Count; i++)
+			{
+				if (PArr[i]->SumCT() == 0)
+				{
+					PArr[i]->AddToRdy(p);
+					return;
+				}
+			}
+			Set_ShortestListIdx();
+			PArr[ShortestListIdx]->AddToRdy(p);
 		}
-		Set_ShortestListIdx();
-		PArr[ShortestListIdx]->AddToRdy(p);
 	}
-		
 
 }
 
@@ -485,6 +505,34 @@ void Scheduler::IntiateForking(Process*running)
 			running->AddChild(child);
 		}
 	}
+}
+
+void Scheduler::Set_LongestListIdx()
+{
+	LongestListIdx = 0;
+	for (int i = 1; i < Processor_Count; i++)
+	{
+		if (PArr[i]->GetTotalCT() < PArr[LongestListIdx]->GetTotalCT())
+			LongestListIdx = i;
+	}
+}
+
+void Scheduler::WorkStealing()
+{
+		float Steal_Limit;
+		Process* p = NULL;
+		Set_ShortestListIdx(); //loops on the processors array to set the shortest index to the shortest list
+		Set_LongestListIdx(); //loops on the processors array to set the longest index to the longest list
+		Steal_Limit = (float)(PArr[LongestListIdx]->SumCT() - PArr[ShortestListIdx]->SumCT()) / PArr[LongestListIdx]->SumCT();
+		if (Steal_Limit < 0.4)
+			return;
+		if (TimeStep == 0 || TimeStep % STL != 0)
+			return;
+		PArr[LongestListIdx]->deleteprocess(p);
+		PArr[ShortestListIdx]->AddToRdy(p);
+		WorkStealing(); // calls the function recursively until one of the exit conditions is satisfied 
+
+	
 }
 
 

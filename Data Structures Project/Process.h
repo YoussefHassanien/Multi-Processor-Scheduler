@@ -54,8 +54,16 @@ public:
 	int GetRunningFor();                                             //Getter for how long the process has been running so far
 	void GetFirstIO(IO*& ioTemp);                                    //Getter for the front IO in the IOs queue
 	bool CheckIO_D();
+<<<<<<< HEAD
 	bool AddChild(Process* child);                                   //Add a forked child to the process
 	void AddIO(LinkedQueue<IO*>* ioq);                               //Getter for the Orphan boolean
+=======
+	void AddChildren(Process*child1,Process*child2);                   //Add 2 Childs to the Childs Tree
+	void AddIO(IO* io);                               //Getter for the Orphan boolean
+	bool GetOrph();                                                  //Getter for the orphan
+	void SetOrph(bool orph);                                         //Setter for the orphan
+	void SetS(int s);                                                //Setter for the Process State
+>>>>>>> f9fd989a6981ec1623eb17254de2d98bd59504ad
 	void PrintProcessInfo();                                         //Prints the Processes info
 	void DecrementCT();                                              //decrements the CT by one 
 	void IncrementRunningFor();                                      //Increments RunningFor by one 
