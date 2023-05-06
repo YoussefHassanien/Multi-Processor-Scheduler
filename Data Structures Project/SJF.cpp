@@ -39,6 +39,7 @@ void SJF:: ScheduleAlgo()
 	{
 		deleteprocess(tmp);
 		RUNNING = tmp;
+		tmp->SetRT(s->getTimeStep() - tmp->GetAT());
 		isbusy = true;                             //Set the processor as busy
 		s->incrementRunningCount();
 		return;

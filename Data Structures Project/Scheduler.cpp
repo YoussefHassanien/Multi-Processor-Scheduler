@@ -93,7 +93,7 @@ void Scheduler::readfileparameters()
 			p->SetID(stoi(PID));
 			p->SetCT(stoi(CT));
 			p->SetN(stoi(N));
-			LinkedQueue<IO*>* IOq= new LinkedQueue<IO*>;
+			//LinkedQueue<IO*>* IOq= new LinkedQueue<IO*>;
 			for (int i = 0; i < stoi(N); i++)
 			{
 				string openbracket;
@@ -113,7 +113,7 @@ void Scheduler::readfileparameters()
 				io->SetDuration(intIO_D);
 				io->SetRequest(intIO_R);
 				p->AddIO(io);
-				continue;
+				
 
 			}
 			addtonewlist(p);
@@ -268,6 +268,7 @@ void Scheduler::simulation()
 				Process* CurrentRunning = PArr[i]->getRunning(); //moves to terminated if ct =0
 				if (CurrentRunning->GetCT() == 0)
 				{
+					CurrentRunning->SetTT(TimeStep);
 					addToTrm(CurrentRunning);
 					PArr[i]->SetRunning(nullptr);
 					PArr[i]->setisbusy(false);
@@ -275,7 +276,7 @@ void Scheduler::simulation()
 					continue;
 				}
 
-				//Run to BLK
+			//	//Run to BLK
 				if (CurrentRunning->GetN() != 0) //checks if the current process needs IO
 				{
 					CurrentRunning->GetFirstIO(ioTemp); 
@@ -311,6 +312,14 @@ void Scheduler::simulation()
 			}
 
 		}
+		if (!terminatedlist.isEmpty())
+		{
+			Process* p = nullptr;
+			terminatedlist.dequeue(p);
+			cout <<p->GetID()<<" " << p->GetWT() << " " << p->GetTRT() << " " << p->GetRT() << endl;
+		}
+		else
+			cout << "terminated empty..."<<endl;
 		WorkStealing();
 		UI.PrintInteractiveMode();
 		TimeStep++;

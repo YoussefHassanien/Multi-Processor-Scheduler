@@ -1,6 +1,5 @@
-﻿  Scheduler.cpp
-D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\Scheduler.cpp(230,6): warning C4101: 'random': unreferenced local variable
-  UI_Info.cpp
+﻿  Process.cpp
+  Scheduler.cpp
+C:\Data Struct\Data-Structure-Project\Data Structures Project\Scheduler.cpp(230,6): warning C4101: 'random': unreferenced local variable
   Generating Code...
-  LINK : D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\x64\Debug\Data Structures Project.exe not found or not built by the last incremental link; performing full link
-  Data Structures Project.vcxproj -> D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\x64\Debug\Data Structures Project.exe
+  Data Structures Project.vcxproj -> C:\Data Struct\Data-Structure-Project\x64\Debug\Data Structures Project.exe

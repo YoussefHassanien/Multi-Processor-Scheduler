@@ -19,6 +19,7 @@ class Scheduler
 private:
 
 	string FLName;                         //File name
+	string Output;
 	Processor* PArr[500];                  //Array of processors pointers 
 	LinkedQueue<Process*> newlist;         //NEW list
 	LinkedQueue<Process*>blocklist;        //BLK list
@@ -62,6 +63,7 @@ public:
 	~Scheduler();                         //Destructor
 	void setfilename(string& s);          //Setter for the file name
 	void readfileparameters();            //Function to read the input file
+	void PrintOutputFile();
 	void addtonewlist(Process* p);        //Adds a process to the NEW list 
 	void addtoblocklist(Process*& p);     //Adds a process to the BLK list
 	void addToTrm(Process*& p);           //Adds a process to the terminated list

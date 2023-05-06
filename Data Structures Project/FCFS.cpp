@@ -84,24 +84,26 @@ int FCFS::GetRDYListCount()
 void FCFS::ScheduleAlgo()
 {
 	Process* tmp = nullptr;
-
+	IO* ioTemp;
 	if (RDYList.isEmpty() && !RUNNING) // if there is nothing in the ready list and no process is running
 		return;
-
-
 	if (!isbusy) //sets a process as running if the processor is idle
 	{
 		deleteprocess(tmp);
+		tmp->SetRT(s->getTimeStep());
 		RUNNING = tmp;
 		isbusy = true;                                  //Set the processor as busy
 		s->incrementRunningCount();
 		return;
 	}
-	else if (isbusy && RUNNING->GetCT() != 0) 
+	else if (isbusy && RUNNING->GetCT() != 0)
 	{
 		RUNNING->DecrementCT();
 		RUNNING->IncrementRunningFor();
 	}
+
+	
+	
 
 }
 

@@ -28,6 +28,7 @@ UI_Info::UI_Info(Scheduler* Sptr)
 	cin >> y;
 	FLName = y;
 	S->setfilename(FLName);
+
 }
 void UI_Info::PrintInteractiveMode()
 {

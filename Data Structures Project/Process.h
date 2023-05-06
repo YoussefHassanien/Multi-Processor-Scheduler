@@ -18,9 +18,11 @@ private:
 		, WT // Waiting Time
 		, N // Number of Times the process requests I/O
 		, RunningFor //How long the process has been running so far
+		, Actual_CT //original ct
+		, IO_D //total IO Duration
 		;
 	Scheduler* s;
-	LinkedQueue<IO*>* IOqueue; //IOs Queue for each process
+	LinkedQueue<IO*> IOqueue; //IOs Queue for each process
 	Process* Parent;   //a pointer to the parent process that have created this forked processes if it is a forked one
 	Process* FirstChild; //a pointer to the first forked child
 	Process* SecondChild; //a pointer to the second forked child
@@ -55,7 +57,7 @@ public:
 	void GetFirstIO(IO*& ioTemp);                                    //Getter for the front IO in the IOs queue
 	bool CheckIO_D();
 	bool AddChild(Process* child);                                   //Add a forked child to the process
-	void AddIO(LinkedQueue<IO*>* ioq);                               
+	//void AddIO(LinkedQueue<IO*>* ioq);                               
 	void AddIO(IO* io);                               
 	void PrintProcessInfo();                                         //Prints the Processes info
 	void DecrementCT();                                              //decrements the CT by one 
@@ -64,6 +66,8 @@ public:
 	friend ostream& operator<<(ostream& output,Process &p);          //<< Operator overloading
     friend bool operator ==(Process& p1,Process& p2);                //== Operator Overloading 
 	friend bool operator==(int value,Process& p);                    //== Operator Overloading when the Process ID is sent instead of 2 Processes
+	int GetActualCT();
+	void SetIO_D();
 	~Process();                                                      //Destructor
 };
 
