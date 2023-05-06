@@ -313,9 +313,9 @@ void Scheduler::simulation()
 
 
 //Moves the process from NEW list to RDY list
-void Scheduler::AddtoRdyLists()
+void Scheduler::AddtoRdyLists(Process*p)
 {
-	if (p->GetAT() == TimeSlice)
+	if (p->GetAT() == TimeStep)
 	{
 		newlist.dequeue(p);
 		for (int i = 0; i < Processor_Count; i++)

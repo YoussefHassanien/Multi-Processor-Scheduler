@@ -7,8 +7,7 @@ Process::Process(int at, int id, int ct, int n)
 	SetCT(ct);
 	SetN(n);
 	IOqueue = new LinkedQueue<IO*>;
-	ChildrenTree = new BinaryTree<Process*>;
-	ChildrenTree->Insert(this);
+	Parent = nullptr;
 	Orph = false;
 	S = New;
 	
@@ -149,10 +148,6 @@ void Process::GetFirstIO(IO*& ioTemp)
 	IOqueue->peek(ioTemp);
 }
 
-BinaryTree<Process*>* Process::GetChildrenTree()
-{
-	return ChildrenTree;
-}
 
 bool Process::CheckIO_D()
 {
@@ -172,16 +167,20 @@ bool Process::CheckIO_D()
 
 void Process::AddChildren(Process*child1,Process*child2)
 {
-	ChildrenTree->Insert(child1);
-	ChildrenTree->Insert(child2);
+	FirstChild = child1;
+	SecondChild = child2;
 }
 
 Process::~Process()
 {
 	delete IOqueue;
 	IOqueue = nullptr;
-	delete ChildrenTree;
-	ChildrenTree = nullptr;
+	delete Parent;
+	Parent = nullptr;
+	delete FirstChild;
+	FirstChild = nullptr;
+	delete SecondChild;
+	SecondChild = nullptr;
 }
 
 ostream& operator<<(ostream& output, Process& p)

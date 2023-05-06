@@ -20,9 +20,6 @@ int main()
 	p1->AddChildren(p2, p3);
 	p2->AddChildren(p4, p5);
 	p3->AddChildren(p6, p7);
-	p1->GetChildrenTree()->Delete(p6);
-	p1->GetChildrenTree()->Delete(p7);
-	p1->GetChildrenTree()->Print();
 	//cout << endl;
 	//p2->GetChildsTree()->Print();
 	//cout << endl;
