@@ -29,6 +29,7 @@ Scheduler::Scheduler(): UI(this)
 	RTF=0;
 	MaxW=0;
 	STL = 0;
+	Output = "OutputFile";
 }
 
 //destructor
@@ -41,6 +42,7 @@ void Scheduler::setfilename(string& s)
 {
 	FLName = s;
 }
+
 
 //Function to read the input file
 void Scheduler::readfileparameters()
@@ -157,6 +159,14 @@ void Scheduler::readfileparameters()
 	else {
 		cout << "file not oppened" << endl; //failed to load the file 
 	}
+}
+
+void Scheduler::PrintOutputFile() //still in progress
+{
+	Output += ".txt";
+	ofstream OutFile;
+	OutFile.open(Output, ios::out);
+	//OutFile<<
 }
 
 //Adds a process to the NEW list 
@@ -312,14 +322,14 @@ void Scheduler::simulation()
 			}
 
 		}
-		if (!terminatedlist.isEmpty())
+		/*if (!terminatedlist.isEmpty())
 		{
 			Process* p = nullptr;
 			terminatedlist.dequeue(p);
 			cout <<p->GetID()<<" " << p->GetWT() << " " << p->GetTRT() << " " << p->GetRT() << endl;
 		}
 		else
-			cout << "terminated empty..."<<endl;
+			cout << "terminated empty..."<<endl;*/
 		WorkStealing();
 		UI.PrintInteractiveMode();
 		TimeStep++;
