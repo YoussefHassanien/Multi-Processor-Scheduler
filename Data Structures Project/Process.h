@@ -2,7 +2,6 @@
 #include<iostream>
 #include"IO.h"
 #include "Scheduler.h"
-#include"BinaryTree.h"
 #include"LinkedQueue.h"
 using namespace std;
 class Scheduler;
@@ -48,9 +47,9 @@ public:
 	int GetWT();                                                     //Getter for the Wait Time
 	int GetN();                                                      //Getter for the number of IOs
 	bool GetOrph();                                                  //Getter for the orphan
-	Process* GetParent();                                            //Getter for the parent
-	Process* GetFirstChild();                                        //Getter for the first child
-	Process* GetSecondChild();                                       //Getter for the second child
+	Process*& GetParent();                                            //Getter for the parent
+	Process*& GetFirstChild();                                        //Getter for the first child
+	Process*& GetSecondChild();                                       //Getter for the second child
 	int GetRunningFor();                                             //Getter for how long the process has been running so far
 	void GetFirstIO(IO*& ioTemp);                                    //Getter for the front IO in the IOs queue
 	bool CheckIO_D();

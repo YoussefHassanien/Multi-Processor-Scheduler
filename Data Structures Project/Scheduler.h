@@ -23,12 +23,13 @@ private:
 	LinkedQueue<Process*> newlist;         //NEW list
 	LinkedQueue<Process*>blocklist;        //BLK list
 	LinkedQueue<Process*>terminatedlist;   //TRM list
-	LinkedList<Process*>FamilyList;        // a list of pointers to the parent and its children and grandchildren
+	LinkedList<Process*>ParentsList;       //a list of pointers to the parent processes
+	UI_Info UI;                            //Object of the UI info class
+	LinkedQueue<SIGKILL*> KillSigList;     //Queue of killing signals pointers 
 	int Processor_Count;                   //Total count of processors
 	int FCFS_ProcessorsCnt;                //Count of the FCFS processors
 	int RR_ProcessorsCnt;                  //Count of the RR processors 
 	int SJF_ProcessorsCnt;                 //Count of the SJF processors
-	SIGKILL* SigKillarr[500];              //Array of signal kill pointers 
 	int TimeStep;                          //Time step
 	int TimeSlice;                         //Time slice
 	int LastProcessID;                     //processes count for all processes in the program
@@ -37,7 +38,6 @@ private:
 	int ForkProb;                          //Forking probability read from the input file
 	int STL;                               //The Time at which the stealing action occurs  
 	int TerminatedProcesses;               //counter for all terminated processes
-	UI_Info UI;                            //Pointer to the UI info class
 	int BLKCount;                          //Number of processes in the BLK list
 	int RunningCount;                      //Number of processes currently in the running state
 	int counter;                           //Counter to add to RdyLists of processors 
@@ -55,7 +55,8 @@ private:
 	int ShortestFCFSListIdx;               //Index of the FCFS processor with the shortest ready list
 	int ShortestSJFListIdx;                //Index of the SJF processor with the shortest ready list
 	int ShortestRRListIdx;                 //Index of the RR processor with the shortest ready list
-	int LongestListIdx;                   //Index of the processor with the Longest ready list
+	int LongestListIdx;                    //Index of the processor with the Longest ready list
+
 
 public:
 	Scheduler();                          //Constructor 
@@ -64,7 +65,7 @@ public:
 	void readfileparameters();            //Function to read the input file
 	void addtonewlist(Process* p);        //Adds a process to the NEW list 
 	void addtoblocklist(Process*& p);     //Adds a process to the BLK list
-	void addToTrm(Process*& p);           //Adds a process to the terminated list
+	void addToTrm(Process* p);            //Adds a process to the terminated list
 	int getprocessorcount();              //Getter for the total number of processors 
 	void incrementprocessorcount();       //increments the count of processors once a new processor is declared
 	int generaterandom(int min, int max); //Generates a random number between a max and a min value
@@ -81,7 +82,7 @@ public:
 	void PrintTRMList();                  //Prints the TRM list
 	void PrintRunningList();              //Prints the running processes
 	void Set_ShortestListIdx();           //Setter for the Shortest List Index
-	void Set_ShortestFCFS();	      //Setter for the Shortest FCFS List Index
+	void Set_ShortestFCFS();	          //Setter for the Shortest FCFS List Index
 	int Get_ShortestFCFS();               //Getter for the Shortest FCFS List Index
 	int Get_ShortestLlistIdx();           //Getter for the Shortest List Index 
 	void Set_ShortestSJF();               //Setter for the Shortest SJF List Index
@@ -93,8 +94,10 @@ public:
 	int GetRTF();                         //Getter for the RTF
 	int GetMaxW();                        //Getter for the MaxW
 	void IntiateForking(Process* running);//The Function that checks if the running process in the FCFS will fork or not then makes all the necessary operations if it will
-	//void AddtoFCFS_RDY(int Processor_id); //Adds the forked process to the right FCFS ready queue
-	void Set_LongestListIdx();           //Setter for the Longest List Index
+	void Set_LongestListIdx();            //Setter for the Longest List Index
 	void WorkStealing();
+	LinkedQueue<SIGKILL*> GetKillSigList();  //Getter for the KillSigList
+	void AddChildrenToTrm(Process* parent);  //Adds the forked processes to the terminated list
+	bool ParentKilling(Process* parent);     //Kills a specific parent process and its children  
 };
 #endif

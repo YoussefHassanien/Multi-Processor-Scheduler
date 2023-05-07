@@ -138,32 +138,17 @@ public:
 			NodePtr = NodePtr->getNext();
 		}
 	}
+	bool Find(T value)
+	{
+		Node<T>* curPtr = frontPtr;
+		for (int i = 0; i < NodesCounter; i++) {
+			if (value == curPtr->getItem())
+				return true;
+			curPtr = curPtr->getNext();
+		}
+		return false;
+	}
 };
 //end LinkedQueue
 
 #endif
-
-//another copy constructor
-	//LinkedQueue(const LinkedQueue<T>& queue)
-	//{
-	//	Node<T>* temp = queue.frontPtr;
-	//	Node<T>* newFront;
-	//	Node<T>* newBack;
-	//	//LinkedQueue<T>* newQueue = new LinkedQueue<T>;
-	//	while(temp)
-	//	{
-	//		Node<T>* newNodePtr = new Node<T>(temp->getItem());
-	//		if (isEmpty())	//special case if this is the first node to insert	
-	//		{
-	//			newFront = newNodePtr; // The queue is empty
-	//			NodesCounter++;
-	//		}
-	//		else
-	//		{
-	//			newBack->setNext(newNodePtr); // The queue was not empty
-	//			NodesCounter++;
-	//		}
-	//		backPtr = newNodePtr;
-	//		temp = temp->getNext();
-	//	}
-	//}

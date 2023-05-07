@@ -169,6 +169,16 @@ public:
 			PriNodePtr = PriNodePtr->getNext();
 		}
 	}
+	bool Find(T value)
+	{
+		PriorityNode<T>* curPtr = frontPtr;
+		for (int i = 0; i < NodesCounter; i++) {
+			if (value == curPtr->getItem())
+				return true;
+			curPtr = curPtr->getNext();
+		}
+		return false;
+	}
 };
 //end PriorityQueue
 

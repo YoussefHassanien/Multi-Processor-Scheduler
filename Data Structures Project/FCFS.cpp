@@ -1,9 +1,10 @@
 #include "FCFS.h"
-
+LinkedQueue<SIGKILL*> FCFS::KillingSignalsList;
 //Constructor
 FCFS::FCFS(Scheduler*Sptr,int id): Processor(Sptr)
 {
 	ID = id;
+	KillingSignalsList = Sptr->GetKillSigList();
 }
 
 //adds a process in the ready list
@@ -21,9 +22,9 @@ void FCFS::AddToRdyIDs(Process* p)
 }
 
 //removes a node from the list
-void FCFS::deleteprocess(Process*& p)
+void FCFS::DeleteProcess(Process*& p)
 {
-	RDYList.DeleteFirst(p);
+	RDYList.DeleteNode(p);
 	processescount--;
 	deleteprocessid(p);
 }
@@ -91,7 +92,8 @@ void FCFS::ScheduleAlgo()
 
 	if (!isbusy) //sets a process as running if the processor is idle
 	{
-		deleteprocess(tmp);
+		RDYList.DeleteFirst(tmp);
+		processescount--;
 		RUNNING = tmp;
 		isbusy = true;                                  //Set the processor as busy
 		s->incrementRunningCount();
@@ -122,6 +124,11 @@ void FCFS::FCFStoRR_Migration()
 			FCFStoRR_Migration();
 		}
 	}
+}
+
+bool FCFS::Search(Process* value)
+{
+	return RDYList.Find(value);
 }
 
 //destructor

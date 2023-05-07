@@ -118,7 +118,6 @@ void Scheduler::readfileparameters()
 			}
 			addtonewlist(p);
 		}
-		int i = 0;
 		string sigkill;
 		InFile >> sigkill;
 		InFile >> sigkill;
@@ -131,8 +130,7 @@ void Scheduler::readfileparameters()
 			InFile >> ProcessID;
 			int intProcessID = stoi(ProcessID);
 			SIGKILL* SigKillPtr = new SIGKILL(intProcessID, intkillTime);
-			SigKillarr[i] = SigKillPtr;
-			i++;
+			KillSigList.enqueue(SigKillPtr);
 			continue;
 		}
 		for (int i = 0; i < FCFS_ProcessorsCnt; i++)
@@ -173,10 +171,13 @@ void Scheduler::addtoblocklist(Process*& p)
 }
 
 //Adds a process to the TRM list 
-void Scheduler::addToTrm(Process*& p)
+void Scheduler::addToTrm(Process* p)
 {
-	terminatedlist.enqueue(p);
-	TerminatedProcesses++;
+	if (p)
+	{
+		terminatedlist.enqueue(p);
+		TerminatedProcesses++;
+	}
 }
 
 //Getter for the total number of processors 
@@ -247,7 +248,6 @@ void Scheduler::simulation()
 
 		for (int i = 0; i < Processor_Count; i++) 
 		{
-
 			
 			//Process migration 
 			
@@ -262,6 +262,8 @@ void Scheduler::simulation()
 
 			
 			PArr[i]->ScheduleAlgo(); //rdy to run and run to rdy
+			if (i < FCFS_ProcessorsCnt) //to insure that the forking is for fcfs processors only
+				IntiateForking(PArr[i]->getRunning()); //Forking operation
 
 			//Run to TRM
 			if (PArr[i]->getRunning()) {
@@ -269,6 +271,7 @@ void Scheduler::simulation()
 				if (CurrentRunning->GetCT() == 0)
 				{
 					addToTrm(CurrentRunning);
+
 					PArr[i]->SetRunning(nullptr);
 					PArr[i]->setisbusy(false);
 					DecrementRunningCount();
@@ -496,6 +499,9 @@ void Scheduler::IntiateForking(Process*running)
 			Process* child = new Process(TimeStep, LastProcessID, running->GetCT());
 			child->SetParent(running);
 			running->AddChild(child);
+			Set_ShortestFCFS();
+			PArr[ShortestFCFSListIdx]->AddToRdy(child);
+			ParentsList.InsertEnd(running);
 		}
 	}
 }
@@ -521,11 +527,66 @@ void Scheduler::WorkStealing()
 			return;
 		if (TimeStep == 0 || TimeStep % STL != 0)
 			return;
-		PArr[LongestListIdx]->deleteprocess(p);
+		PArr[LongestListIdx]->DeleteProcess(p);
 		PArr[ShortestListIdx]->AddToRdy(p);
 		WorkStealing(); // calls the function recursively until one of the exit conditions is satisfied 
 
 	
+}
+
+LinkedQueue<SIGKILL*> Scheduler::GetKillSigList()
+{
+	return KillSigList;
+}
+
+void Scheduler::AddChildrenToTrm(Process* parent)
+{
+	if ((!parent->GetFirstChild()) && (!parent->GetSecondChild())) 
+		return;
+	else
+	{
+		addToTrm(parent->GetFirstChild());
+		addToTrm(parent->GetSecondChild());
+	}
+	AddChildrenToTrm(parent->GetFirstChild());
+	AddChildrenToTrm(parent->GetSecondChild());
+}
+
+bool Scheduler::ParentKilling(Process* parent)
+{
+	if (!ParentsList.isEmpty()) //Checks if the parents list is empty or not
+	{
+		if (ParentsList.Find(parent)) //Checks if the current running process is in the parents list or not
+		{
+			AddChildrenToTrm(parent); //Since the current running process is in the parents list and it is being terminated so its children must be terminated too
+			if (parent->GetFirstChild()) //Checks if the parent has first child
+			{
+				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+				{
+					if (PArr[i]->Search(parent->GetFirstChild()))
+					{
+						PArr[i]->DeleteProcess(parent->GetFirstChild()); //i think this might cause a null access violation as the the delete takes the value by refrence and makes it point to null after removing it from the nodes
+					}
+						
+				}
+			} 
+			else 
+				if (parent->GetSecondChild()) //Checks if the parent has second child
+				{
+					for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+					{
+						if (PArr[i]->Search(parent->GetSecondChild()))
+						{
+							PArr[i]->DeleteProcess(parent->GetSecondChild());  //i think this might cause a null access violation as the the delete takes the value by refrence and makes it point to null after removing it from the nodes
+						}
+
+					}
+				}
+			return true;
+		}
+		return false;
+	}
+	return false;
 }
 
 

@@ -116,15 +116,15 @@ bool Process::GetOrph()
 {
 	return Orph;
 }
-Process* Process::GetParent()
+Process*& Process::GetParent()
 {
 	return Parent;
 }
-Process* Process::GetFirstChild()
+Process*& Process::GetFirstChild()
 {
 	return FirstChild;
 }
-Process* Process::GetSecondChild()
+Process*& Process::GetSecondChild()
 {
 	return SecondChild;
 }

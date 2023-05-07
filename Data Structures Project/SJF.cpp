@@ -16,7 +16,7 @@ void SJF::AddToRdy(Process* p)
 }
 
 //deletes a give process when it moves to another queue or to being blocked
-void SJF::deleteprocess(Process*& p)
+void SJF::DeleteProcess(Process*& p)
 {
 	RDY_List.dequeue(p);
 	processescount--;
@@ -37,7 +37,7 @@ void SJF:: ScheduleAlgo()
 	//sets a process as running if the processor is idle
 	if (!isbusy && !RUNNING)
 	{
-		deleteprocess(tmp);
+		DeleteProcess(tmp);
 		RUNNING = tmp;
 		isbusy = true;                             //Set the processor as busy
 		s->incrementRunningCount();
@@ -75,6 +75,11 @@ string SJF::Get_Processor_Type()
 int SJF::GetRDYListCount()
 {
 	return RDY_List.NodesCounter;
+}
+
+bool SJF::Search(Process* value)
+{
+	return RDY_List.Find(value);
 }
 
 //destructor

@@ -101,20 +101,18 @@ public:
 	}
 
 	//searches for a given value in the list, returns true if found; false otherwise.
-	int Find(int& Key)
+	bool Find(T value)
 	{
-		int position = 0;
 		Node<T>* ptr = Head;
 		//This is how to iterate over a linked list using for loop, NO i++ here (ptr = ptr->next)
 		for (ptr; ptr; ptr = ptr->getNext()) //the second ptr means while ptr!= NULL
 		{
-			position++;
-			if (ptr->getItem() == Key)
+			if (ptr->getItem() == value)
 			{
-				return position;
+				return true;
 			}
 		}
-		return 0;
+		return false;
 	}
 
 
@@ -171,9 +169,6 @@ public:
 
 	//deletes the first node with the given value (if found) and returns true
 	//if not found, returns false
-	//Note: List is not sorted
-	
-
 	bool DeleteNode(const T& value)
 	{
 		Node<T>* p = Head;

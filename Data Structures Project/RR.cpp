@@ -12,7 +12,7 @@ void RoundRobin::AddToRdy(Process* p)
 	processescount++;
 }
 
-void RoundRobin::deleteprocess(Process*& p)
+void RoundRobin::DeleteProcess(Process*& p)
 {
 	RDY_List.dequeue(p);
 	processescount--;
@@ -32,7 +32,7 @@ void RoundRobin::ScheduleAlgo()
 	//sets a process as running if the processor is idle
 	if (!isbusy)
 	{
-		deleteprocess(tmp);
+		DeleteProcess(tmp);
 		RUNNING = tmp;
 		isbusy = true;                             //Set the processor as busy
 		s->incrementRunningCount();
@@ -98,6 +98,11 @@ void RoundRobin::RRtoSJF_Migration()
 			RRtoSJF_Migration();
 		}
 	}
+}
+
+bool RoundRobin::Search(Process* value)
+{
+	return RDY_List.Find(value);
 }
 
 //destructor

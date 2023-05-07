@@ -85,7 +85,7 @@ int Processor::SumCT()
 	Process* p;
 	for (int i = 0; i < processescount; i++)
 	{
-		deleteprocess(p);
+		DeleteProcess(p);
 		sum += p->GetCT();
 		AddToRdy(p);
 	}

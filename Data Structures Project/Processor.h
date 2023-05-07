@@ -14,7 +14,7 @@ class Process;
 	protected:
 		Process* RUNNING;    //the process in the running state
 		bool isbusy; //indicator if there is a process in the running state (busy=1,idle=0)
-		string Type; // stirng indicating the processor type
+		string Type; //stirng indicating the processor type
 		int ID;      //needs initialization and incrementation 
 		int processescount; //number of processes in the ready queue of the processor
 		Scheduler* s;
@@ -28,7 +28,8 @@ class Process;
 
 		Processor(Scheduler* Sptr);                                //Constructor
 		virtual void AddToRdy(Process* p) = 0;                     //Adds a process to the processor ready list
-		virtual void deleteprocess(Process*& p) = 0;   //deletes a given process when it moves to another queue or to being blocked 
+		virtual void DeleteProcess(Process*& p) = 0;               //deletes a given process when it moves to another queue or to being blocked 
+		virtual bool Search(Process* value) = 0;                   //Searches for a specific process in the processors ready lists
 		virtual void ScheduleAlgo() = 0;                           //Schedueling algorithm
 		void setisbusy(bool b);                                    //sets the processor running state
 		Process* getRunning();                                     //gets the process in running state

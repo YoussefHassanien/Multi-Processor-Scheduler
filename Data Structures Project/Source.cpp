@@ -5,7 +5,7 @@ using namespace std;
 #include "UI_Info.h"
 int main()
 {
-	//Scheduler* S=new Scheduler;
+	Scheduler* S=new Scheduler;
 	//S->simulation();
 	//system("pause");
 	//delete S;
@@ -19,6 +19,13 @@ int main()
 	Process* p7=new Process(1, 7, 10);
 	p1->AddChild(p2);
 	p1->AddChild(p3);
-	cout << *p1 << " " << *p1->GetFirstChild() << " " << *p1->GetSecondChild();
+	p2->AddChild(p4);
+	p2->AddChild(p5);
+	p3->AddChild(p6);
+	p3->AddChild(p7);
+	S->addToTrm(p1);
+	S->AddChildrenToTrm(p1);
+	S->PrintTRMList();
+	//cout << *p1 << " " << *p1->GetFirstChild() << " " << *p1->GetSecondChild();
 	return 0;
 }
