@@ -98,12 +98,39 @@ void FCFS::ScheduleAlgo()
 	}
 	else if (isbusy && RUNNING->GetCT() != 0)
 	{
+		
 		RUNNING->DecrementCT();
 		RUNNING->IncrementRunningFor();
+	
+		if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running 
+		{
+			RUNNING->GetFirstIO(ioTemp);
+			if (ioTemp)
+			{
+				if (ioTemp->GetRequest() >= 0)
+				{
+					ioTemp->DecrementIO_R();
+				}
+
+
+				if (ioTemp->GetRequest() == -1)
+				{
+					s->addtoblocklist(RUNNING);
+					isbusy = false;
+					RUNNING = nullptr;
+					s->DecrementRunningCount();
+				}
+			}
+		}
+	}
+	else if (isbusy && RUNNING->GetCT() == 0)
+	{
+		s->addToTrm(RUNNING);
+		isbusy = false;
+		RUNNING = nullptr;
+		s->DecrementRunningCount();
 	}
 
-	
-	
 
 }
 

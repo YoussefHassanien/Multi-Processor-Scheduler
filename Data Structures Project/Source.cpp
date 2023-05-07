@@ -11,8 +11,12 @@ int main()
 	delete S;
 	S = NULL;
 
-	/*Process* p1=new Process(1, 1, 10);
-	Process* p2=new Process(1, 2, 10);
+
+	/*Process* p1=new Process(1, 1, 10, 1);
+	IO io(3,2);
+	p1->AddIO(&io);*/
+	
+	/*Process* p2 = new Process(1, 2, 10);
 	Process* p3=new Process(1, 3, 10);
 	Process* p4=new Process(1, 4, 10);
 	Process* p5=new Process(1, 5, 10);

@@ -185,6 +185,7 @@ void Scheduler::addtoblocklist(Process*& p)
 //Adds a process to the TRM list 
 void Scheduler::addToTrm(Process*& p)
 {
+	p->SetTT(TimeStep); //sets the termination time of the process with the current timestep;
 	terminatedlist.enqueue(p);
 	TerminatedProcesses++;
 }
@@ -272,37 +273,6 @@ void Scheduler::simulation()
 
 			
 			PArr[i]->ScheduleAlgo(); //rdy to run and run to rdy
-
-			//Run to TRM
-			if (PArr[i]->getRunning()) {
-				Process* CurrentRunning = PArr[i]->getRunning(); //moves to terminated if ct =0
-				if (CurrentRunning->GetCT() == 0)
-				{
-					CurrentRunning->SetTT(TimeStep);
-					addToTrm(CurrentRunning);
-					PArr[i]->SetRunning(nullptr);
-					PArr[i]->setisbusy(false);
-					DecrementRunningCount();
-					continue;
-				}
-
-			//	//Run to BLK
-				if (CurrentRunning->GetN() != 0) //checks if the current process needs IO
-				{
-					CurrentRunning->GetFirstIO(ioTemp); 
-					if (ioTemp!=nullptr) {
-						if (ioTemp->GetRequest() == TimeStep) //checks if the IO_R equals the current timestep //add a data member that counts execution time
-						{
-							addtoblocklist(CurrentRunning);
-							PArr[i]->SetRunning(nullptr);
-							PArr[i]->setisbusy(false);
-							DecrementRunningCount();
-						}
-					}
-				}
-
-				
-			}
 
 		}
 		//BLK to RDY
