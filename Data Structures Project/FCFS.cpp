@@ -85,25 +85,58 @@ int FCFS::GetRDYListCount()
 void FCFS::ScheduleAlgo()
 {
 	Process* tmp = nullptr;
-
+	IO* ioTemp;
 	if (RDYList.isEmpty() && !RUNNING) // if there is nothing in the ready list and no process is running
 		return;
-
-
 	if (!isbusy) //sets a process as running if the processor is idle
 	{
+<<<<<<< HEAD
 		RDYList.DeleteFirst(tmp);
 		processescount--;
+=======
+		deleteprocess(tmp);
+		tmp->SetRT(s->getTimeStep());
+>>>>>>> 743cb664bfd79e2b26fd428d91e4bf0904c79b2a
 		RUNNING = tmp;
 		isbusy = true;                                  //Set the processor as busy
 		s->incrementRunningCount();
 		return;
 	}
-	else if (isbusy && RUNNING->GetCT() != 0) 
+	else if (isbusy && RUNNING->GetCT() != 0)
 	{
+		
 		RUNNING->DecrementCT();
 		RUNNING->IncrementRunningFor();
+	
+		if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running 
+		{
+			RUNNING->GetFirstIO(ioTemp);
+			if (ioTemp)
+			{
+				if (ioTemp->GetRequest() >= 0)
+				{
+					ioTemp->DecrementIO_R();
+				}
+
+
+				if (ioTemp->GetRequest() == -1)
+				{
+					s->addtoblocklist(RUNNING);
+					isbusy = false;
+					RUNNING = nullptr;
+					s->DecrementRunningCount();
+				}
+			}
+		}
 	}
+	else if (isbusy && RUNNING->GetCT() == 0)
+	{
+		s->addToTrm(RUNNING);
+		isbusy = false;
+		RUNNING = nullptr;
+		s->DecrementRunningCount();
+	}
+
 
 }
 

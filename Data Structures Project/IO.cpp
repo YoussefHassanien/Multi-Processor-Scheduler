@@ -32,6 +32,11 @@ int IO::GetDuration()
 	return Duration;
 }
 
+void IO::DecrementIO_R()
+{
+	Request--;
+}
+
 //Destructor
 IO::~IO()
 {

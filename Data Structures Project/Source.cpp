@@ -6,12 +6,26 @@ using namespace std;
 int main()
 {
 	Scheduler* S=new Scheduler;
+<<<<<<< HEAD
 	//S->simulation();
 	//system("pause");
 	//delete S;
 	//S = NULL;
 	Process* p1=new Process(1, 1, 10);
 	Process* p2=new Process(1, 2, 10);
+=======
+	S->simulation();
+	system("pause");
+	delete S;
+	S = NULL;
+
+
+	/*Process* p1=new Process(1, 1, 10, 1);
+	IO io(3,2);
+	p1->AddIO(&io);*/
+	
+	/*Process* p2 = new Process(1, 2, 10);
+>>>>>>> 743cb664bfd79e2b26fd428d91e4bf0904c79b2a
 	Process* p3=new Process(1, 3, 10);
 	Process* p4=new Process(1, 4, 10);
 	Process* p5=new Process(1, 5, 10);
@@ -19,6 +33,7 @@ int main()
 	Process* p7=new Process(1, 7, 10);
 	p1->AddChild(p2);
 	p1->AddChild(p3);
+<<<<<<< HEAD
 	p2->AddChild(p4);
 	p2->AddChild(p5);
 	p3->AddChild(p6);
@@ -27,5 +42,8 @@ int main()
 	S->AddChildrenToTrm(p1);
 	S->PrintTRMList();
 	//cout << *p1 << " " << *p1->GetFirstChild() << " " << *p1->GetSecondChild();
+=======
+	cout << *p1 << " " << *p1->GetFirstChild() << " " << *p1->GetSecondChild();*/
+>>>>>>> 743cb664bfd79e2b26fd428d91e4bf0904c79b2a
 	return 0;
 }

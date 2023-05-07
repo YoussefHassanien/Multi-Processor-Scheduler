@@ -23,10 +23,9 @@ void SJF::DeleteProcess(Process*& p)
 }
 
 //Schedueling algorithm
-void SJF:: ScheduleAlgo()
-
+void SJF::ScheduleAlgo()
 {
-	
+	IO* ioTemp;
 	if (RDY_List.isEmpty())
 		return;
 	Process* tmp=nullptr;
@@ -39,15 +38,44 @@ void SJF:: ScheduleAlgo()
 	{
 		DeleteProcess(tmp);
 		RUNNING = tmp;
+		tmp->SetRT(s->getTimeStep() - tmp->GetAT());
 		isbusy = true;                             //Set the processor as busy
 		s->incrementRunningCount();
 		return;
 	}
 
-	else if (isbusy) 
+	else if (isbusy && RUNNING->GetCT()!=0)
 	{
 		RUNNING->DecrementCT();
 		RUNNING->IncrementRunningFor();
+		if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running 
+		{
+			RUNNING->GetFirstIO(ioTemp);
+			if (ioTemp)
+			{
+				if (ioTemp->GetRequest() >= 0)
+				{
+					ioTemp->DecrementIO_R();
+				}
+
+
+				if (ioTemp->GetRequest() == -1)
+				{
+					s->addtoblocklist(RUNNING);
+					isbusy = false;
+					RUNNING = nullptr;
+					s->DecrementRunningCount();
+				}
+			}
+		}
+	}
+
+	else if (isbusy && RUNNING->GetCT() == 0)
+	{
+		s->addToTrm(RUNNING);
+		isbusy = false;
+		RUNNING = nullptr;
+		s->DecrementRunningCount();
 	}
 
 

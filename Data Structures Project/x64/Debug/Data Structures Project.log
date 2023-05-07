@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 ﻿  Scheduler.cpp
 D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\Scheduler.cpp(231,6): warning C4101: 'random': unreferenced local variable
   UI_Info.cpp
   Generating Code...
   Data Structures Project.vcxproj -> D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\x64\Debug\Data Structures Project.exe
+=======
+﻿  Processor.cpp
+  RR.cpp
+  SJF.cpp
+  Generating Code...
+  Data Structures Project.vcxproj -> C:\Users\Doha ElBeltagy\Desktop\Courses\Spring2023\Data Structure\Project\Phase2.1\Data-Structure-Project\x64\Debug\Data Structures Project.exe
+>>>>>>> 743cb664bfd79e2b26fd428d91e4bf0904c79b2a

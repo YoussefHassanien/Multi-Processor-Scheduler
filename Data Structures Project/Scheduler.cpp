@@ -29,6 +29,7 @@ Scheduler::Scheduler(): UI(this)
 	RTF=0;
 	MaxW=0;
 	STL = 0;
+	Output = "OutputFile";
 }
 
 //destructor
@@ -41,6 +42,7 @@ void Scheduler::setfilename(string& s)
 {
 	FLName = s;
 }
+
 
 //Function to read the input file
 void Scheduler::readfileparameters()
@@ -93,7 +95,7 @@ void Scheduler::readfileparameters()
 			p->SetID(stoi(PID));
 			p->SetCT(stoi(CT));
 			p->SetN(stoi(N));
-			LinkedQueue<IO*>* IOq= new LinkedQueue<IO*>;
+			//LinkedQueue<IO*>* IOq= new LinkedQueue<IO*>;
 			for (int i = 0; i < stoi(N); i++)
 			{
 				string openbracket;
@@ -113,7 +115,7 @@ void Scheduler::readfileparameters()
 				io->SetDuration(intIO_D);
 				io->SetRequest(intIO_R);
 				p->AddIO(io);
-				continue;
+				
 
 			}
 			addtonewlist(p);
@@ -157,6 +159,14 @@ void Scheduler::readfileparameters()
 	}
 }
 
+void Scheduler::PrintOutputFile() //still in progress
+{
+	Output += ".txt";
+	ofstream OutFile;
+	OutFile.open(Output, ios::out);
+	//OutFile<<
+}
+
 //Adds a process to the NEW list 
 void Scheduler::addtonewlist(Process* p)
 {
@@ -173,11 +183,17 @@ void Scheduler::addtoblocklist(Process*& p)
 //Adds a process to the TRM list 
 void Scheduler::addToTrm(Process* p)
 {
+<<<<<<< HEAD
 	if (p)
 	{
 		terminatedlist.enqueue(p);
 		TerminatedProcesses++;
 	}
+=======
+	p->SetTT(TimeStep); //sets the termination time of the process with the current timestep;
+	terminatedlist.enqueue(p);
+	TerminatedProcesses++;
+>>>>>>> 743cb664bfd79e2b26fd428d91e4bf0904c79b2a
 }
 
 //Getter for the total number of processors 
@@ -265,6 +281,7 @@ void Scheduler::simulation()
 			if (i < FCFS_ProcessorsCnt) //to insure that the forking is for fcfs processors only
 				IntiateForking(PArr[i]->getRunning()); //Forking operation
 
+<<<<<<< HEAD
 			//Run to TRM
 			if (PArr[i]->getRunning()) {
 				Process* CurrentRunning = PArr[i]->getRunning(); //moves to terminated if ct =0
@@ -296,6 +313,8 @@ void Scheduler::simulation()
 				
 			}
 
+=======
+>>>>>>> 743cb664bfd79e2b26fd428d91e4bf0904c79b2a
 		}
 		//BLK to RDY
 		if (!blocklist.isEmpty()) //check BLK list
@@ -314,6 +333,14 @@ void Scheduler::simulation()
 			}
 
 		}
+		/*if (!terminatedlist.isEmpty())
+		{
+			Process* p = nullptr;
+			terminatedlist.dequeue(p);
+			cout <<p->GetID()<<" " << p->GetWT() << " " << p->GetTRT() << " " << p->GetRT() << endl;
+		}
+		else
+			cout << "terminated empty..."<<endl;*/
 		WorkStealing();
 		UI.PrintInteractiveMode();
 		TimeStep++;

@@ -21,6 +21,7 @@ void RoundRobin::DeleteProcess(Process*& p)
 //Schedueling algorithm
 void RoundRobin::ScheduleAlgo()
 {
+	IO* ioTemp;
 
 	if (RDY_List.isEmpty() && !RUNNING)
 		return;
@@ -34,6 +35,7 @@ void RoundRobin::ScheduleAlgo()
 	{
 		DeleteProcess(tmp);
 		RUNNING = tmp;
+		tmp->SetRT(s->getTimeStep() - tmp->GetAT());
 		isbusy = true;                             //Set the processor as busy
 		s->incrementRunningCount();
 		return;
@@ -43,6 +45,26 @@ void RoundRobin::ScheduleAlgo()
 		stepscounter++;
 		RUNNING->DecrementCT();
 		RUNNING->IncrementRunningFor();
+		if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running 
+		{
+			RUNNING->GetFirstIO(ioTemp);
+			if (ioTemp)
+			{
+				if (ioTemp->GetRequest() >= 0)
+				{
+					ioTemp->DecrementIO_R();
+				}
+
+
+				if (ioTemp->GetRequest() == -1)
+				{
+					s->addtoblocklist(RUNNING);
+					isbusy = false;
+					RUNNING = nullptr;
+					s->DecrementRunningCount();
+				}
+			}
+		}
 	}
 
 	if  (stepscounter==Time_Slice)   //the current timestep is the Round Robin timeslice
@@ -53,6 +75,14 @@ void RoundRobin::ScheduleAlgo()
 		s->DecrementRunningCount();
 		stepscounter = 0;
 		return;
+	}
+
+	if (isbusy && RUNNING->GetCT() == 0)
+	{
+		s->addToTrm(RUNNING);
+		isbusy = false;
+		RUNNING = nullptr;
+		s->DecrementRunningCount();
 	}
 	
 	
