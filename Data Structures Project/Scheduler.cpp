@@ -183,17 +183,14 @@ void Scheduler::addtoblocklist(Process*& p)
 //Adds a process to the TRM list 
 void Scheduler::addToTrm(Process* p)
 {
-<<<<<<< HEAD
 	if (p)
 	{
 		terminatedlist.enqueue(p);
 		TerminatedProcesses++;
 	}
-=======
 	p->SetTT(TimeStep); //sets the termination time of the process with the current timestep;
 	terminatedlist.enqueue(p);
 	TerminatedProcesses++;
->>>>>>> 743cb664bfd79e2b26fd428d91e4bf0904c79b2a
 }
 
 //Getter for the total number of processors 
@@ -250,9 +247,9 @@ void Scheduler::simulation()
 	readfileparameters();
 	while (!AllIsTerminated())
 	{
-        
-		Process* p=nullptr;
-		for (int i = 0; i < LastProcessID; i++) 
+
+		Process* p = nullptr;
+		for (int i = 0; i < LastProcessID; i++)
 		{
 			if (!newlist.isEmpty())
 			{
@@ -260,93 +257,44 @@ void Scheduler::simulation()
 				AddtoRdyLists(p);
 			}
 		}
-		
 
-		for (int i = 0; i < Processor_Count; i++) 
+
+		for (int i = 0; i < Processor_Count; i++)
 		{
-			
-			//Process migration 
-			
-			//if (FCFS* FCFSptr = dynamic_cast<FCFS*>(PArr[i]))  // the current processor is a FCFS processor
-			//{
-			//	FCFSptr->FCFStoRR_Migration();
-			//}
-			//else if (RoundRobin* RRptr = dynamic_cast<RoundRobin*>(PArr[i])) // the current processor is a RR processor 
-			//{
-			//	RRptr->RRtoSJF_Migration();
-			//}
-
-			
 			PArr[i]->ScheduleAlgo(); //rdy to run and run to rdy
-			if (i < FCFS_ProcessorsCnt) //to insure that the forking is for fcfs processors only
-				IntiateForking(PArr[i]->getRunning()); //Forking operation
 
-<<<<<<< HEAD
-			//Run to TRM
-			if (PArr[i]->getRunning()) {
-				Process* CurrentRunning = PArr[i]->getRunning(); //moves to terminated if ct =0
-				if (CurrentRunning->GetCT() == 0)
-				{
-					addToTrm(CurrentRunning);
-
-					PArr[i]->SetRunning(nullptr);
-					PArr[i]->setisbusy(false);
-					DecrementRunningCount();
-					continue;
-				}
-
-				//Run to BLK
-				if (CurrentRunning->GetN() != 0) //checks if the current process needs IO
-				{
-					CurrentRunning->GetFirstIO(ioTemp); 
-					if (ioTemp!=nullptr) {
-						if (ioTemp->GetRequest() == TimeStep) //checks if the IO_R equals the current timestep //add a data member that counts execution time
-						{
-							addtoblocklist(CurrentRunning);
-							PArr[i]->SetRunning(nullptr);
-							PArr[i]->setisbusy(false);
-							DecrementRunningCount();
-						}
-					}
-				}
-
-				
-			}
-
-=======
->>>>>>> 743cb664bfd79e2b26fd428d91e4bf0904c79b2a
-		}
-		//BLK to RDY
-		if (!blocklist.isEmpty()) //check BLK list
-		{
-			for (int i = 0; i < BLKCount; i++)
+			//BLK to RDY
+			if (!blocklist.isEmpty()) //check BLK list
 			{
-				blocklist.dequeue(TempProc);
-				if (TempProc->CheckIO_D())  //CheckIO_D needs further modifications
+				for (int i = 0; i < BLKCount; i++)
 				{
-					Set_ShortestListIdx();
-					PArr[ShortestListIdx]->AddToRdy(TempProc);
-					BLKCount--;
+					blocklist.dequeue(TempProc);
+					if (TempProc->CheckIO_D())  //CheckIO_D needs further modifications
+					{
+						Set_ShortestListIdx();
+						PArr[ShortestListIdx]->AddToRdy(TempProc);
+						BLKCount--;
+					}
+					else
+						blocklist.enqueue(TempProc);
 				}
-				else
-					blocklist.enqueue(TempProc);
+
 			}
+			/*if (!terminatedlist.isEmpty())
+			{
+				Process* p = nullptr;
+				terminatedlist.dequeue(p);
+				cout <<p->GetID()<<" " << p->GetWT() << " " << p->GetTRT() << " " << p->GetRT() << endl;
+			}
+			else
+				cout << "terminated empty..."<<endl;*/
+			WorkStealing();
+			UI.PrintInteractiveMode();
+			TimeStep++;
+		}
 
-		}
-		/*if (!terminatedlist.isEmpty())
-		{
-			Process* p = nullptr;
-			terminatedlist.dequeue(p);
-			cout <<p->GetID()<<" " << p->GetWT() << " " << p->GetTRT() << " " << p->GetRT() << endl;
-		}
-		else
-			cout << "terminated empty..."<<endl;*/
-		WorkStealing();
-		UI.PrintInteractiveMode();
-		TimeStep++;
+
 	}
-
-
 }
 
 
@@ -519,17 +467,13 @@ void Scheduler::IntiateForking(Process*running)
 {
 	if (running)
 	{
-		int RandomForkProb = generaterandom(1, 100);
-		if (RandomForkProb > 0 && RandomForkProb <= ForkProb)
-		{
-			LastProcessID++;
-			Process* child = new Process(TimeStep, LastProcessID, running->GetCT());
-			child->SetParent(running);
-			running->AddChild(child);
-			Set_ShortestFCFS();
-			PArr[ShortestFCFSListIdx]->AddToRdy(child);
-			ParentsList.InsertEnd(running);
-		}
+		LastProcessID++;
+		Process* child = new Process(TimeStep, LastProcessID, running->GetCT());
+		child->SetParent(running);
+		running->AddChild(child);
+		Set_ShortestFCFS();
+		PArr[ShortestFCFSListIdx]->AddToRdy(child);
+		ParentsList.InsertEnd(running);
 	}
 }
 
@@ -592,7 +536,7 @@ bool Scheduler::ParentKilling(Process* parent)
 				{
 					if (PArr[i]->Search(parent->GetFirstChild()))
 					{
-						PArr[i]->DeleteProcess(parent->GetFirstChild()); //i think this might cause a null access violation as the the delete takes the value by refrence and makes it point to null after removing it from the nodes
+						PArr[i]->DeleteProcess(parent->GetFirstChild()); 
 					}
 						
 				}

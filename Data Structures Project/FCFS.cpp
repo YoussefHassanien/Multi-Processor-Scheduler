@@ -86,20 +86,20 @@ void FCFS::ScheduleAlgo()
 {
 	Process* tmp = nullptr;
 	IO* ioTemp;
+	int RandomForkProb = s->generaterandom(1, 100);
 	if (RDYList.isEmpty() && !RUNNING) // if there is nothing in the ready list and no process is running
 		return;
 	if (!isbusy) //sets a process as running if the processor is idle
 	{
-<<<<<<< HEAD
 		RDYList.DeleteFirst(tmp);
 		processescount--;
-=======
-		deleteprocess(tmp);
+		DeleteProcess(tmp);
 		tmp->SetRT(s->getTimeStep());
->>>>>>> 743cb664bfd79e2b26fd428d91e4bf0904c79b2a
 		RUNNING = tmp;
 		isbusy = true;                                  //Set the processor as busy
 		s->incrementRunningCount();
+		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb()) //Forking condition
+			s->IntiateForking(RUNNING); //Forking operation
 		return;
 	}
 	else if (isbusy && RUNNING->GetCT() != 0)
@@ -107,7 +107,8 @@ void FCFS::ScheduleAlgo()
 		
 		RUNNING->DecrementCT();
 		RUNNING->IncrementRunningFor();
-	
+		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb()) //Forking condition
+			s->IntiateForking(RUNNING); //Forking operation
 		if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running 
 		{
 			RUNNING->GetFirstIO(ioTemp);
@@ -132,6 +133,7 @@ void FCFS::ScheduleAlgo()
 	else if (isbusy && RUNNING->GetCT() == 0)
 	{
 		s->addToTrm(RUNNING);
+		s->ParentKilling(RUNNING); //Killing the orphans operation
 		isbusy = false;
 		RUNNING = nullptr;
 		s->DecrementRunningCount();
