@@ -187,10 +187,9 @@ void Scheduler::addToTrm(Process* p)
 	{
 		terminatedlist.enqueue(p);
 		TerminatedProcesses++;
+		p->SetTT(TimeStep); //sets the termination time of the process with the current timestep;
 	}
-	p->SetTT(TimeStep); //sets the termination time of the process with the current timestep;
-	terminatedlist.enqueue(p);
-	TerminatedProcesses++;
+	
 }
 
 //Getter for the total number of processors 
@@ -263,23 +262,24 @@ void Scheduler::simulation()
 		{
 			PArr[i]->ScheduleAlgo(); //rdy to run and run to rdy
 
-			//BLK to RDY
-			if (!blocklist.isEmpty()) //check BLK list
+		}
+		//BLK to RDY
+		if (!blocklist.isEmpty()) //check BLK list
+		{
+			for (int i = 0; i < BLKCount; i++)
 			{
-				for (int i = 0; i < BLKCount; i++)
+				blocklist.dequeue(TempProc);
+				if (TempProc->CheckIO_D())  //CheckIO_D needs further modifications
 				{
-					blocklist.dequeue(TempProc);
-					if (TempProc->CheckIO_D())  //CheckIO_D needs further modifications
-					{
-						Set_ShortestListIdx();
-						PArr[ShortestListIdx]->AddToRdy(TempProc);
-						BLKCount--;
-					}
-					else
-						blocklist.enqueue(TempProc);
+					Set_ShortestListIdx();
+					PArr[ShortestListIdx]->AddToRdy(TempProc);
+					BLKCount--;
 				}
-
+				else
+					blocklist.enqueue(TempProc);
 			}
+
+		}
 			/*if (!terminatedlist.isEmpty())
 			{
 				Process* p = nullptr;
@@ -288,10 +288,10 @@ void Scheduler::simulation()
 			}
 			else
 				cout << "terminated empty..."<<endl;*/
-			WorkStealing();
-			UI.PrintInteractiveMode();
-			TimeStep++;
-		}
+	WorkStealing();
+	UI.PrintInteractiveMode();
+	TimeStep++;
+		
 
 
 	}

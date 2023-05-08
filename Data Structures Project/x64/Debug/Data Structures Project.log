@@ -1,12 +1,2 @@
-﻿  FCFS.cpp
-  Process.cpp
-  Processor.cpp
-  RR.cpp
-  SJF.cpp
-  Scheduler.cpp
-D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\Scheduler.cpp(246,6): warning C4101: 'ioTemp': unreferenced local variable
-D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\Scheduler.cpp(244,6): warning C4101: 'random': unreferenced local variable
-  Source.cpp
-  UI_Info.cpp
-  Generating Code...
-  Data Structures Project.vcxproj -> D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\x64\Debug\Data Structures Project.exe
+﻿  RR.cpp
+  Data Structures Project.vcxproj -> C:\Users\Doha ElBeltagy\Desktop\Courses\Spring2023\Data Structure\Project\Phase2.1\Data-Structure-Project\x64\Debug\Data Structures Project.exe

@@ -21,7 +21,7 @@ void RoundRobin::DeleteProcess(Process*& p)
 //Schedueling algorithm
 void RoundRobin::ScheduleAlgo()
 {
-	IO* ioTemp;
+	IO* ioTemp=NULL;
 
 	if (RDY_List.isEmpty() && !RUNNING)
 		return;
@@ -48,7 +48,7 @@ void RoundRobin::ScheduleAlgo()
 		if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running 
 		{
 			RUNNING->GetFirstIO(ioTemp);
-			if (ioTemp)
+			if (ioTemp!=nullptr)
 			{
 				if (ioTemp->GetRequest() >= 0)
 				{
