@@ -146,18 +146,14 @@ void FCFS::ScheduleAlgo()
 //Controls the process migration from FCFS processor to RR processor
 void FCFS::FCFStoRR_Migration()
 {
-	if (RUNNING)   //there is a running process to check the migration condition
+	 
+	Process *p;
+	RDYList.peek(p);
+	if (p->WTsofar() < s->GetMaxW())
 	{
-		Process* p = nullptr;
-		Process* newrunning = nullptr;
-		if (RUNNING->WTsofar() < s->GetMaxW())
-		{
-			p = RUNNING;
-			RDYList.DeleteFirst(newrunning);
-			RUNNING = newrunning;
-			s->FromFCFStoShortestRR(p);
-			FCFStoRR_Migration();
-		}
+		RDYList.DeleteFirst(p);
+		s->FromFCFStoShortestRR(p);
+		FCFStoRR_Migration();
 	}
 }
 
