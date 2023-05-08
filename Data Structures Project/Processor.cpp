@@ -79,19 +79,7 @@ int Processor::GetTotalCT()
 	return TotalCT;
 }
 
-int Processor::SumCT()
-{
-	int sum = 0;
-	Process* p;
-	for (int i = 0; i < processescount; i++)
-	{
-		DeleteProcess(p);
-		sum += p->GetCT();
-		AddToRdy(p);
-	}
-	TotalCT = sum;
-	return (TotalCT);
-}
+
 
 
 //Destructor

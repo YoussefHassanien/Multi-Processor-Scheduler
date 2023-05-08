@@ -110,6 +110,17 @@ bool SJF::Search(Process* value)
 	return RDY_List.Find(value);
 }
 
+int SJF::SumCT()
+{
+	Process* p;
+	for (int i = 0; i < processescount; i++)
+	{
+		RDY_List.IterativePeek(p, i + 1);
+		TotalCT += p->GetCT();
+	}
+	return (TotalCT);
+}
+
 //destructor
 SJF::~SJF()
 {

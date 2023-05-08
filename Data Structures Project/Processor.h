@@ -47,7 +47,7 @@ class Process;
 		int GetPLoad();                     // Getter for the Processor Load perecentage 
 		int GetPUtil();                     // Getter for the Processor Utilization Percentage
 		int GetTotalCT();                   //Getter for the total CT of all processes in the ready list
-		int SumCT();                        //Sums the CT of all processes in the ready queue
+		virtual int SumCT()=0;              //Sums the CT of all processes in the ready queue
 		~Processor();                       //Destructor
 
 	};

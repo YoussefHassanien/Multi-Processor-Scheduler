@@ -107,7 +107,7 @@ void FCFS::ScheduleAlgo()
 		
 		RUNNING->DecrementCT();
 		RUNNING->IncrementRunningFor();
-		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb()) //Forking condition
+		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb())
 			s->IntiateForking(RUNNING); //Forking operation
 		if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running 
 		{
@@ -164,6 +164,17 @@ void FCFS::FCFStoRR_Migration()
 bool FCFS::Search(Process* value)
 {
 	return RDYList.Find(value);
+}
+
+int FCFS::SumCT()
+{
+		Process* p;
+		for (int i = 0; i < processescount; i++)
+		{
+			RDYList.IterativePeek(p, i + 1);
+			TotalCT += p->GetCT();
+		}
+		return (TotalCT);
 }
 
 //destructor

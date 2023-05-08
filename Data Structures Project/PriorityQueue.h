@@ -179,6 +179,21 @@ public:
 		}
 		return false;
 	}
+	bool IterativePeek(T& frntEntry, int index)
+	{
+		if (isEmpty() || index > NodesCounter)
+			return false;
+		if (index == 1)
+			return peek(frntEntry);
+		else
+		{
+			PriorityNode<T>* Temp = frontPtr;
+			for (int i = 0; i < (index - 1); i++)
+				Temp = Temp->getNext();
+			frntEntry = Temp->getItem();
+			return true;
+		}
+	}
 };
 //end PriorityQueue
 

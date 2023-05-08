@@ -273,6 +273,20 @@ public:
 		value = Head->getItem();
 		return true;
 	}
-	
+	bool IterativePeek(T& value, int index)
+	{
+		if (isEmpty() || index > NodesCounter)
+			return false;
+		if (index == 1)
+			return peek(value);
+		else
+		{
+			Node<T>* Temp = Head;
+			for (int i = 0; i < (index-1); i++)
+				Temp = Temp->getNext();
+			value = Temp->getItem();
+			return true;
+		}
+	}
 
 };
