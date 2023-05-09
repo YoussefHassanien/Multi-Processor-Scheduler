@@ -516,11 +516,20 @@ void Scheduler::AddChildrenToTrm(Process* parent)
 		return;
 	else
 	{
-		addToTrm(parent->GetFirstChild());
-		addToTrm(parent->GetSecondChild());
+		if (parent->GetFirstChild())
+		{
+			Process* Child1 = new Process(parent->GetFirstChild()->GetAT(), parent->GetFirstChild()->GetID(), parent->GetFirstChild()->GetCT());
+			addToTrm(Child1);
+			AddChildrenToTrm(parent->GetFirstChild());
+		}
+		if (parent->GetSecondChild())
+		{
+			Process* Child2 = new Process(parent->GetSecondChild()->GetAT(), parent->GetSecondChild()->GetID(), parent->GetSecondChild()->GetCT());
+			addToTrm(Child2);
+			AddChildrenToTrm(parent->GetSecondChild());
+		}
 	}
-	AddChildrenToTrm(parent->GetFirstChild());
-	AddChildrenToTrm(parent->GetSecondChild());
+
 }
 
 bool Scheduler::ParentKilling(Process* parent)
@@ -530,6 +539,7 @@ bool Scheduler::ParentKilling(Process* parent)
 		if (ParentsList.Find(parent)) //Checks if the current running process is in the parents list or not
 		{
 			AddChildrenToTrm(parent); //Since the current running process is in the parents list and it is being terminated so its children must be terminated too
+			
 			if (parent->GetFirstChild()) //Checks if the parent has first child
 			{
 				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
@@ -538,7 +548,6 @@ bool Scheduler::ParentKilling(Process* parent)
 					{
 						PArr[i]->DeleteProcess(parent->GetFirstChild()); 
 					}
-						
 				}
 			} 
 			else 
@@ -550,7 +559,6 @@ bool Scheduler::ParentKilling(Process* parent)
 						{
 							PArr[i]->DeleteProcess(parent->GetSecondChild());  //i think this might cause a null access violation as the the delete takes the value by refrence and makes it point to null after removing it from the nodes
 						}
-
 					}
 				}
 			return true;
