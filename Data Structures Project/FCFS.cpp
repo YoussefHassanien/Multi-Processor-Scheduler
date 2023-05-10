@@ -101,17 +101,22 @@ void FCFS::ScheduleAlgo()
 		s->incrementRunningCount();
 		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb()) //Forking condition
 			s->IntiateForking(RUNNING); //Forking operation
+<<<<<<< HEAD
 		TempKillSig->DecrementKillTime();
 		if (TempKillSig->getTime() == 0)
 		{
 			s->addToTrm(RUNNING);
 			}
+=======
+		
+>>>>>>> ca1047949b40a48c84f9358ade913cd1c8809308
 		return;
 	}
-	else if (isbusy && RUNNING->GetCT() != 0)
+	else if (isbusy && RUNNING->GetCT() != 0) //keda lama btdkhol running mesh h decrement l ct fl time step di??
 	{
 		
 		RUNNING->DecrementCT();
+		TotalBT++;
 		RUNNING->IncrementRunningFor();
 		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb())
 			s->IntiateForking(RUNNING); //Forking operation
@@ -142,6 +147,8 @@ void FCFS::ScheduleAlgo()
 		s->ParentKilling(RUNNING); //Killing the orphans operation
 		isbusy = false;
 		RUNNING = nullptr;
+		//increment el idle ??
+		TotalIT++;
 		s->DecrementRunningCount();
 	}
 

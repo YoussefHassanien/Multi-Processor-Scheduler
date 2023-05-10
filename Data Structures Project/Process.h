@@ -67,7 +67,8 @@ public:
     friend bool operator ==(Process& p1,Process& p2);                //== Operator Overloading 
 	friend bool operator==(int value,Process& p);                    //== Operator Overloading when the Process ID is sent instead of 2 Processes
 	int GetActualCT();
-	void SetIO_D();										 
+	void SetIO_D();			
+	int GetIO_D();
 	~Process();                                                      //Destructor
 };
 

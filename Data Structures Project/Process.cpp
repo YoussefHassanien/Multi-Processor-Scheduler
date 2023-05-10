@@ -198,6 +198,11 @@ void Process::SetIO_D()
 	}
 }
 
+int Process::GetIO_D()
+{
+	return IO_D;
+}
+
 Process::~Process()
 {
 	//delete IOqueue;

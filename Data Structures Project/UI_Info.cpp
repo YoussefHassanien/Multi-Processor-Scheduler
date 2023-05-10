@@ -1,6 +1,8 @@
 #pragma once
 #include "UI_Info.h"
 #include "Scheduler.h"
+#include <chrono>
+#include <thread>
 UI_Info::UI_Info(Scheduler* Sptr)
 {
 	S = Sptr;
@@ -30,6 +32,15 @@ UI_Info::UI_Info(Scheduler* Sptr)
 	S->setfilename(FLName);
 
 }
+void UI_Info::printInterface()
+{
+	if (InterfaceMode == 0)
+		PrintInteractiveMode();
+	else if (InterfaceMode == 1)
+		PrintStep_By_StepMode();
+	else
+		PrintSilentMode();
+}
 void UI_Info::PrintInteractiveMode()
 {
 	cout << "current timestep: " << S->getTimeStep() << endl;
@@ -43,4 +54,38 @@ void UI_Info::PrintInteractiveMode()
 	S->PrintTRMList();
 	cout << endl<<"PRESS ANY KEY TO MOVE TO NEXT STEP !" << endl;
 	system("pause");
+}
+
+void UI_Info::PrintStep_By_StepMode()
+{
+	cout << "current timestep: " << S->getTimeStep() << endl;
+	cout << "------------------------- RDY Processes ------------------------- " << endl;
+	S->PrintProcessorList();
+	cout << "------------------------- BLK Processes ------------------------- " << endl;
+	S->PrintBLKList();
+	cout << endl << "------------------------- RUN Processes ------------------------- " << endl;
+	S->PrintRunningList();
+	cout << endl << "------------------------- TRM Processes ------------------------- " << endl;
+	S->PrintTRMList();
+	wait();
+}
+
+void UI_Info::PrintSilentMode()
+{
+	if (S->AllIsTerminated())
+	{
+		cout << "Silent Mode...............      Simulation Starts..." << endl;
+		cout << "Simulation ends, Output file Created";
+	}
+}
+
+void UI_Info::wait()
+{
+	
+		using namespace std::this_thread;     // sleep_for, sleep_until
+		using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
+		using std::chrono::system_clock;
+		sleep_for(100ns);
+		sleep_until(system_clock::now() + 1s);
+	
 }
