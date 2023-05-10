@@ -59,19 +59,19 @@ int Processor::GetTotalBT()
 //Getter for the total time of the idle state duration of the processor
 int Processor::GetTotalIT()
 {
-	return TotalIT;
+	return TotalIT;          //howa mesh keda l Idle time daiman b zero???
 }
 
 // Getter for the Processor Load perecentage 
 int Processor::GetPLoad()
 {
-	return PLoad;
+	return (float)GetTotalBT()/s->GetTotalTRT();
 }
 
 // Getter for the Processor Utilization Percentage
 int Processor::GetPUtil()
 {
-	return PUtil;
+	return (float)GetTotalBT()/(GetTotalBT()+GetTotalIT());
 }
 
 int Processor::GetTotalCT()

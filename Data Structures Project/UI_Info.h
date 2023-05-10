@@ -21,10 +21,11 @@ public:
 	Scheduler* S;
 	string FLName;
 	UI_Info(Scheduler* Sptr);
-	
+	void printInterface();
 	void PrintInteractiveMode();
-	
-
+	void PrintStep_By_StepMode();
+	void PrintSilentMode();
+	void wait();
 };
 
 #endif

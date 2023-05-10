@@ -4,6 +4,7 @@
 #include "RR.h"
 #include "SJF.h"
 #include "SIGKILL.h"
+#include <iomanip>
 
 //Constructor
 Scheduler::Scheduler(): UI(this)
@@ -21,7 +22,7 @@ Scheduler::Scheduler(): UI(this)
 	AvgTRT = 0;
 	AvgRTF = 0;
 	MigPercent = 0;
-	StealPercent = 0;
+	StealedProcesses = 0;
 	KillPercent = 0;
 	ForkPercent = 0;
 	AvgUtil = 0;
@@ -36,6 +37,7 @@ Scheduler::Scheduler(): UI(this)
 Scheduler::~Scheduler()
 {
 }
+
 
 //Setter for the file name
 void Scheduler::setfilename(string& s)
@@ -159,12 +161,67 @@ void Scheduler::readfileparameters()
 	}
 }
 
+
 void Scheduler::PrintOutputFile() //still in progress
 {
 	Output += ".txt";
 	ofstream OutFile;
 	OutFile.open(Output, ios::out);
-	//OutFile<<
+	const char separator = ' ';
+	const int nameWidth = 6;
+	const int numWidth = 8;
+	OutFile<< left << setw(nameWidth) << setfill(separator) << "TT";
+	OutFile << left << setw(nameWidth) << setfill(separator) << "PID";
+	OutFile << left << setw(nameWidth) << setfill(separator) << "AT";
+	OutFile << left << setw(nameWidth) << setfill(separator) << "CT";
+	OutFile << left << setw(nameWidth) << setfill(separator) << "IO_D"<<"      ";
+	OutFile << left << setw(nameWidth) << setfill(separator) << "WT";
+	OutFile << left << setw(nameWidth) << setfill(separator) << "RT";
+	OutFile << left << setw(nameWidth) << setfill(separator) << "TRT";
+	OutFile << endl;
+	int TotalWT=0;
+	int TotalTRT=0;
+	int TotalRT=0;
+	for (int i = 0; i < LastProcessID; i++)
+	{
+		Process* p = nullptr;
+		terminatedlist.dequeue(p);
+		OutFile << left << setw(nameWidth) << setfill(separator) << p->GetTT();
+		OutFile << left << setw(nameWidth) << setfill(separator) << p->GetID();
+		OutFile << left << setw(nameWidth) << setfill(separator) << p->GetAT();
+		OutFile << left << setw(nameWidth) << setfill(separator) << p->GetActualCT();
+		OutFile << left << setw(nameWidth) << setfill(separator) << p->GetIO_D() << "      ";
+		OutFile << left << setw(nameWidth) << setfill(separator) << p->GetWT();
+		OutFile << left << setw(nameWidth) << setfill(separator) << p->GetRT();
+		OutFile << left << setw(nameWidth) << setfill(separator) << p->GetTRT();
+		OutFile << endl;
+		TotalWT += p->GetWT();
+		TotalTRT += p->GetTRT();
+		TotalRT += p->GetRT();
+	}
+	OutFile << "Processes: " << LastProcessID << endl;
+	OutFile << "Avg WT = " << TotalWT / LastProcessID << ",       Avg RT = " << TotalRT / LastProcessID << ",       Avg TRT = " << TotalTRT / LastProcessID << endl;
+	OutFile << "Migration %:" << "       RTF=" << "%,       MaxW=" << "%" << endl;   //TBC
+	OutFile << "Work Steal%: " <<((float) StealedProcesses/LastProcessID)*100<< "%" << endl;
+	OutFile << "Forked Processes :" << "%" << endl;   //TBC
+	OutFile << "Killed Processes :" << "%" << endl;   //TBC
+	OutFile << endl << endl;
+	OutFile << "Processor: " << Processor_Count << " ["<<FCFS_ProcessorsCnt<<" FCFS, "<<SJF_ProcessorsCnt<<" SJF, "<<RR_ProcessorsCnt<<" RR]" << endl;
+	OutFile << "Processors Load" << endl;
+	for (int i = 0; i < Processor_Count; i++)
+	{
+		OutFile << "p" << PArr[i]->getID() << "=" << PArr[i]->GetPLoad() * 100 << "%,    ";
+	}
+	OutFile << endl<<endl;
+	OutFile << "Processors Utiliz" << endl;
+	int TotalUtiliz = 0;
+	for (int i = 0; i < Processor_Count; i++)
+	{
+		OutFile << "p" << PArr[i]->getID() << "=" << PArr[i]->GetPUtil() * 100 << "%,    ";
+		TotalUtiliz += PArr[i]->GetPUtil() * 100;
+	}
+	OutFile << endl << "Avg utilization = " << ((float)TotalUtiliz / Processor_Count)*100<<"%";
+
 }
 
 //Adds a process to the NEW list 
@@ -188,6 +245,7 @@ void Scheduler::addToTrm(Process* p)
 		terminatedlist.enqueue(p);
 		TerminatedProcesses++;
 		p->SetTT(TimeStep); //sets the termination time of the process with the current timestep;
+		IncrementTotalTRT(p->GetTRT());  //increments the total TRT
 	}
 	
 }
@@ -239,14 +297,13 @@ bool Scheduler::AllIsTerminated()
 //Simulation function
 void Scheduler::simulation()
 {
-
 	int random;
 	Process* TempProc;;
 	IO* ioTemp;
 	readfileparameters();
 	while (!AllIsTerminated())
 	{
-
+		
 		Process* p = nullptr;
 		for (int i = 0; i < LastProcessID; i++)
 		{
@@ -289,12 +346,13 @@ void Scheduler::simulation()
 			else
 				cout << "terminated empty..."<<endl;*/
 	WorkStealing();
-	UI.PrintInteractiveMode();
+	UI.printInterface();
 	TimeStep++;
 		
 
 
 	}
+	PrintOutputFile();
 }
 
 
@@ -486,6 +544,7 @@ void Scheduler::Set_LongestListIdx()
 			LongestListIdx = i;
 	}
 }
+//work stealing
 
 void Scheduler::WorkStealing()
 {
@@ -500,6 +559,7 @@ void Scheduler::WorkStealing()
 			return;
 		PArr[LongestListIdx]->DeleteProcess(p);
 		PArr[ShortestListIdx]->AddToRdy(p);
+		StealedProcesses++;
 		WorkStealing(); // calls the function recursively until one of the exit conditions is satisfied 
 
 	
@@ -566,6 +626,16 @@ bool Scheduler::ParentKilling(Process* parent)
 		return false;
 	}
 	return false;
+}
+
+void Scheduler::IncrementTotalTRT(int trt)
+{
+	TotalTRT += trt;
+}
+
+int Scheduler::GetTotalTRT()
+{
+	return TotalTRT;
 }
 
 

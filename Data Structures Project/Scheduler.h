@@ -47,7 +47,7 @@ private:
 	int AvgTRT;                            //Average Turnaround Time of all Processes
 	int AvgRTF;                            //Average RTF time of all Processes
 	int MigPercent;                        //Percentage of Process Migration due to RTF and MaxW
-	int StealPercent;                      //Percentage of Process moved by Work Steal
+	int StealedProcesses;                      //Percentage of Process moved by Work Steal
 	int KillPercent;                       //Percentage of Process Kill
 	int ForkPercent;                       //Percentage of Process Fork
 	int AvgUtil;                           //Average Utilization for all Processors
@@ -57,6 +57,7 @@ private:
 	int ShortestSJFListIdx;                //Index of the SJF processor with the shortest ready list
 	int ShortestRRListIdx;                 //Index of the RR processor with the shortest ready list
 	int LongestListIdx;                    //Index of the processor with the Longest ready list
+	int TotalTRT;                          //total TurnAround time for all processors in the system (used for PLoad)
 
 
 public:
@@ -101,5 +102,7 @@ public:
 	LinkedQueue<SIGKILL*> GetKillSigList();  //Getter for the KillSigList
 	void AddChildrenToTrm(Process* parent);  //Adds the forked processes to the terminated list
 	bool ParentKilling(Process* parent);     //Kills a specific parent process and its children  
+	void IncrementTotalTRT(int trt);         //increments the total TRT with a process's TRT
+	int GetTotalTRT();                       //Getter for the total TRT
 };
 #endif
