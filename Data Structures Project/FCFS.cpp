@@ -4,7 +4,6 @@ LinkedQueue<SIGKILL*> FCFS::KillingSignalsList;
 FCFS::FCFS(Scheduler*Sptr,int id): Processor(Sptr)
 {
 	ID = id;
-	KillingSignalsList = Sptr->GetKillSigList();
 }
 
 //adds a process in the ready list
@@ -85,8 +84,10 @@ int FCFS::GetRDYListCount()
 void FCFS::ScheduleAlgo()
 {
 	Process* tmp = nullptr;
-	IO* ioTemp;
+	IO* ioTemp = nullptr;
+	SIGKILL* TempKillSig = nullptr;
 	int RandomForkProb = s->generaterandom(1, 100);
+	KillingSignalsList.peek(TempKillSig);
 	if (RDYList.isEmpty() && !RUNNING) // if there is nothing in the ready list and no process is running
 		return;
 	if (!isbusy) //sets a process as running if the processor is idle
@@ -100,6 +101,11 @@ void FCFS::ScheduleAlgo()
 		s->incrementRunningCount();
 		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb()) //Forking condition
 			s->IntiateForking(RUNNING); //Forking operation
+		TempKillSig->DecrementKillTime();
+		if (TempKillSig->getTime() == 0)
+		{
+			s->addToTrm(RUNNING);
+			}
 		return;
 	}
 	else if (isbusy && RUNNING->GetCT() != 0)
@@ -173,6 +179,14 @@ int FCFS::SumCT()
 		return (TotalCT);
 }
 
+ void FCFS::SetKillSigList(LinkedQueue<SIGKILL*>killsiglist)
+{
+	 KillingSignalsList = killsiglist;
+}
+ void FCFS::AddKillingSignal(SIGKILL* killsignal)
+ {
+	 KillingSignalsList.enqueue(killsignal);
+ }
 //destructor
 FCFS::~FCFS()
 {

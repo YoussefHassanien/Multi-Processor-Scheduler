@@ -132,7 +132,8 @@ void Scheduler::readfileparameters()
 			InFile >> ProcessID;
 			int intProcessID = stoi(ProcessID);
 			SIGKILL* SigKillPtr = new SIGKILL(intProcessID, intkillTime);
-			KillSigList.enqueue(SigKillPtr);
+			FCFS* TempFCFS = new FCFS(this);
+			TempFCFS->AddKillingSignal(SigKillPtr);
 			continue;
 		}
 		for (int i = 0; i < FCFS_ProcessorsCnt; i++)
@@ -503,11 +504,6 @@ void Scheduler::WorkStealing()
 		WorkStealing(); // calls the function recursively until one of the exit conditions is satisfied 
 
 	
-}
-
-LinkedQueue<SIGKILL*> Scheduler::GetKillSigList()
-{
-	return KillSigList;
 }
 
 void Scheduler::AddChildrenToTrm(Process* parent)

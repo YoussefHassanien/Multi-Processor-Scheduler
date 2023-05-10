@@ -4,23 +4,28 @@ using namespace std;
 class SIGKILL
 {
 private:
-	int Process_ID;
-	int Kill_Time;
+	int ProcessID;
+	int KillTime;
 public:
 	//Constructor
 	SIGKILL(int Process_ID, int Kill_Time)
 	{
-		Process_ID = this->Process_ID;
-		Kill_Time = this->Kill_Time;
+		ProcessID = Process_ID;
+		KillTime = Kill_Time;
 	}
 	//Getter for the ID
 	int getID()
 	{
-		return Process_ID;
+		return ProcessID;
 	}
 	//Getter for the kill time
 	int getTime()
 	{
-		return Kill_Time;
+		return KillTime;
+	}
+	void DecrementKillTime()
+	{
+		if (KillTime > 0)
+			KillTime--;
 	}
 };

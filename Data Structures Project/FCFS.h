@@ -2,13 +2,14 @@
 #include "Processor.h"
 #include "LinkedQueue.h"
 #include "LinkedList.h"
+#include "SigKill.h"
 
 class FCFS : public Processor
 {
 private:
 	LinkedList<Process*> RDYList;                   //RDY list
 	LinkedList<int> RDYListIDs;                     //list of ID of processes in the RDY list
-	static LinkedQueue<SIGKILL*> KillingSignalsList;//Queue of killing signals pointers 
+	static LinkedQueue<SIGKILL*> KillingSignalsList; //A Queue of killing signals pointers 
 public:
 	FCFS(Scheduler* Sptr,int id=0);                 //constructor
 	void AddToRdy(Process* p);                      //Adds a process to the processor ready list
@@ -24,6 +25,7 @@ public:
 	void FCFStoRR_Migration();                      //Controls the process migration from FCFS processor to RR processor
 	bool Search(Process* value);                    //Searches for a specific process in the ready list
 	int SumCT();                                    //Sums the CT of all processes in the ready queue
+	static void AddKillingSignal(SIGKILL*killsignal);   //enqueue a killing in the Killing Signals List
 	~FCFS();                                        //Destructor
 	         
 };
