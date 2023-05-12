@@ -34,9 +34,9 @@ class Process;
 		void setisbusy(bool b);                                    //sets the processor running state
 		Process* getRunning();                                     //gets the process in running state
 		void SetRunning(Process* proc);
+		virtual void DeleteProcessAtPosition(Process*& p)=0;       //deletes a process in any place in the RDYList (Applicable only for FCFS)
 		bool getisbusy();                                          //returns the processor's running state
 		int Getprocessescount();                                   //Getter for the processes count in the ready list
-		virtual bool RandomTermination(int id)=0;                  //Picks a process randomly to terminate it
 		int getID();                                               //Getter for the processor ID
 		virtual void Print_List() = 0;                             //Prints the ready list
 		friend ostream& operator<<(ostream& output, Processor& p); //Operator overloading

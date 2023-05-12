@@ -88,11 +88,6 @@ void RoundRobin::ScheduleAlgo()
 	
 }
 
-//Picks a process randomly to terminate it
-bool RoundRobin::RandomTermination(int id)
-{
-	return false;
-}
 
 //Prints ready list processes
 void RoundRobin::Print_List()
@@ -139,6 +134,11 @@ int RoundRobin::SumCT()
 		TotalCT += p->GetCT();
 	}
 	return (TotalCT);
+}
+
+void RoundRobin::DeleteProcessAtPosition(Process*& p)
+{
+	return;
 }
 
 //destructor

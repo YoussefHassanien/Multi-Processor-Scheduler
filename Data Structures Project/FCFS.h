@@ -14,8 +14,8 @@ public:
 	FCFS(Scheduler* Sptr,int id=0);                 //constructor
 	void AddToRdy(Process* p);                      //Adds a process to the processor ready list
 	void DeleteProcess(Process*& p);                //deletes a give process when it moves to another queue or to being blocked
+	void DeleteProcessAtPosition(Process*& p);      //deletes a process in any place in the RDYList
 	void ScheduleAlgo();                            //Schedueling algorithm
-	bool RandomTermination(int id);                 //Picks a process randomly to terminate it
 	void DeleteProcessID(Process* p);               //Deletes a process ID from RDYListIDs
 	void AddToRdyIDs(Process* p);                   //Adds a process ID to RDYListIDs
 	void Print_List();                              //Prints ready list processes

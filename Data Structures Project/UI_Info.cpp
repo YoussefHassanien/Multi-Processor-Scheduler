@@ -32,18 +32,18 @@ UI_Info::UI_Info(Scheduler* Sptr)
 	S->setfilename(FLName);
 
 }
-void UI_Info::printInterface()
+void UI_Info::printInterface(int timestep)
 {
 	if (InterfaceMode == 0)
-		PrintInteractiveMode();
+		PrintInteractiveMode(timestep);
 	else if (InterfaceMode == 1)
-		PrintStep_By_StepMode();
+		PrintStep_By_StepMode(timestep);
 	else
 		PrintSilentMode();
 }
-void UI_Info::PrintInteractiveMode()
+void UI_Info::PrintInteractiveMode(int timestep)
 {
-	cout << "current timestep: " << S->getTimeStep() << endl;
+	cout << "current timestep: " << timestep << endl;
 	cout << "------------------------- RDY Processes ------------------------- " << endl;
 	S->PrintProcessorList();
 	cout << "------------------------- BLK Processes ------------------------- " << endl;
@@ -56,9 +56,9 @@ void UI_Info::PrintInteractiveMode()
 	system("pause");
 }
 
-void UI_Info::PrintStep_By_StepMode()
+void UI_Info::PrintStep_By_StepMode(int timestep)
 {
-	cout << "current timestep: " << S->getTimeStep() << endl;
+	cout << "current timestep: " << timestep << endl;
 	cout << "------------------------- RDY Processes ------------------------- " << endl;
 	S->PrintProcessorList();
 	cout << "------------------------- BLK Processes ------------------------- " << endl;

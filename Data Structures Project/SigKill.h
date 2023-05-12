@@ -23,9 +23,4 @@ public:
 	{
 		return KillTime;
 	}
-	void DecrementKillTime()
-	{
-		if (KillTime > 0)
-			KillTime--;
-	}
 };

@@ -21,9 +21,9 @@ public:
 	Scheduler* S;
 	string FLName;
 	UI_Info(Scheduler* Sptr);
-	void printInterface();
-	void PrintInteractiveMode();
-	void PrintStep_By_StepMode();
+	void printInterface(int timestep);
+	void PrintInteractiveMode(int timestep);
+	void PrintStep_By_StepMode(int timestep);
 	void PrintSilentMode();
 	void wait();
 };

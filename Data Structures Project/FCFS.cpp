@@ -23,35 +23,26 @@ void FCFS::AddToRdyIDs(Process* p)
 //removes a node from the list
 void FCFS::DeleteProcess(Process*& p)
 {
-	RDYList.DeleteNode(p);
+	RDYList.DeleteFirst(p);
 	processescount--;
 	DeleteProcessID(p);
+}
+
+void FCFS::DeleteProcessAtPosition(Process*& p)
+{
+	RDYList.DeleteNode(p);
+	processescount--;
 }
 
 //Deletes a process ID from RDYListIDs
 void FCFS::DeleteProcessID(Process* p)
 {
-	int y = p->GetID();
-	RDYListIDs.DeleteNode(y);
+	int y=0;
+	RDYListIDs.DeleteFirst(y);
 }
 
 
-//Picks a process randomly to terminate it
-bool FCFS::RandomTermination(int id)
-{
-	int position = RDYListIDs.Find(id);
-	Process* p=nullptr;
-	
-	if (position!=0)
-	{
-		int i=0;
-		RDYListIDs.DeleteNodeAtPosition(i, position);
-		RDYList.DeleteNodeAtPosition(p,position);
-		s->addToTrm(p);
-		return true;
-	}
-	return false;
-}
+
 
 //Prints ready list processes
 void FCFS::Print_List()
@@ -75,6 +66,7 @@ int FCFS::GetRDYListCount()
 void FCFS::ScheduleAlgo()
 {
 	Process* tmp = nullptr;
+	Process* KilledProcess = NULL;
 	IO* ioTemp = nullptr;
 	SIGKILL* TempKillSig = nullptr;
 	int RandomForkProb = s->generaterandom(1, 100);
@@ -84,21 +76,25 @@ void FCFS::ScheduleAlgo()
 	KillingSignalsList.peek(TempKillSig);
 	if (TempKillSig)
 	{
-		TempKillSig->DecrementKillTime();
-	 }
-	//	if (TempKillSig->getTime() == 0)
-	//	{
-	//		KillingSignalsList.dequeue(TempKillSig);
-	//		if (RDYList.Find(TempKillSig->getID()))
-	//		{
+		int position = 0;
 
-	//		}
-	//	}
-	//}
+		if (s->CheckKillSigTime(TempKillSig))
+		{
+			if (RDYListIDs.Find(TempKillSig->getID(), position))
+			{
+				int id = 0;  //dummy integer
+				KillingSignalsList.dequeue(TempKillSig);
+				RDYList.DeleteNodeAtPosition(KilledProcess, position);
+				RDYListIDs.DeleteNodeAtPosition(id, position);
+				s->addToTrm(KilledProcess);
+				s->ParentKilling(KilledProcess); //Killing the orphans operation
+				processescount--;
+			}
+		}
+	}
+	
 	if (!isbusy) //sets a process as running if the processor is idle
 	{
-		RDYList.DeleteFirst(tmp);
-		processescount--;
 		DeleteProcess(tmp);
 		tmp->SetRT(s->getTimeStep());
 		RUNNING = tmp;
@@ -109,7 +105,7 @@ void FCFS::ScheduleAlgo()
 		KillingSignalsList.peek(TempKillSig);
 		if (TempKillSig)
 		{
-			if (TempKillSig->getTime() == 0) //Killing Signals Operation
+			if (s->CheckKillSigTime(TempKillSig)) //Killing Signals Operation
 			{
 				KillingSignalsList.dequeue(TempKillSig);
 				if (TempKillSig->getID() == *RUNNING)
@@ -127,7 +123,7 @@ void FCFS::ScheduleAlgo()
 
 		return;
 	}
-	else if (isbusy && RUNNING->GetCT() != 0) //keda lama btdkhol running mesh h decrement l ct fl time step di??
+	else if (isbusy && RUNNING->GetCT() != 0) 
 	{
 		RUNNING->DecrementCT();
 		TotalBT++;
@@ -137,7 +133,7 @@ void FCFS::ScheduleAlgo()
 		KillingSignalsList.peek(TempKillSig);
 		if (TempKillSig)
 		{
-			if (TempKillSig->getTime() == 0) //Killing Signals Operation
+			if (s->CheckKillSigTime(TempKillSig)) //Killing Signals Operation
 			{
 				KillingSignalsList.dequeue(TempKillSig);
 				if (TempKillSig->getID() == *RUNNING)
@@ -222,7 +218,8 @@ void FCFS::FCFStoRR_Migration()
 
 bool FCFS::Search(Process* value)
 {
-	return RDYList.Find(value);
+	int x=0;
+	return RDYList.Find(value,x);
 }
 
 int FCFS::SumCT()

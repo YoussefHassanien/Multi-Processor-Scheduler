@@ -102,5 +102,6 @@ public:
 	bool ParentKilling(Process* parent);     //Kills a specific parent process and its children  
 	void IncrementTotalTRT(int trt);         //increments the total TRT with a process's TRT
 	int GetTotalTRT();                       //Getter for the total TRT
+	bool CheckKillSigTime(SIGKILL* SigKill); //checks if the given kill Signal time is equal to the timestep
 };
 #endif

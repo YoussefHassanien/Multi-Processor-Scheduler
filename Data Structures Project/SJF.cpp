@@ -81,11 +81,7 @@ void SJF::ScheduleAlgo()
 
 }
 
-//Picks a process randomly to terminate it
-bool SJF::RandomTermination(int id)
-{
-	return false;
-}
+
 
 //Prints ready list processes
 void SJF::Print_List()
@@ -119,6 +115,11 @@ int SJF::SumCT()
 		TotalCT += p->GetCT();
 	}
 	return (TotalCT);
+}
+
+void SJF::DeleteProcessAtPosition(Process*& p)
+{
+	return;
 }
 
 //destructor

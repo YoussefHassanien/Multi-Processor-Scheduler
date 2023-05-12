@@ -348,7 +348,7 @@ void Scheduler::simulation()
 			else
 				cout << "terminated empty..."<<endl;*/
 	WorkStealing();
-	UI.printInterface();
+	UI.printInterface(TimeStep);
 	TimeStep++;
 		
 
@@ -593,7 +593,8 @@ bool Scheduler::ParentKilling(Process* parent)
 {
 	if (!ParentsList.isEmpty()) //Checks if the parents list is empty or not
 	{
-		if (ParentsList.Find(parent)) //Checks if the current running process is in the parents list or not
+		int x = 0;
+		if (ParentsList.Find(parent,x)) //Checks if the current running process is in the parents list or not
 		{
 			AddChildrenToTrm(parent); //Since the current running process is in the parents list and it is being terminated so its children must be terminated too
 			
@@ -603,21 +604,35 @@ bool Scheduler::ParentKilling(Process* parent)
 				{
 					if (PArr[i]->Search(parent->GetFirstChild()))
 					{
-						PArr[i]->DeleteProcess(parent->GetFirstChild()); 
+						PArr[i]->DeleteProcessAtPosition(parent->GetFirstChild()); 
 					}
+					else if (PArr[i]->getRunning() == parent->GetFirstChild())
+					{
+						PArr[i]->SetRunning(nullptr);
+						PArr[i]->setisbusy(false);
+						DecrementRunningCount();
+					}
+					
 				}
 			} 
-			else 
-				if (parent->GetSecondChild()) //Checks if the parent has second child
+			if (parent->GetSecondChild()) //Checks if the parent has second child
+			{
+				
+				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 				{
-					for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+					if (PArr[i]->Search(parent->GetSecondChild()))
 					{
-						if (PArr[i]->Search(parent->GetSecondChild()))
-						{
-							PArr[i]->DeleteProcess(parent->GetSecondChild());  //i think this might cause a null access violation as the the delete takes the value by refrence and makes it point to null after removing it from the nodes(this case is handeled)
-						}
+						PArr[i]->DeleteProcessAtPosition(parent->GetSecondChild());
+					}
+					else if (PArr[i]->getRunning() == parent->GetSecondChild())
+					{
+						PArr[i]->SetRunning(nullptr);
+						PArr[i]->setisbusy(false);
+						DecrementRunningCount();
 					}
 				}
+					
+			}
 			return true;
 		}
 		return false;
@@ -633,6 +648,11 @@ void Scheduler::IncrementTotalTRT(int trt)
 int Scheduler::GetTotalTRT()
 {
 	return TotalTRT;
+}
+
+bool Scheduler::CheckKillSigTime(SIGKILL* SigKill)
+{
+	return (SigKill->getTime() == TimeStep);
 }
 
 
