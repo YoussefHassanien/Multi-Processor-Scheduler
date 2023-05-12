@@ -25,25 +25,16 @@ void FCFS::DeleteProcess(Process*& p)
 {
 	RDYList.DeleteNode(p);
 	processescount--;
-	deleteprocessid(p);
+	DeleteProcessID(p);
 }
 
 //Deletes a process ID from RDYListIDs
-void FCFS::deleteprocessid(Process* p)
+void FCFS::DeleteProcessID(Process* p)
 {
-	int y;
-	RDYListIDs.DeleteFirst(y);
+	int y = p->GetID();
+	RDYListIDs.DeleteNode(y);
 }
 
-
-
-
-//Deletes a child process from the ready list
-void FCFS::DeleteChild(Process* p)
-{
-	RDYList.DeleteNode(p);
-	RDYListIDs.DeleteNode(p->GetID());
-}
 
 //Picks a process randomly to terminate it
 bool FCFS::RandomTermination(int id)
@@ -87,9 +78,23 @@ void FCFS::ScheduleAlgo()
 	IO* ioTemp = nullptr;
 	SIGKILL* TempKillSig = nullptr;
 	int RandomForkProb = s->generaterandom(1, 100);
-	KillingSignalsList.peek(TempKillSig);
+
 	if (RDYList.isEmpty() && !RUNNING) // if there is nothing in the ready list and no process is running
 		return;
+	KillingSignalsList.peek(TempKillSig);
+	if (TempKillSig)
+	{
+		TempKillSig->DecrementKillTime();
+	 }
+	//	if (TempKillSig->getTime() == 0)
+	//	{
+	//		KillingSignalsList.dequeue(TempKillSig);
+	//		if (RDYList.Find(TempKillSig->getID()))
+	//		{
+
+	//		}
+	//	}
+	//}
 	if (!isbusy) //sets a process as running if the processor is idle
 	{
 		RDYList.DeleteFirst(tmp);
@@ -101,26 +106,73 @@ void FCFS::ScheduleAlgo()
 		s->incrementRunningCount();
 		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb()) //Forking condition
 			s->IntiateForking(RUNNING); //Forking operation
-<<<<<<< HEAD
-		TempKillSig->DecrementKillTime();
-		if (TempKillSig->getTime() == 0)
+		KillingSignalsList.peek(TempKillSig);
+		if (TempKillSig)
 		{
-			s->addToTrm(RUNNING);
+			if (TempKillSig->getTime() == 0) //Killing Signals Operation
+			{
+				KillingSignalsList.dequeue(TempKillSig);
+				if (TempKillSig->getID() == *RUNNING)
+				{
+					s->addToTrm(RUNNING);
+					s->ParentKilling(RUNNING); //Killing the orphans operation
+					isbusy = false;
+					RUNNING = nullptr;
+					//increment el idle ??
+					//TotalIT++;
+					s->DecrementRunningCount();
+				}
 			}
-=======
-		
->>>>>>> ca1047949b40a48c84f9358ade913cd1c8809308
+		}
+
 		return;
 	}
 	else if (isbusy && RUNNING->GetCT() != 0) //keda lama btdkhol running mesh h decrement l ct fl time step di??
 	{
-		
 		RUNNING->DecrementCT();
 		TotalBT++;
 		RUNNING->IncrementRunningFor();
 		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb())
 			s->IntiateForking(RUNNING); //Forking operation
-		if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running 
+		KillingSignalsList.peek(TempKillSig);
+		if (TempKillSig)
+		{
+			if (TempKillSig->getTime() == 0) //Killing Signals Operation
+			{
+				KillingSignalsList.dequeue(TempKillSig);
+				if (TempKillSig->getID() == *RUNNING)
+				{
+					s->addToTrm(RUNNING);
+					s->ParentKilling(RUNNING); //Killing the orphans operation
+					isbusy = false;
+					RUNNING = nullptr;
+					//increment el idle ??
+					//TotalIT++;
+					s->DecrementRunningCount();
+				}
+			}
+			else if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running
+			{
+				RUNNING->GetFirstIO(ioTemp);
+				if (ioTemp)
+				{
+					if (ioTemp->GetRequest() >= 0)
+					{
+						ioTemp->DecrementIO_R();
+					}
+
+
+					if (ioTemp->GetRequest() == -1)
+					{
+						s->addtoblocklist(RUNNING);
+						isbusy = false;
+						RUNNING = nullptr;
+						s->DecrementRunningCount();
+					}
+				}
+			}
+		}
+		else if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running
 		{
 			RUNNING->GetFirstIO(ioTemp);
 			if (ioTemp)
@@ -140,7 +192,7 @@ void FCFS::ScheduleAlgo()
 				}
 			}
 		}
-	}
+	}	
 	else if (isbusy && RUNNING->GetCT() == 0)
 	{
 		s->addToTrm(RUNNING);
@@ -151,8 +203,6 @@ void FCFS::ScheduleAlgo()
 		TotalIT++;
 		s->DecrementRunningCount();
 	}
-
-
 }
 
 
@@ -186,10 +236,6 @@ int FCFS::SumCT()
 		return (TotalCT);
 }
 
- void FCFS::SetKillSigList(LinkedQueue<SIGKILL*>killsiglist)
-{
-	 KillingSignalsList = killsiglist;
-}
  void FCFS::AddKillingSignal(SIGKILL* killsignal)
  {
 	 KillingSignalsList.enqueue(killsignal);

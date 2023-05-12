@@ -127,13 +127,14 @@ void Scheduler::readfileparameters()
 		InFile >> sigkill;
 		while (!InFile.eof())
 		{
+			
 			string killTime;
 			InFile >> killTime;
 			int intkillTime = stoi(killTime);
 			string ProcessID;
 			InFile >> ProcessID;
 			int intProcessID = stoi(ProcessID);
-			SIGKILL* SigKillPtr = new SIGKILL(intProcessID, intkillTime);
+			SIGKILL* SigKillPtr = new SIGKILL(intkillTime, intProcessID);
 			FCFS* TempFCFS = new FCFS(this);
 			TempFCFS->AddKillingSignal(SigKillPtr);
 			continue;
@@ -613,7 +614,7 @@ bool Scheduler::ParentKilling(Process* parent)
 					{
 						if (PArr[i]->Search(parent->GetSecondChild()))
 						{
-							PArr[i]->DeleteProcess(parent->GetSecondChild());  //i think this might cause a null access violation as the the delete takes the value by refrence and makes it point to null after removing it from the nodes
+							PArr[i]->DeleteProcess(parent->GetSecondChild());  //i think this might cause a null access violation as the the delete takes the value by refrence and makes it point to null after removing it from the nodes(this case is handeled)
 						}
 					}
 				}

@@ -16,9 +16,8 @@ public:
 	void DeleteProcess(Process*& p);                //deletes a give process when it moves to another queue or to being blocked
 	void ScheduleAlgo();                            //Schedueling algorithm
 	bool RandomTermination(int id);                 //Picks a process randomly to terminate it
-	void deleteprocessid(Process* p);               //Deletes a process ID from RDYListIDs
+	void DeleteProcessID(Process* p);               //Deletes a process ID from RDYListIDs
 	void AddToRdyIDs(Process* p);                   //Adds a process ID to RDYListIDs
-	void DeleteChild(Process* p);                   //Deletes a child process from the ready list
 	void Print_List();                              //Prints ready list processes
 	string Get_Processor_Type();                    //Returns the processor type
 	int GetRDYListCount();                          //Returns the number of processes in the ready list

@@ -5,10 +5,10 @@ class SIGKILL
 {
 private:
 	int ProcessID;
-	int KillTime;
+	int KillTime;      
 public:
 	//Constructor
-	SIGKILL(int Process_ID, int Kill_Time)
+	SIGKILL(int Kill_Time, int Process_ID)
 	{
 		ProcessID = Process_ID;
 		KillTime = Kill_Time;
