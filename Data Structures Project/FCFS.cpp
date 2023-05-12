@@ -93,13 +93,14 @@ void FCFS::ScheduleAlgo()
 		}
 	}
 	
-	if (!isbusy) //sets a process as running if the processor is idle
+	if ((!isbusy) && (!RDYList.isEmpty())) //sets a process as running if the processor is idle
 	{
-		DeleteProcess(tmp);
+		RDYList.DeleteFirst(tmp);
 		tmp->SetRT(s->getTimeStep());
 		RUNNING = tmp;
 		isbusy = true;                                  //Set the processor as busy
 		s->incrementRunningCount();
+		processescount--;
 		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb()) //Forking condition
 			s->IntiateForking(RUNNING); //Forking operation
 		KillingSignalsList.peek(TempKillSig);
@@ -135,9 +136,9 @@ void FCFS::ScheduleAlgo()
 		{
 			if (s->CheckKillSigTime(TempKillSig)) //Killing Signals Operation
 			{
-				KillingSignalsList.dequeue(TempKillSig);
 				if (TempKillSig->getID() == *RUNNING)
 				{
+					KillingSignalsList.dequeue(TempKillSig);
 					s->addToTrm(RUNNING);
 					s->ParentKilling(RUNNING); //Killing the orphans operation
 					isbusy = false;
