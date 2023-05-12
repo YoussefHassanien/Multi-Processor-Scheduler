@@ -602,11 +602,11 @@ bool Scheduler::ParentKilling(Process* parent)
 			{
 				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 				{
-					if (PArr[i]->Search(parent->GetFirstChild()))
+					if (PArr[i]->Search(parent->GetFirstChild())) //Checks if the child is in a ready queue of any FCFS processor
 					{
 						PArr[i]->DeleteProcessAtPosition(parent->GetFirstChild()); 
 					}
-					else if (PArr[i]->getRunning() == parent->GetFirstChild())
+					else if (PArr[i]->getRunning() == parent->GetFirstChild()) //Checks if the child is running in any FCFS processor
 					{
 						PArr[i]->SetRunning(nullptr);
 						PArr[i]->setisbusy(false);
@@ -653,6 +653,11 @@ int Scheduler::GetTotalTRT()
 bool Scheduler::CheckKillSigTime(SIGKILL* SigKill)
 {
 	return (SigKill->getTime() == TimeStep);
+}
+
+bool Scheduler::CheckTimeSlice()
+{
+	return ((TimeStep%TimeSlice)==0);
 }
 
 

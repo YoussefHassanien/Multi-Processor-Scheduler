@@ -98,11 +98,11 @@ void FCFS::ScheduleAlgo()
 	{
 		RDYList.DeleteFirst(TempProcess);
 		RDYListIDs.DeleteFirst(TempID);
+		processescount--;
 		TempProcess->SetRT(s->getTimeStep());
 		RUNNING = TempProcess;
 		isbusy = true;                                  //Set the processor as busy
 		s->incrementRunningCount();
-		processescount--;
 		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb()) //Forking condition
 			s->IntiateForking(RUNNING); //Forking operation
 		KillingSignalsList.peek(TempKillSig);

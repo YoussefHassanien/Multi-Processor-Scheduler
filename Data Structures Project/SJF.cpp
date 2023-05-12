@@ -25,20 +25,18 @@ void SJF::DeleteProcess(Process*& p)
 //Schedueling algorithm
 void SJF::ScheduleAlgo()
 {
-	IO* ioTemp;
-	if (RDY_List.isEmpty())
+	IO* TempIO = nullptr;
+	Process* TempProcess = nullptr;
+	if (RDY_List.isEmpty() && !RUNNING)
 		return;
-	Process* tmp=nullptr;
-	/*Process* temp = nullptr;
-	RDY_List.peek(temp);*/
 	
-
 	//sets a process as running if the processor is idle
 	if (!isbusy && !RUNNING)
 	{
-		DeleteProcess(tmp);
-		RUNNING = tmp;
-		tmp->SetRT(s->getTimeStep() - tmp->GetAT());
+		RDY_List.dequeue(TempProcess);
+		processescount--;
+		RUNNING = TempProcess;
+		TempProcess->SetRT(s->getTimeStep() - TempProcess->GetAT());
 		isbusy = true;                             //Set the processor as busy
 		s->incrementRunningCount();
 		return;
@@ -50,16 +48,16 @@ void SJF::ScheduleAlgo()
 		RUNNING->IncrementRunningFor();
 		if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running 
 		{
-			RUNNING->GetFirstIO(ioTemp);
-			if (ioTemp)
+			RUNNING->GetFirstIO(TempIO);
+			if (TempIO)
 			{
-				if (ioTemp->GetRequest() >= 0)
+				if (TempIO->GetRequest() >= 0)
 				{
-					ioTemp->DecrementIO_R();
+					TempIO->DecrementIO_R();
 				}
 
 
-				if (ioTemp->GetRequest() == -1)
+				if (TempIO->GetRequest() == -1)
 				{
 					s->addtoblocklist(RUNNING);
 					isbusy = false;
