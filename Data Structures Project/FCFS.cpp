@@ -65,9 +65,10 @@ int FCFS::GetRDYListCount()
 //Schedueling algorithm
 void FCFS::ScheduleAlgo()
 {
-	Process* tmp = nullptr;
-	Process* KilledProcess = NULL;
-	IO* ioTemp = nullptr;
+	int TempID = 0;
+	Process* TempProcess = nullptr;
+	Process* KilledProcess = nullptr;
+	IO* TempIO = nullptr;
 	SIGKILL* TempKillSig = nullptr;
 	int RandomForkProb = s->generaterandom(1, 100);
 
@@ -95,9 +96,10 @@ void FCFS::ScheduleAlgo()
 	
 	if ((!isbusy) && (!RDYList.isEmpty())) //sets a process as running if the processor is idle
 	{
-		RDYList.DeleteFirst(tmp);
-		tmp->SetRT(s->getTimeStep());
-		RUNNING = tmp;
+		RDYList.DeleteFirst(TempProcess);
+		RDYListIDs.DeleteFirst(TempID);
+		TempProcess->SetRT(s->getTimeStep());
+		RUNNING = TempProcess;
 		isbusy = true;                                  //Set the processor as busy
 		s->incrementRunningCount();
 		processescount--;
@@ -108,9 +110,9 @@ void FCFS::ScheduleAlgo()
 		{
 			if (s->CheckKillSigTime(TempKillSig)) //Killing Signals Operation
 			{
-				KillingSignalsList.dequeue(TempKillSig);
 				if (TempKillSig->getID() == *RUNNING)
 				{
+					KillingSignalsList.dequeue(TempKillSig);
 					s->addToTrm(RUNNING);
 					s->ParentKilling(RUNNING); //Killing the orphans operation
 					isbusy = false;
@@ -150,16 +152,16 @@ void FCFS::ScheduleAlgo()
 			}
 			else if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running
 			{
-				RUNNING->GetFirstIO(ioTemp);
-				if (ioTemp)
+				RUNNING->GetFirstIO(TempIO);
+				if (TempIO)
 				{
-					if (ioTemp->GetRequest() >= 0)
+					if (TempIO->GetRequest() >= 0)
 					{
-						ioTemp->DecrementIO_R();
+						TempIO->DecrementIO_R();
 					}
 
 
-					if (ioTemp->GetRequest() == -1)
+					if (TempIO->GetRequest() == -1)
 					{
 						s->addtoblocklist(RUNNING);
 						isbusy = false;
@@ -171,16 +173,16 @@ void FCFS::ScheduleAlgo()
 		}
 		else if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running
 		{
-			RUNNING->GetFirstIO(ioTemp);
-			if (ioTemp)
+			RUNNING->GetFirstIO(TempIO);
+			if (TempIO)
 			{
-				if (ioTemp->GetRequest() >= 0)
+				if (TempIO->GetRequest() >= 0)
 				{
-					ioTemp->DecrementIO_R();
+					TempIO->DecrementIO_R();
 				}
 
 
-				if (ioTemp->GetRequest() == -1)
+				if (TempIO->GetRequest() == -1)
 				{
 					s->addtoblocklist(RUNNING);
 					isbusy = false;
