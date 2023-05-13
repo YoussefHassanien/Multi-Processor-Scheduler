@@ -26,6 +26,7 @@ public:
 	bool Search(Process* value);       //Searches for a specific process in the ready list
 	int SumCT();                       //Sums the CT of all processes in the ready queue
 	void DeleteProcessAtPosition(Process*& p);      //deletes a process in any place in the RDYList
+	void ReturnFirst(Process*& p);
 	~SJF();                            //Destructor
 	
 };

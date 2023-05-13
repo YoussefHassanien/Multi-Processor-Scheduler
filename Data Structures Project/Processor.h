@@ -48,8 +48,8 @@ class Process;
 		int GetPUtil();                     // Getter for the Processor Utilization Percentage
 		int GetTotalCT();                   //Getter for the total CT of all processes in the ready list
 		virtual int SumCT()=0;              //Sums the CT of all processes in the ready queue
+		virtual void ReturnFirst(Process *&p) = 0;		//Return the first process in each processor's ready list
 		~Processor();                       //Destructor
-
 	};
 #endif
 

@@ -127,6 +127,10 @@ void SJF::DeleteProcessAtPosition(Process*& p)
 	return;
 }
 
+void SJF::ReturnFirst(Process*& p)
+{
+	RDY_List.peek(p);
+}
 //destructor
 SJF::~SJF()
 {

@@ -212,7 +212,7 @@ void FCFS::FCFStoRR_Migration(int timestep)
 	RDYList.peek(p);
 	if (p) 
 	{
-		if (p->WTsofar(timestep) < s->GetMaxW())
+		if (p->WTsofar(timestep) < s->GetMaxW() && !p->GetParent())
 		{
 			RDYList.DeleteFirst(p);
 			processescount--;
@@ -244,6 +244,13 @@ int FCFS::SumCT()
  {
 	 KillingSignalsList.enqueue(killsignal);
  }
+
+ void FCFS::ReturnFirst(Process*&p)
+ {
+	 RDYList.DeleteFirst(p);
+	 RDYList.InsertBeg(p);
+ }
+
 //destructor
 FCFS::~FCFS()
 {

@@ -122,7 +122,7 @@ void RoundRobin::RRtoSJF_Migration()
 {  
 	Process* p;
 	RDY_List.peek(p);
-	if (p->GetCT() < RTF)
+	if (p->GetCT() < RTF && !p->GetParent())
 	{
 		RDY_List.dequeue(p);
 		processescount--;
@@ -151,6 +151,11 @@ int RoundRobin::SumCT()
 void RoundRobin::DeleteProcessAtPosition(Process*& p)
 {
 	return;
+}
+
+void RoundRobin::ReturnFirst(Process*& p)
+{
+	RDY_List.peek(p);
 }
 
 //destructor

@@ -12,7 +12,7 @@ Process::Process(int at, int id, int ct, int n)
 	Parent = nullptr;
 	FirstChild = nullptr;
 	SecondChild = nullptr;
-	Orph = false;
+
 	Actual_CT = ct;
 	// Termination time should be sent when the process moves from the running queue to the termination queue inside a processor
 	// Response time should be calculated when the process moves from the ready queue to the running queue inside a processor
@@ -69,15 +69,12 @@ int Process::WTsofar(int timestep)
 	return (timestep-AT-RunningFor);
 }
 
-void Process::SetOrph(bool orph)
-{
-	Orph = orph;
-}
 void Process::SetParent(Process* parent)
 {
 	if(!Parent)
 	Parent = parent;
 }
+
 int Process::GetID()
 {
 	return ID;
@@ -114,10 +111,7 @@ int Process::GetRunningFor()
 {
 	return RunningFor;
 }
-bool Process::GetOrph()
-{
-	return Orph;
-}
+
 Process*& Process::GetParent()
 {
 	return Parent;

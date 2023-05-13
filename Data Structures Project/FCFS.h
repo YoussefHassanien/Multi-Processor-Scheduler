@@ -25,6 +25,7 @@ public:
 	void FCFStoRR_Migration(int timestep);                      //Controls the process migration from FCFS processor to RR processor
 	bool Search(Process* value);                    //Searches for a specific process in the ready list
 	int SumCT();                                    //Sums the CT of all processes in the ready queue
+	void ReturnFirst(Process*& p);
 	static void AddKillingSignal(SIGKILL*killsignal);   //enqueue a killing in the Killing Signals List
 	~FCFS();                                        //Destructor
 	         

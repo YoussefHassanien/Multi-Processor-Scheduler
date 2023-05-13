@@ -552,11 +552,15 @@ void Scheduler::WorkStealing()
 		Steal_Limit = (float)(PArr[LongestListIdx]->SumCT() - PArr[ShortestListIdx]->SumCT()) / PArr[LongestListIdx]->SumCT();
 		if (Steal_Limit < 0.4)
 			return;
-		if (TimeStep == 0 || TimeStep % STL != 0)
+		if (TimeStep % STL != 0)
 			return;
-		PArr[LongestListIdx]->DeleteProcess(p);
-		PArr[ShortestListIdx]->AddToRdy(p);
-		StealedProcesses++;
+		PArr[LongestListIdx]->ReturnFirst(p);
+		if (!p->GetParent()) 
+		{
+			PArr[LongestListIdx]->DeleteProcess(p);
+			PArr[ShortestListIdx]->AddToRdy(p);
+			StealedProcesses++;
+		}
 		WorkStealing(); // calls the function recursively until one of the exit conditions is satisfied 
 
 	
