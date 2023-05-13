@@ -182,8 +182,6 @@ void FCFS::ScheduleAlgo(int TimeStep)
 				{
 					TempIO->DecrementIO_R();
 				}
-
-
 				if (TempIO->GetRequest() == -1)
 				{
 					s->addtoblocklist(RUNNING);
@@ -233,10 +231,11 @@ int FCFS::SumCT()
 		Process* p;
 		for (int i = 0; i < processescount; i++)
 		{
-			RDYList.IterativePeek(p, i + 1);
-			TotalCT += p->GetCT();
+			RDYList.DeleteFirst(p);
+			TotalCT = TotalCT + p->GetCT();
+			RDYList.InsertEnd(p);
 		}
-		return (TotalCT);
+		return TotalCT;
 }
 
  void FCFS::AddKillingSignal(SIGKILL* killsignal)

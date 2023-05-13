@@ -6,7 +6,7 @@ using namespace std;
 int main()
 {
 	Scheduler* S=new Scheduler;
-	S->simulation();
+	S->Simulation();
 	system("pause");
 	delete S;
 	S = NULL;

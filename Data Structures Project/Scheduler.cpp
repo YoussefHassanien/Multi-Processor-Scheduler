@@ -97,7 +97,6 @@ void Scheduler::readfileparameters()
 			p->SetID(stoi(PID));
 			p->SetCT(stoi(CT));
 			p->SetN(stoi(N));
-			//LinkedQueue<IO*>* IOq= new LinkedQueue<IO*>;
 			for (int i = 0; i < stoi(N); i++)
 			{
 				string openbracket;
@@ -277,11 +276,7 @@ int Scheduler::generaterandom(int min, int max)
 	//Generate and return the Rabdom Number
 	return dis(gen);
 }
-//Getter for the forking probability
-int Scheduler::getForkProb()
-{
-	return ForkProb;
-}
+
 //Getter for the timestep
 int Scheduler::getTimeStep()
 {
@@ -297,11 +292,9 @@ bool Scheduler::AllIsTerminated()
 }
 
 //Simulation function
-void Scheduler::simulation()
+void Scheduler::Simulation()
 {
-	int random;
-	Process* TempProc;;
-	IO* ioTemp;
+	Process* TempProcess;
 	readfileparameters();
 	while (!AllIsTerminated())
 	{
@@ -327,32 +320,21 @@ void Scheduler::simulation()
 		{
 			for (int i = 0; i < BLKCount; i++)
 			{
-				blocklist.dequeue(TempProc);
-				if (TempProc->CheckIO_D())  //CheckIO_D needs further modifications
+				blocklist.dequeue(TempProcess);
+				if (TempProcess->CheckIO_D())  //CheckIO_D needs further modifications
 				{
 					Set_ShortestListIdx();
-					PArr[ShortestListIdx]->AddToRdy(TempProc);
+					PArr[ShortestListIdx]->AddToRdy(TempProcess);
 					BLKCount--;
 				}
 				else
-					blocklist.enqueue(TempProc);
+					blocklist.enqueue(TempProcess);
 			}
 
 		}
-			/*if (!terminatedlist.isEmpty())
-			{
-				Process* p = nullptr;
-				terminatedlist.dequeue(p);
-				cout <<p->GetID()<<" " << p->GetWT() << " " << p->GetTRT() << " " << p->GetRT() << endl;
-			}
-			else
-				cout << "terminated empty..."<<endl;*/
 	WorkStealing();
 	UI.printInterface(TimeStep);
 	TimeStep++;
-		
-
-
 	}
 	PrintOutputFile();
 }
@@ -575,14 +557,12 @@ void Scheduler::AddChildrenToTrm(Process* parent)
 	{
 		if (parent->GetFirstChild())
 		{
-			Process* Child1 = new Process(parent->GetFirstChild()->GetAT(), parent->GetFirstChild()->GetID(), parent->GetFirstChild()->GetCT());
-			addToTrm(Child1);
+			addToTrm(parent->GetFirstChild());
 			AddChildrenToTrm(parent->GetFirstChild());
 		}
 		if (parent->GetSecondChild())
 		{
-			Process* Child2 = new Process(parent->GetSecondChild()->GetAT(), parent->GetSecondChild()->GetID(), parent->GetSecondChild()->GetCT());
-			addToTrm(Child2);
+			addToTrm(parent->GetSecondChild());
 			AddChildrenToTrm(parent->GetSecondChild());
 		}
 	}
@@ -650,14 +630,5 @@ int Scheduler::GetTotalTRT()
 	return TotalTRT;
 }
 
-bool Scheduler::CheckKillSigTime(SIGKILL* SigKill)
-{
-	return (SigKill->getTime() == TimeStep);
-}
-
-bool Scheduler::CheckTimeSlice()
-{
-	return ((TimeStep%TimeSlice)==0);
-}
 
 

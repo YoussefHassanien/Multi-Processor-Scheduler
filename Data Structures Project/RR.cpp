@@ -50,8 +50,6 @@ void RoundRobin::ScheduleAlgo(int TimeStep)
 				{
 					TempIO->DecrementIO_R();
 				}
-
-
 				if (TempIO->GetRequest() == -1)
 				{
 					s->addtoblocklist(RUNNING);
@@ -62,6 +60,7 @@ void RoundRobin::ScheduleAlgo(int TimeStep)
 				else  if (!(TimeStep % TimeSlice))   //the current timestep is the Round Robin timeslice
 				{
 					RDY_List.enqueue(RUNNING);               //The process goes back to the beginning of the RDY list
+					processescount++;
 					RUNNING = nullptr;
 					isbusy = false;                          //Set the processor as idle
 					s->DecrementRunningCount();
@@ -70,6 +69,7 @@ void RoundRobin::ScheduleAlgo(int TimeStep)
 			else if (!(TimeStep % TimeSlice))   //the current timestep is the Round Robin timeslice
 			{
 				RDY_List.enqueue(RUNNING);               //The process goes back to the beginning of the RDY list
+				processescount++;
 				RUNNING = nullptr;
 				isbusy = false;                          //Set the processor as idle
 				s->DecrementRunningCount();
@@ -78,6 +78,7 @@ void RoundRobin::ScheduleAlgo(int TimeStep)
 		else if (!(TimeStep % TimeSlice))   //the current timestep is the Round Robin timeslice
 		{
 			RDY_List.enqueue(RUNNING);               //The process goes back to the beginning of the RDY list
+			processescount++;
 			RUNNING = nullptr;
 			isbusy = false;                          //Set the processor as idle
 			s->DecrementRunningCount();
@@ -135,10 +136,11 @@ int RoundRobin::SumCT()
 	Process* p;
 	for (int i = 0; i < processescount; i++)
 	{
-		RDY_List.IterativePeek(p, i + 1);
-		TotalCT += p->GetCT();
+		RDY_List.dequeue(p);
+		TotalCT = TotalCT + p->GetCT();
+		RDY_List.enqueue(p);
 	}
-	return (TotalCT);
+	return TotalCT;
 }
 
 void RoundRobin::DeleteProcessAtPosition(Process*& p)

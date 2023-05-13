@@ -56,8 +56,6 @@ void SJF::ScheduleAlgo(int TimeStep)
 				{
 					TempIO->DecrementIO_R();
 				}
-
-
 				if (TempIO->GetRequest() == -1)
 				{
 					s->addtoblocklist(RUNNING);
@@ -108,12 +106,19 @@ bool SJF::Search(Process* value)
 int SJF::SumCT()
 {
 	Process* p;
+	PriorityQueue<Process*>TempRDYList;
 	for (int i = 0; i < processescount; i++)
 	{
-		RDY_List.IterativePeek(p, i + 1);
-		TotalCT += p->GetCT();
+		RDY_List.dequeue(p);
+		TotalCT = TotalCT + p->GetCT();
+		TempRDYList.enqueue(p,p->GetCT());
 	}
-	return (TotalCT);
+	for (int i = 0; i < processescount; i++)
+	{
+		TempRDYList.dequeue(p);
+		RDY_List.enqueue(p, p->GetCT());
+	}
+	return TotalCT;
 }
 
 void SJF::DeleteProcessAtPosition(Process*& p)

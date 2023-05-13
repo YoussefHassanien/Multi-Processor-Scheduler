@@ -71,10 +71,9 @@ public:
 	int getprocessorcount();              //Getter for the total number of processors 
 	void incrementprocessorcount();       //increments the count of processors once a new processor is declared
 	int generaterandom(int min, int max); //Generates a random number between a max and a min value
-	int getForkProb();                    //Getter for the forking probability
 	int getTimeStep();                    //Getter for the timestep
 	bool AllIsTerminated();               //checks that all ready lists are empty and all processors are idle
-	void simulation();                    //Simulation function
+	void Simulation();                    //Simulation function
 	void AddtoRdyLists(Process*p);        //Moves the process from NEW list to RDY list
 	void PrintProcessorList();            //Prints the processor list
 	int getBLKCount();                    //Getter for the count of blocked processes
@@ -102,7 +101,5 @@ public:
 	bool ParentKilling(Process* parent);     //Kills a specific parent process and its children  
 	void IncrementTotalTRT(int trt);         //increments the total TRT with a process's TRT
 	int GetTotalTRT();                       //Getter for the total TRT
-	bool CheckKillSigTime(SIGKILL* SigKill); //checks if the given kill Signal time is equal to the timestep
-	bool CheckTimeSlice();                   //checks if the current time step is the one which RR processors should return the running process to the ready list 
 };
 #endif
