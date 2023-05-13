@@ -97,9 +97,9 @@ public:
 	void IntiateForking(Process* running);//The Function that checks if the running process in the FCFS will fork or not then makes all the necessary operations if it will
 	void Set_LongestListIdx();            //Setter for the Longest List Index
 	void WorkStealing();
-	void AddChildrenToTrm(Process* parent);  //Adds the forked processes to the terminated list
 	bool ParentKilling(Process* parent);     //Kills a specific parent process and its children  
 	void IncrementTotalTRT(int trt);         //increments the total TRT with a process's TRT
 	int GetTotalTRT();                       //Getter for the total TRT
+	void addtoparentlist(Process* p);
 };
 #endif

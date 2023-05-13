@@ -70,6 +70,7 @@ void SJF::ScheduleAlgo(int TimeStep)
 	else if (isbusy && !RUNNING->GetCT()) //same as if RUNNING->GetCT==0
 	{
 		s->addToTrm(RUNNING);
+		s->ParentKilling(RUNNING);
 		isbusy = false;
 		RUNNING = nullptr;
 		s->DecrementRunningCount();

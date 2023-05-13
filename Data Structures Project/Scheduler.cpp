@@ -589,10 +589,12 @@ bool Scheduler::ParentKilling(Process* parent)
 		int x = 0;
 		if (ParentsList.Find(parent,x)) //Checks if the current running process is in the parents list or not
 		{
-			AddChildrenToTrm(parent); //Since the current running process is in the parents list and it is being terminated so its children must be terminated too
+			if ((!parent->GetFirstChild()) && (!parent->GetSecondChild()))
+				return false;
 			
 			if (parent->GetFirstChild()) //Checks if the parent has first child
 			{
+				addToTrm(parent->GetFirstChild());
 				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 				{
 					if (PArr[i]->Search(parent->GetFirstChild())) //Checks if the child is in a ready queue of any FCFS processor
@@ -607,10 +609,12 @@ bool Scheduler::ParentKilling(Process* parent)
 					}
 					
 				}
+				
+				ParentKilling(parent->GetFirstChild());
 			} 
 			if (parent->GetSecondChild()) //Checks if the parent has second child
 			{
-				
+				addToTrm(parent->GetSecondChild());
 				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 				{
 					if (PArr[i]->Search(parent->GetSecondChild()))
@@ -624,8 +628,10 @@ bool Scheduler::ParentKilling(Process* parent)
 						DecrementRunningCount();
 					}
 				}
-					
+				
+				ParentKilling(parent->GetSecondChild());
 			}
+			//AddChildrenToTrm(parent); //Since the current running process is in the parents list and it is being terminated so its children must be terminated too
 			return true;
 		}
 		return false;
@@ -641,6 +647,11 @@ void Scheduler::IncrementTotalTRT(int trt)
 int Scheduler::GetTotalTRT()
 {
 	return TotalTRT;
+}
+
+void Scheduler::addtoparentlist(Process* p)
+{
+	ParentsList.InsertEnd(p);
 }
 
 
