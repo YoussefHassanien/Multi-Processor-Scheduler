@@ -121,6 +121,7 @@ void RoundRobin::RRtoSJF_Migration()
 	if (p->GetCT() < s->GetRTF())
 	{
 		RDY_List.dequeue(p);
+		processescount--;
 		s->FromRRtoShortestSJF(p);
 		RRtoSJF_Migration();
 	}

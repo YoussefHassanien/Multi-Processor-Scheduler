@@ -1,2 +1,12 @@
-﻿  Scheduler.cpp
+﻿  FCFS.cpp
+  Process.cpp
+  Processor.cpp
+D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\Processor.cpp(68,28): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\Processor.cpp(74,28): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+  RR.cpp
+  Scheduler.cpp
+  SJF.cpp
+  Source.cpp
+  UI_Info.cpp
+  Generating Code...
   Data Structures Project.vcxproj -> D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\x64\Debug\Data Structures Project.exe

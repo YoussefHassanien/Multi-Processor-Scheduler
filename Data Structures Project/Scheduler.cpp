@@ -296,7 +296,7 @@ void Scheduler::Simulation()
 {
 	Process* TempProcess;
 	readfileparameters();
-	while (!AllIsTerminated())
+	while (TerminatedProcesses<LastProcessID)
 	{
 		
 		Process* p = nullptr;
@@ -485,12 +485,14 @@ int Scheduler::Get_ShortestRR()
 //Takes the running process from the RR processor and inserts it in the shortest SJF RDY queue
 void Scheduler::FromRRtoShortestSJF(Process* p)
 {
+	Set_ShortestSJF();
 	PArr[ShortestSJFListIdx]->AddToRdy(p);
 }
 
 //Takes the running process from the RR processor and inserts it in the shortest SJF RDY queue
 void Scheduler::FromFCFStoShortestRR(Process* p)
 {
+	Set_ShortestRR();
 	PArr[ShortestRRListIdx]->AddToRdy(p);
 }
 

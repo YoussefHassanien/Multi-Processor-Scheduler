@@ -15,7 +15,7 @@ void SJF::AddToRdy(Process* p)
 	processescount++;
 }
 
-//deletes a give process when it moves to another queue or to being blocked
+//deletes a given process when it moves to another queue or to being blocked
 void SJF::DeleteProcess(Process*& p)
 {
 	RDY_List.dequeue(p);

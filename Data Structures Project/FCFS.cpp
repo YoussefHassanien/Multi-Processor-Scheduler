@@ -215,6 +215,7 @@ void FCFS::FCFStoRR_Migration()
 	if (p->WTsofar() < s->GetMaxW())
 	{
 		RDYList.DeleteFirst(p);
+		processescount--;
 		s->FromFCFStoShortestRR(p);
 		FCFStoRR_Migration();
 	}
