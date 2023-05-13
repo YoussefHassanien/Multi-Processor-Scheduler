@@ -204,6 +204,16 @@ int Process::GetIO_D()
 	return IO_D;
 }
 
+void Process::SetFirstChild(Process* p)
+{
+	FirstChild = p;
+}
+
+void Process::SetSecondChild(Process* p)
+{
+	SecondChild = p;
+}
+
 Process::~Process()
 {
 	//delete IOqueue;

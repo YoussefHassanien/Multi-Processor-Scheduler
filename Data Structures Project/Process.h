@@ -25,7 +25,6 @@ private:
 	Process* Parent;   //a pointer to the parent process that have created this forked processes if it is a forked one
 	Process* FirstChild; //a pointer to the first forked child
 	Process* SecondChild; //a pointer to the second forked child
-	bool Orph;  //a bolean that indicates if the process is orphan or not
 
 public:
 
@@ -38,7 +37,6 @@ public:
 	void SetTRT(int trt);                                            //Setter for the Turnarround time
 	void SetWT(int wt);                                              //Setter for the Wait Time
 	void SetN(int n);                                                //Setter for the Number of IOs
-	void SetOrph(bool orph);                                         //Setter for the orphan
 	void SetParent(Process* parent);                                 //Setter for the parent
 	int GetID();                                                     //Getter for the process ID 
 	int GetAT();                                                     //Getter for the Arrival Time
@@ -48,7 +46,6 @@ public:
 	int GetTRT();                                                    //Getter for the Turnarround time
 	int GetWT();                                                     //Getter for the Wait Time
 	int GetN();                                                      //Getter for the number of IOs
-	bool GetOrph();                                                  //Getter for the orphan
 	Process*& GetParent();                                            //Getter for the parent
 	Process*& GetFirstChild();                                        //Getter for the first child
 	Process*& GetSecondChild();                                       //Getter for the second child
@@ -67,7 +64,9 @@ public:
 	friend bool operator==(int value,Process& p);                    //== Operator Overloading when the Process ID is sent instead of 2 Processes
 	int GetActualCT();
 	void SetIO_D();			
-	int GetIO_D();
+	int GetIO_D();													
+	void SetFirstChild(Process*p);
+	void SetSecondChild(Process*p);
 	~Process();                                                      //Destructor
 };
 
