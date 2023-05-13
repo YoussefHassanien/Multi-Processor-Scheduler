@@ -92,7 +92,7 @@ void FCFS::ScheduleAlgo(int TimeStep)
 				RDYList.DeleteNodeAtPosition(KilledProcess, position);
 				RDYListIDs.DeleteNodeAtPosition(id, position);
 				s->addToTrm(KilledProcess);
-				s->ParentKilling(KilledProcess); //Killing the orphans operation
+				s->ChildrenKilling(KilledProcess); //Killing the orphans operation
 				processescount--;
 			}
 		}
@@ -121,7 +121,7 @@ void FCFS::ScheduleAlgo(int TimeStep)
 					{
 						KillingSignalsList.dequeue(TempKillSig);
 						s->addToTrm(RUNNING);
-						s->ParentKilling(RUNNING); //Killing the orphans operation
+						s->ChildrenKilling(RUNNING); //Killing the orphans operation
 						isbusy = false;
 						RUNNING = nullptr;
 						s->DecrementRunningCount();
@@ -146,7 +146,7 @@ void FCFS::ScheduleAlgo(int TimeStep)
 				{
 					KillingSignalsList.dequeue(TempKillSig);
 					s->addToTrm(RUNNING);
-					s->ParentKilling(RUNNING); //Killing the orphans operation
+					s->ChildrenKilling(RUNNING); //Killing the orphans operation
 					isbusy = false;
 					RUNNING = nullptr;
 					s->DecrementRunningCount();
@@ -218,7 +218,7 @@ void FCFS::ScheduleAlgo(int TimeStep)
 	else if (isbusy && !RUNNING->GetCT()) //same as if RUNNING->GetCT==0
 	{
 		s->addToTrm(RUNNING);
-		s->ParentKilling(RUNNING); //Killing the orphans operation
+		s->ChildrenKilling(RUNNING); //Killing the orphans operation
 		isbusy = false;
 		RUNNING = nullptr;
 		s->DecrementRunningCount();
@@ -259,6 +259,8 @@ int FCFS::SumCT()
 			TotalCT = TotalCT + p->GetActualCT();
 			RDYList.InsertEnd(p);
 		}
+		if(RUNNING)
+		TotalCT = TotalCT + RUNNING->GetCT();
 		return TotalCT;
 }
 

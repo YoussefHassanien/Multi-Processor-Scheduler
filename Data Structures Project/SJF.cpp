@@ -75,7 +75,7 @@ void SJF::ScheduleAlgo(int TimeStep)
 	else if (isbusy && !RUNNING->GetCT()) //same as if RUNNING->GetCT==0
 	{
 		s->addToTrm(RUNNING);
-		s->ParentKilling(RUNNING);
+		s->ChildrenKilling(RUNNING);
 		isbusy = false;
 		RUNNING = nullptr;
 		s->DecrementRunningCount();
@@ -124,6 +124,8 @@ int SJF::SumCT()
 		TempRDYList.dequeue(p);
 		RDY_List.enqueue(p, p->GetActualCT());
 	}
+	if (RUNNING)
+	TotalCT = TotalCT + RUNNING->GetCT();
 	return TotalCT;
 }
 

@@ -519,7 +519,7 @@ int Scheduler::GetMaxW()
 }
 void Scheduler::IntiateForking(Process*Parent)
 {
-	if (Parent)
+	if (Parent && (!Parent->GetFirstChild() || !Parent->GetSecondChild()))
 	{
 		Process* Child = nullptr;
 		if (Parent->AddChild(Child));
@@ -530,7 +530,6 @@ void Scheduler::IntiateForking(Process*Parent)
 			Child->SetParent(Parent);
 			Set_ShortestFCFS();
 			PArr[ShortestFCFSListIdx]->AddToRdy(Child);
-			ParentsList.InsertEnd(Parent);
 		}
 	}
 }
@@ -570,63 +569,56 @@ void Scheduler::WorkStealing()
 }
 
 
-bool Scheduler::ParentKilling(Process* parent)
+void Scheduler::ChildrenKilling(Process* Parent)
 {
-	if (!ParentsList.isEmpty()) //Checks if the parents list is empty or not
+	if (Parent)
 	{
-		int x = 0;
-		if (ParentsList.Find(parent, x)) //Checks if the current running process is in the parents list or not
+		if ((!Parent->GetFirstChild()) && (!Parent->GetSecondChild()))
+			return;
+
+		if (Parent->GetFirstChild()) //Checks if the parent has first child
 		{
-			ParentsList.DeleteNodeAtPosition(parent, x);
-			if ((!parent->GetFirstChild()) && (!parent->GetSecondChild()))
-				return false;
-
-			if (parent->GetFirstChild()) //Checks if the parent has first child
+			for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 			{
-				addToTrm(parent->GetFirstChild());
-				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+				if (PArr[i]->Search(Parent->GetFirstChild())) //Checks if the child is in a ready queue of any FCFS processor
 				{
-					if (PArr[i]->Search(parent->GetFirstChild())) //Checks if the child is in a ready queue of any FCFS processor
-					{
-						PArr[i]->DeleteProcessAtPosition(parent->GetFirstChild());
-					}
-					else if (PArr[i]->getRunning() == parent->GetFirstChild()) //Checks if the child is running in any FCFS processor
-					{
-						PArr[i]->SetRunning(nullptr);
-						PArr[i]->setisbusy(false);
-						DecrementRunningCount();
-					}
-
+					addToTrm(Parent->GetFirstChild());
+					PArr[i]->DeleteProcessAtPosition(Parent->GetFirstChild());
 				}
-
-				ParentKilling(parent->GetFirstChild());
-				ParentKilling(parent->GetSecondChild());
-			}
-			if (parent->GetSecondChild()) //Checks if the parent has second child
-			{
-				addToTrm(parent->GetSecondChild());
-
-				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+				else if (PArr[i]->getRunning() == Parent->GetFirstChild()) //Checks if the child is running in any FCFS processor
 				{
-					if (PArr[i]->Search(parent->GetSecondChild()))
-					{
-						PArr[i]->DeleteProcessAtPosition(parent->GetSecondChild());
-					}
-					else if (PArr[i]->getRunning() == parent->GetSecondChild())
-					{
-						PArr[i]->SetRunning(nullptr);
-						PArr[i]->setisbusy(false);
-						DecrementRunningCount();
-					}
+					addToTrm(Parent->GetFirstChild());
+					PArr[i]->SetRunning(nullptr);
+					PArr[i]->setisbusy(false);
+					DecrementRunningCount();
 				}
-				ParentKilling(parent->GetFirstChild());
-				ParentKilling(parent->GetSecondChild());
 			}
-			return true;
+			ChildrenKilling(Parent->GetFirstChild());
+			ChildrenKilling(Parent->GetSecondChild());
 		}
-		return false;
+
+		if (Parent->GetSecondChild()) //Checks if the parent has second child
+		{
+			for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+			{
+				if (PArr[i]->Search(Parent->GetSecondChild())) //Checks if the child is in a ready queue of any FCFS processor
+				{
+					addToTrm(Parent->GetSecondChild());
+					PArr[i]->DeleteProcessAtPosition(Parent->GetSecondChild());
+				}
+				else if (PArr[i]->getRunning() == Parent->GetSecondChild()) //Checks if the child is running in any FCFS processor
+				{
+					addToTrm(Parent->GetSecondChild());
+					PArr[i]->SetRunning(nullptr);
+					PArr[i]->setisbusy(false);
+					DecrementRunningCount();
+				}
+			}
+			ChildrenKilling(Parent->GetFirstChild());
+			ChildrenKilling(Parent->GetSecondChild());
+		}
 	}
-	return false;
+	return;
 }
 
 void Scheduler::IncrementTotalTRT(int trt)
@@ -639,10 +631,6 @@ int Scheduler::GetTotalTRT()
 	return TotalTRT;
 }
 
-void Scheduler::addtoparentlist(Process* p)
-{
-	ParentsList.InsertEnd(p);
-}
 
 
 

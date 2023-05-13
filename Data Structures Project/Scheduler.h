@@ -24,7 +24,6 @@ private:
 	LinkedQueue<Process*> newlist;         //NEW list
 	LinkedQueue<Process*>blocklist;        //BLK list
 	LinkedQueue<Process*>terminatedlist;   //TRM list
-	LinkedList<Process*>ParentsList;       //a list of pointers to the parent processes
 	UI_Info UI;                            //Object of the UI info class
 	int Processor_Count;                   //Total count of processors
 	int FCFS_ProcessorsCnt;                //Count of the FCFS processors
@@ -97,9 +96,8 @@ public:
 	void IntiateForking(Process* running);//The Function that checks if the running process in the FCFS will fork or not then makes all the necessary operations if it will
 	void Set_LongestListIdx();            //Setter for the Longest List Index
 	void WorkStealing();
-	bool ParentKilling(Process* parent);     //Kills a specific parent process and its children  
+	void ChildrenKilling(Process* parent);     //Kills a specific parent process and its children  
 	void IncrementTotalTRT(int trt);         //increments the total TRT with a process's TRT
 	int GetTotalTRT();                       //Getter for the total TRT
-	void addtoparentlist(Process* p);
 };
 #endif
