@@ -13,6 +13,7 @@ Processor::Processor(Scheduler* Sptr)
 	TotalIT = 0; 
 	PLoad = 0;
 	PUtil = 0;
+	TotalCT = 0;
 }
 
 //gets the process in running state

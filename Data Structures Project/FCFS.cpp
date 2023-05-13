@@ -72,8 +72,12 @@ void FCFS::ScheduleAlgo(int TimeStep)
 	SIGKILL* TempKillSig = nullptr;
 	int RandomForkProb = s->generaterandom(1, 100);
 
-	if (RDYList.isEmpty() && !RUNNING) // if there is nothing in the ready list and no process is running
+	if (RDYList.isEmpty())
+		TotalCT = 0;
+
+	if (RDYList.isEmpty() && !RUNNING) //if there is nothing in the ready list and no running process
 		return;
+		
 	KillingSignalsList.peek(TempKillSig);
 	if (TempKillSig)
 	{
@@ -87,6 +91,7 @@ void FCFS::ScheduleAlgo(int TimeStep)
 				KillingSignalsList.dequeue(TempKillSig);
 				RDYList.DeleteNodeAtPosition(KilledProcess, position);
 				RDYListIDs.DeleteNodeAtPosition(id, position);
+				s->addToTrm(KilledProcess);
 				s->ParentKilling(KilledProcess); //Killing the orphans operation
 				processescount--;
 			}
@@ -97,14 +102,14 @@ void FCFS::ScheduleAlgo(int TimeStep)
 	{
 		FCFStoRR_Migration(TimeStep);
 		RDYList.DeleteFirst(TempProcess);
-		if (TempProcess) {
+		if (TempProcess) 
+		{
 			RDYListIDs.DeleteFirst(TempID);
 			processescount--;
 			TempProcess->SetRT(TimeStep);
 			RUNNING = TempProcess;
 			isbusy = true;                                  //Set the processor as busy
 			s->incrementRunningCount();
-		}
 			if (RandomForkProb > 0 && RandomForkProb <= ForkProb) //Forking condition
 				s->IntiateForking(RUNNING); //Forking operation
 			KillingSignalsList.peek(TempKillSig);
@@ -115,16 +120,15 @@ void FCFS::ScheduleAlgo(int TimeStep)
 					if (TempKillSig->getID() == *RUNNING)
 					{
 						KillingSignalsList.dequeue(TempKillSig);
+						s->addToTrm(RUNNING);
 						s->ParentKilling(RUNNING); //Killing the orphans operation
 						isbusy = false;
 						RUNNING = nullptr;
-						//increment el idle ??
-						//TotalIT++;
 						s->DecrementRunningCount();
 					}
 				}
 			}
-		return;
+		}
 	}
 	else if (isbusy && RUNNING->GetCT()) //Same as if RUNNING->GetCT!=0
 	{
@@ -141,12 +145,32 @@ void FCFS::ScheduleAlgo(int TimeStep)
 				if (TempKillSig->getID() == *RUNNING)
 				{
 					KillingSignalsList.dequeue(TempKillSig);
+					s->addToTrm(RUNNING);
 					s->ParentKilling(RUNNING); //Killing the orphans operation
 					isbusy = false;
 					RUNNING = nullptr;
-					//increment el idle ??
-					//TotalIT++;
 					s->DecrementRunningCount();
+				}
+				else if (RUNNING->GetN())	/* the condition is same as if RUNNING->GetN()!=0 ,
+										 decrements the IO_R while the process is running*/
+				{
+					RUNNING->GetFirstIO(TempIO);
+					if (TempIO)
+					{
+						if (TempIO->GetRequest() >= 0)
+						{
+							TempIO->DecrementIO_R();
+						}
+
+
+						if (TempIO->GetRequest() == -1)
+						{
+							s->addtoblocklist(RUNNING);
+							isbusy = false;
+							RUNNING = nullptr;
+							s->DecrementRunningCount();
+						}
+					}
 				}
 			}
 			else if (RUNNING->GetN())	/* the condition is same as if RUNNING->GetN()!=0 , 
@@ -193,12 +217,10 @@ void FCFS::ScheduleAlgo(int TimeStep)
 	}	
 	else if (isbusy && !RUNNING->GetCT()) //same as if RUNNING->GetCT==0
 	{
+		s->addToTrm(RUNNING);
 		s->ParentKilling(RUNNING); //Killing the orphans operation
 		isbusy = false;
 		RUNNING = nullptr;
-		//increment el idle ??
-		TotalIT++;
-
 		s->DecrementRunningCount();
 	}
 }
@@ -212,7 +234,7 @@ void FCFS::FCFStoRR_Migration(int timestep)
 	RDYList.peek(p);
 	if (p) 
 	{
-		if (p->WTsofar(timestep) < s->GetMaxW() && !p->GetParent())
+		if (p->WTsofar(timestep) > s->GetMaxW() && !p->GetParent())
 		{
 			RDYList.DeleteFirst(p);
 			processescount--;

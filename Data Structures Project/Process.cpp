@@ -222,6 +222,9 @@ Process::~Process()
 
 ostream& operator<<(ostream& output, Process& p)
 {
+	if (p.GetParent())
+		output << p.ID << " Forked From " << p.GetParent()->ID;
+	else 
 	output << p.ID;
 	return output;
 }

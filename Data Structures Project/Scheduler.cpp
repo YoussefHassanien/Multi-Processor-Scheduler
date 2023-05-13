@@ -331,15 +331,14 @@ void Scheduler::Simulation()
 		{
 			for (int i = 0; i < BLKCount; i++)
 			{
-				blocklist.dequeue(TempProcess);
+				blocklist.peek(TempProcess);
 				if (TempProcess->CheckIO_D())  //CheckIO_D needs further modifications
 				{
+					blocklist.dequeue(TempProcess);
 					Set_ShortestListIdx();
 					PArr[ShortestListIdx]->AddToRdy(TempProcess);
 					BLKCount--;
 				}
-				else
-					blocklist.enqueue(TempProcess);
 			}
 
 		}
@@ -429,7 +428,7 @@ void Scheduler::PrintRunningList()
 	for (int i = 0; i < Processor_Count; i++)
 	{
 		if (PArr[i]->getRunning())
-			cout << *PArr[i]->getRunning() << "(P" << i + 1 << "), ";
+				cout << *PArr[i]->getRunning() << "(P" << i + 1 << "), ";
 	}
 }
 void Scheduler::Set_ShortestListIdx()
@@ -452,7 +451,7 @@ int Scheduler::Get_ShortestLlistIdx()
 void Scheduler::Set_ShortestFCFS()
 {
 	ShortestFCFSListIdx = 0;
-	for (int i = 0; i < SJF_ProcessorsCnt; i++)
+	for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 		if (PArr[i]->SumCT() < PArr[ShortestFCFSListIdx]->SumCT())
 			ShortestFCFSListIdx = i;
 }
@@ -467,7 +466,7 @@ int Scheduler::Get_ShortestFCFS()
 void Scheduler::Set_ShortestSJF()
 {
 	ShortestSJFListIdx = FCFS_ProcessorsCnt;
-	for (int i = FCFS_ProcessorsCnt; i < RR_ProcessorsCnt; i++)
+	for (int i = FCFS_ProcessorsCnt; i < (FCFS_ProcessorsCnt+SJF_ProcessorsCnt); i++)
 		if (PArr[i]->SumCT() < PArr[ShortestSJFListIdx]->SumCT())
 			ShortestSJFListIdx = i;
 }
@@ -482,7 +481,7 @@ int Scheduler::Get_ShortestSJF()
 void Scheduler::Set_ShortestRR()
 {
 	ShortestRRListIdx = SJF_ProcessorsCnt;
-	for (int i = SJF_ProcessorsCnt; i < RR_ProcessorsCnt; i++)
+	for (int i = SJF_ProcessorsCnt; i < Processor_Count; i++)
 		if (PArr[i]->SumCT() < PArr[ShortestRRListIdx]->SumCT())
 			ShortestRRListIdx = i;
 }
@@ -522,13 +521,17 @@ void Scheduler::IntiateForking(Process*running)
 {
 	if (running)
 	{
-		LastProcessID++;
-		Process* child = new Process(TimeStep, LastProcessID, running->GetCT());
-		child->SetParent(running);
-		running->AddChild(child);
-		Set_ShortestFCFS();
-		PArr[ShortestFCFSListIdx]->AddToRdy(child);
-		ParentsList.InsertEnd(running);
+		Process* child = nullptr;
+		if (running->AddChild(child));
+		{
+			LastProcessID++;
+			child = new Process(TimeStep, LastProcessID, running->GetCT());
+			running->AddChild(child);
+			child->SetParent(running);
+			Set_ShortestFCFS();
+			PArr[ShortestFCFSListIdx]->AddToRdy(child);
+			ParentsList.InsertEnd(running);
+		}
 	}
 }
 
@@ -537,7 +540,7 @@ void Scheduler::Set_LongestListIdx()
 	LongestListIdx = 0;
 	for (int i = 1; i < Processor_Count; i++)
 	{
-		if (PArr[i]->GetTotalCT() < PArr[LongestListIdx]->GetTotalCT())
+		if (PArr[i]->GetTotalCT() > PArr[LongestListIdx]->GetTotalCT())
 			LongestListIdx = i;
 	}
 }
@@ -555,72 +558,75 @@ void Scheduler::WorkStealing()
 		if (TimeStep % STL != 0)
 			return;
 		PArr[LongestListIdx]->ReturnFirst(p);
-		if (!p->GetParent()) 
+		if (p && !p->GetParent()) 
 		{
 			PArr[LongestListIdx]->DeleteProcess(p);
 			PArr[ShortestListIdx]->AddToRdy(p);
 			StealedProcesses++;
 		}
-		WorkStealing(); // calls the function recursively until one of the exit conditions is satisfied 
+		//WorkStealing(); // calls the function recursively until one of the exit conditions is satisfied 
 
 	
 }
 
 
-void Scheduler::ParentKilling(Process* parent)
+bool Scheduler::ParentKilling(Process* parent)
 {
-	if (parent)
+	if (!ParentsList.isEmpty()) //Checks if the parents list is empty or not
 	{
-		addToTrm(parent);
-
-		if (!ParentsList.isEmpty()) //Checks if the parents list is empty or not
+		int x = 0;
+		if (ParentsList.Find(parent, x)) //Checks if the current running process is in the parents list or not
 		{
-			int x = 0;
-			if (ParentsList.Find(parent, x)) //Checks if the current running process is in the parents list or not
+			ParentsList.DeleteNodeAtPosition(parent, x);
+			if ((!parent->GetFirstChild()) && (!parent->GetSecondChild()))
+				return false;
+
+			if (parent->GetFirstChild()) //Checks if the parent has first child
 			{
-				if (parent->GetFirstChild()) //Checks if the parent has first child
+				addToTrm(parent->GetFirstChild());
+				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 				{
-					for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+					if (PArr[i]->Search(parent->GetFirstChild())) //Checks if the child is in a ready queue of any FCFS processor
 					{
-						if (PArr[i]->Search(parent->GetFirstChild())) //Checks if the child is in a ready queue of any FCFS processor
-						{
-							PArr[i]->DeleteProcessAtPosition(parent->GetFirstChild());
-						}
-						else if (PArr[i]->getRunning() == parent->GetFirstChild()) //Checks if the child is running in any FCFS processor
-						{
-							PArr[i]->SetRunning(nullptr);
-							PArr[i]->setisbusy(false);
-							DecrementRunningCount();
-						}
-
+						PArr[i]->DeleteProcessAtPosition(parent->GetFirstChild());
 					}
-					
-				}
-				if (parent->GetSecondChild()) //Checks if the parent has second child
-				{
-
-					for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+					else if (PArr[i]->getRunning() == parent->GetFirstChild()) //Checks if the child is running in any FCFS processor
 					{
-						if (PArr[i]->Search(parent->GetSecondChild()))
-						{
-							PArr[i]->DeleteProcessAtPosition(parent->GetSecondChild());
-						}
-						else if (PArr[i]->getRunning() == parent->GetSecondChild())
-						{
-							PArr[i]->SetRunning(nullptr);
-							PArr[i]->setisbusy(false);
-							DecrementRunningCount();
-						}
+						PArr[i]->SetRunning(nullptr);
+						PArr[i]->setisbusy(false);
+						DecrementRunningCount();
 					}
 
 				}
 
+				ParentKilling(parent->GetFirstChild());
+				ParentKilling(parent->GetSecondChild());
 			}
-			ParentKilling(parent->GetFirstChild());
-			ParentKilling(parent->GetSecondChild());
+			if (parent->GetSecondChild()) //Checks if the parent has second child
+			{
+				addToTrm(parent->GetSecondChild());
+
+				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+				{
+					if (PArr[i]->Search(parent->GetSecondChild()))
+					{
+						PArr[i]->DeleteProcessAtPosition(parent->GetSecondChild());
+					}
+					else if (PArr[i]->getRunning() == parent->GetSecondChild())
+					{
+						PArr[i]->SetRunning(nullptr);
+						PArr[i]->setisbusy(false);
+						DecrementRunningCount();
+					}
+				}
+				ParentKilling(parent->GetFirstChild());
+				ParentKilling(parent->GetSecondChild());
+			}
+			return true;
 		}
-		
+		return false;
 	}
+	return false;
 }
 
 void Scheduler::IncrementTotalTRT(int trt)

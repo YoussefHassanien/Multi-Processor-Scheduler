@@ -27,7 +27,11 @@ void SJF::ScheduleAlgo(int TimeStep)
 {
 	IO* TempIO = nullptr;
 	Process* TempProcess = nullptr;
-	if (RDY_List.isEmpty() && !RUNNING)
+
+	if (RDY_List.isEmpty())
+		TotalCT = 0;
+
+	if (RDY_List.isEmpty() && !RUNNING) //if there is nothing in the ready list and no running process
 		return;
 	
 	//sets a process as running if the processor is idle
@@ -70,6 +74,7 @@ void SJF::ScheduleAlgo(int TimeStep)
 
 	else if (isbusy && !RUNNING->GetCT()) //same as if RUNNING->GetCT==0
 	{
+		s->addToTrm(RUNNING);
 		s->ParentKilling(RUNNING);
 		isbusy = false;
 		RUNNING = nullptr;

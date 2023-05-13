@@ -6,7 +6,6 @@ class RoundRobin :public Processor
 private:
 	LinkedQueue<Process*> RDY_List;                 //RDY list
 	const int TimeSlice, RTF;					    //time slice
-	//int stepscounter = 0;
 
 public:
 	RoundRobin(Scheduler* Sptr,int id,int ts, int rtf);      //constructor
