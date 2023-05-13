@@ -30,7 +30,7 @@ class Process;
 		virtual void AddToRdy(Process* p) = 0;                     //Adds a process to the processor ready list
 		virtual void DeleteProcess(Process*& p) = 0;               //deletes a given process when it moves to another queue or to being blocked 
 		virtual bool Search(Process* value) = 0;                   //Searches for a specific process in the processors ready lists
-		virtual void ScheduleAlgo() = 0;                           //Schedueling algorithm
+		virtual void ScheduleAlgo(int) = 0;                           //Schedueling algorithm
 		void setisbusy(bool b);                                    //sets the processor running state
 		Process* getRunning();                                     //gets the process in running state
 		void SetRunning(Process* proc);

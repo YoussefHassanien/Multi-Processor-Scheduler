@@ -7,7 +7,7 @@ Processor::Processor(Scheduler* Sptr)
 {
 	s=Sptr;
 	isbusy = false;
-	RUNNING = NULL;
+	RUNNING = nullptr;
 	processescount = 0;
 	TotalBT = 0;  
 	TotalIT = 0; 

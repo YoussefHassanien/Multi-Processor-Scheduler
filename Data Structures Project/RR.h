@@ -5,14 +5,14 @@ class RoundRobin :public Processor
 {
 private:
 	LinkedQueue<Process*> RDY_List;                 //RDY list
-	int Time_Slice;                                 //time slice
+	const int TimeSlice;                                 //time slice
 	int stepscounter = 0;
 
 public:
 	RoundRobin(Scheduler* Sptr,int id,int ts);      //constructor
 	void AddToRdy(Process* p);                      //Adds a process to the processor ready list
 	void DeleteProcess(Process*& p);                //deletes a give process when it moves to another queue or to being blocked
-	void ScheduleAlgo();                            //Schedueling algorithm
+	void ScheduleAlgo(int timestep);                //Schedueling algorithm
 	void Print_List();                              //Prints ready list processes
 	string Get_Processor_Type();                    //Returns the processor type 
 	int GetRDYListCount();                          //Returns the number of processes in the ready list

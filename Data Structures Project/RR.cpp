@@ -1,9 +1,8 @@
 #include "RR.h"
 
-RoundRobin::RoundRobin(Scheduler* Sptr,int id,int ts): Processor(Sptr)
+RoundRobin::RoundRobin(Scheduler* Sptr,int id,int ts): Processor(Sptr),TimeSlice(ts)
 {
 	ID = id;
-	Time_Slice = ts;
 }
 
 void RoundRobin::AddToRdy(Process* p)
@@ -19,7 +18,7 @@ void RoundRobin::DeleteProcess(Process*& p)
 }
 
 //Schedueling algorithm
-void RoundRobin::ScheduleAlgo()
+void RoundRobin::ScheduleAlgo(int TimeStep)
 {
 	IO* TempIO = nullptr;
 	Process* TempProcess = nullptr;
@@ -27,24 +26,25 @@ void RoundRobin::ScheduleAlgo()
 		return;
 
 	//sets a process as running if the processor is idle
-	if (!isbusy && (!RDY_List.isEmpty()))
+	if (!isbusy && !RDY_List.isEmpty())
 	{
 		RDY_List.dequeue(TempProcess);
 		processescount--;
 		RUNNING = TempProcess;
-		TempProcess->SetRT(s->getTimeStep() - TempProcess->GetAT());
-		isbusy = true;                             //Set the processor as busy
+		TempProcess->SetRT(TimeStep - TempProcess->GetAT());
+		isbusy = true;                 //Set the processor as busy
 		s->incrementRunningCount();
 		return;
 	}
-	else if (isbusy && RUNNING->GetCT() != 0)
+	else if (isbusy && RUNNING->GetCT()) //Same as if RUNNING->GetCT!=0
 	{
 		RUNNING->DecrementCT();
 		RUNNING->IncrementRunningFor();
-		if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running 
+		if (RUNNING->GetN())	   /* the condition is same as if RUNNING->GetN()!=0 ,
+									decrements the IO_R while the process is running */
 		{
 			RUNNING->GetFirstIO(TempIO);
-			if (TempIO !=nullptr)
+			if (TempIO)
 			{
 				if (TempIO->GetRequest() >= 0)
 				{
@@ -59,26 +59,32 @@ void RoundRobin::ScheduleAlgo()
 					RUNNING = nullptr;
 					s->DecrementRunningCount();
 				}
-				else  if (s->CheckTimeSlice())   //the current timestep is the Round Robin timeslice
+				else  if (!(TimeStep % TimeSlice))   //the current timestep is the Round Robin timeslice
 				{
 					RDY_List.enqueue(RUNNING);               //The process goes back to the beginning of the RDY list
-					RUNNING = NULL;
+					RUNNING = nullptr;
 					isbusy = false;                          //Set the processor as idle
 					s->DecrementRunningCount();
 				}
-
-
+			}
+			else if (!(TimeStep % TimeSlice))   //the current timestep is the Round Robin timeslice
+			{
+				RDY_List.enqueue(RUNNING);               //The process goes back to the beginning of the RDY list
+				RUNNING = nullptr;
+				isbusy = false;                          //Set the processor as idle
+				s->DecrementRunningCount();
 			}
 		}
-		else if (s->CheckTimeSlice())   //the current timestep is the Round Robin timeslice
+		else if (!(TimeStep % TimeSlice))   //the current timestep is the Round Robin timeslice
 		{
 			RDY_List.enqueue(RUNNING);               //The process goes back to the beginning of the RDY list
-			RUNNING = NULL;
+			RUNNING = nullptr;
 			isbusy = false;                          //Set the processor as idle
 			s->DecrementRunningCount();
 		}
 	}
-	else if (isbusy && RUNNING->GetCT() == 0)
+
+	else if (isbusy && !RUNNING->GetCT()) //same as if RUNNING->GetCT==0
 	{
 		s->addToTrm(RUNNING);
 		isbusy = false;

@@ -23,7 +23,7 @@ void SJF::DeleteProcess(Process*& p)
 }
 
 //Schedueling algorithm
-void SJF::ScheduleAlgo()
+void SJF::ScheduleAlgo(int TimeStep)
 {
 	IO* TempIO = nullptr;
 	Process* TempProcess = nullptr;
@@ -36,17 +36,18 @@ void SJF::ScheduleAlgo()
 		RDY_List.dequeue(TempProcess);
 		processescount--;
 		RUNNING = TempProcess;
-		TempProcess->SetRT(s->getTimeStep() - TempProcess->GetAT());
+		TempProcess->SetRT(TimeStep - TempProcess->GetAT());
 		isbusy = true;                             //Set the processor as busy
 		s->incrementRunningCount();
 		return;
 	}
 
-	else if (isbusy && RUNNING->GetCT()!=0)
+	else if (isbusy && RUNNING->GetCT()) //Same as if RUNNING->GetCT!=0
 	{
 		RUNNING->DecrementCT();
 		RUNNING->IncrementRunningFor();
-		if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running 
+		if (RUNNING->GetN())		/* the condition is same as if RUNNING->GetN()!=0 , 
+				                    decrements the IO_R while the process is running */ 
 		{
 			RUNNING->GetFirstIO(TempIO);
 			if (TempIO)
@@ -68,7 +69,7 @@ void SJF::ScheduleAlgo()
 		}
 	}
 
-	else if (isbusy && RUNNING->GetCT() == 0)
+	else if (isbusy && !RUNNING->GetCT()) //same as if RUNNING->GetCT==0
 	{
 		s->addToTrm(RUNNING);
 		isbusy = false;

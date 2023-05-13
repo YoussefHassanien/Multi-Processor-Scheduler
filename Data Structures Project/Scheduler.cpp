@@ -135,13 +135,13 @@ void Scheduler::readfileparameters()
 			InFile >> ProcessID;
 			int intProcessID = stoi(ProcessID);
 			SIGKILL* SigKillPtr = new SIGKILL(intkillTime, intProcessID);
-			FCFS* TempFCFS = new FCFS(this);
+			FCFS* TempFCFS = new FCFS(this, ForkProb);
 			TempFCFS->AddKillingSignal(SigKillPtr);
 			continue;
 		}
 		for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 		{
-			Processor* p = new FCFS(this,Processor_Count + 1);
+			Processor* p = new FCFS(this, ForkProb,Processor_Count + 1);
 			PArr[Processor_Count] = p;
 			Processor_Count++;
 		}
@@ -319,7 +319,7 @@ void Scheduler::simulation()
 
 		for (int i = 0; i < Processor_Count; i++)
 		{
-			PArr[i]->ScheduleAlgo(); //rdy to run and run to rdy
+			PArr[i]->ScheduleAlgo(TimeStep); //rdy to run and run to rdy
 
 		}
 		//BLK to RDY

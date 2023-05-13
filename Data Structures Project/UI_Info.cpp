@@ -52,7 +52,7 @@ void UI_Info::PrintInteractiveMode(int timestep)
 	S->PrintRunningList();
 	cout << endl << "------------------------- TRM Processes ------------------------- " << endl;
 	S->PrintTRMList();
-	cout << endl<<"PRESS ANY KEY TO MOVE TO NEXT STEP !" << endl;
+	cout << endl<<"PRESS ANY KEY TO MOVE TO THE NEXT STEP !" << endl;
 	system("pause");
 }
 
@@ -67,6 +67,7 @@ void UI_Info::PrintStep_By_StepMode(int timestep)
 	S->PrintRunningList();
 	cout << endl << "------------------------- TRM Processes ------------------------- " << endl;
 	S->PrintTRMList();
+	cout << endl << "MOVING TO THE NEXT STEP !" << endl;
 	wait();
 }
 

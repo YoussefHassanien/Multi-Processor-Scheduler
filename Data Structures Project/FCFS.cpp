@@ -1,7 +1,7 @@
 #include "FCFS.h"
 LinkedQueue<SIGKILL*> FCFS::KillingSignalsList;
 //Constructor
-FCFS::FCFS(Scheduler*Sptr,int id): Processor(Sptr)
+FCFS::FCFS(Scheduler*Sptr,int forkprob, int id): Processor(Sptr),ForkProb(forkprob)
 {
 	ID = id;
 }
@@ -63,7 +63,7 @@ int FCFS::GetRDYListCount()
 }
 
 //Schedueling algorithm
-void FCFS::ScheduleAlgo()
+void FCFS::ScheduleAlgo(int TimeStep)
 {
 	int TempID = 0;
 	Process* TempProcess = nullptr;
@@ -79,7 +79,7 @@ void FCFS::ScheduleAlgo()
 	{
 		int position = 0;
 
-		if (s->CheckKillSigTime(TempKillSig))
+		if (TempKillSig->getTime() == TimeStep)
 		{
 			if (RDYListIDs.Find(TempKillSig->getID(), position))
 			{
@@ -99,16 +99,16 @@ void FCFS::ScheduleAlgo()
 		RDYList.DeleteFirst(TempProcess);
 		RDYListIDs.DeleteFirst(TempID);
 		processescount--;
-		TempProcess->SetRT(s->getTimeStep());
+		TempProcess->SetRT(TimeStep);
 		RUNNING = TempProcess;
 		isbusy = true;                                  //Set the processor as busy
 		s->incrementRunningCount();
-		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb()) //Forking condition
+		if (RandomForkProb > 0 && RandomForkProb <= ForkProb) //Forking condition
 			s->IntiateForking(RUNNING); //Forking operation
 		KillingSignalsList.peek(TempKillSig);
 		if (TempKillSig)
 		{
-			if (s->CheckKillSigTime(TempKillSig)) //Killing Signals Operation
+			if (TempKillSig->getTime() == TimeStep) //Killing Signals Operation
 			{
 				if (TempKillSig->getID() == *RUNNING)
 				{
@@ -126,17 +126,17 @@ void FCFS::ScheduleAlgo()
 
 		return;
 	}
-	else if (isbusy && RUNNING->GetCT() != 0) 
+	else if (isbusy && RUNNING->GetCT()) //Same as if RUNNING->GetCT!=0
 	{
 		RUNNING->DecrementCT();
 		TotalBT++;
 		RUNNING->IncrementRunningFor();
-		if (RandomForkProb > 0 && RandomForkProb <= s->getForkProb())
+		if (RandomForkProb > 0 && RandomForkProb <= ForkProb)
 			s->IntiateForking(RUNNING); //Forking operation
 		KillingSignalsList.peek(TempKillSig);
 		if (TempKillSig)
 		{
-			if (s->CheckKillSigTime(TempKillSig)) //Killing Signals Operation
+			if (TempKillSig->getTime() == TimeStep) //Killing Signals Operation
 			{
 				if (TempKillSig->getID() == *RUNNING)
 				{
@@ -150,7 +150,8 @@ void FCFS::ScheduleAlgo()
 					s->DecrementRunningCount();
 				}
 			}
-			else if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running
+			else if (RUNNING->GetN())	/* the condition is same as if RUNNING->GetN()!=0 , 
+				                         decrements the IO_R while the process is running*/ 
 			{
 				RUNNING->GetFirstIO(TempIO);
 				if (TempIO)
@@ -171,7 +172,8 @@ void FCFS::ScheduleAlgo()
 				}
 			}
 		}
-		else if (RUNNING->GetN() != 0)						// decrements the IO_R while the process is running
+		else if (RUNNING->GetN())	/* the condition is same as if RUNNING->GetN()!=0 , 
+				                         decrements the IO_R while the process is running*/ 
 		{
 			RUNNING->GetFirstIO(TempIO);
 			if (TempIO)
@@ -192,7 +194,7 @@ void FCFS::ScheduleAlgo()
 			}
 		}
 	}	
-	else if (isbusy && RUNNING->GetCT() == 0)
+	else if (isbusy && !RUNNING->GetCT()) //same as if RUNNING->GetCT==0
 	{
 		s->addToTrm(RUNNING);
 		s->ParentKilling(RUNNING); //Killing the orphans operation
@@ -200,6 +202,7 @@ void FCFS::ScheduleAlgo()
 		RUNNING = nullptr;
 		//increment el idle ??
 		TotalIT++;
+
 		s->DecrementRunningCount();
 	}
 }
