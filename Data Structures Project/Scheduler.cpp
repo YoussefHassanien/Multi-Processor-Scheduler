@@ -562,25 +562,6 @@ void Scheduler::WorkStealing()
 	
 }
 
-void Scheduler::AddChildrenToTrm(Process* parent)
-{
-	if ((!parent->GetFirstChild()) && (!parent->GetSecondChild())) 
-		return;
-	else
-	{
-		if (parent->GetFirstChild())
-		{
-			addToTrm(parent->GetFirstChild());
-			AddChildrenToTrm(parent->GetFirstChild());
-		}
-		if (parent->GetSecondChild())
-		{
-			addToTrm(parent->GetSecondChild());
-			AddChildrenToTrm(parent->GetSecondChild());
-		}
-	}
-
-}
 
 bool Scheduler::ParentKilling(Process* parent)
 {
@@ -603,7 +584,7 @@ bool Scheduler::ParentKilling(Process* parent)
 					}
 					else if (PArr[i]->getRunning() == parent->GetFirstChild()) //Checks if the child is running in any FCFS processor
 					{
-						PArr[i]->SetRunning(nullptr);
+						PArr[i]->SetRunning(nullptr); 
 						PArr[i]->setisbusy(false);
 						DecrementRunningCount();
 					}
@@ -615,6 +596,7 @@ bool Scheduler::ParentKilling(Process* parent)
 			if (parent->GetSecondChild()) //Checks if the parent has second child
 			{
 				addToTrm(parent->GetSecondChild());
+
 				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 				{
 					if (PArr[i]->Search(parent->GetSecondChild()))
@@ -631,7 +613,6 @@ bool Scheduler::ParentKilling(Process* parent)
 				
 				ParentKilling(parent->GetSecondChild());
 			}
-			//AddChildrenToTrm(parent); //Since the current running process is in the parents list and it is being terminated so its children must be terminated too
 			return true;
 		}
 		return false;
