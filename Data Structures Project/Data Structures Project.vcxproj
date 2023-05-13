@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="BinaryTree.h" />
     <ClInclude Include="CyclicQueue.h" />
+    <ClInclude Include="EDF.h" />
     <ClInclude Include="FCFS.h" />
     <ClInclude Include="TreeNode.h" />
     <ClInclude Include="UI_Info.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="SJF.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EDF.cpp" />
     <ClCompile Include="FCFS.cpp" />
     <ClCompile Include="IO.cpp" />
     <ClCompile Include="Process.cpp" />
