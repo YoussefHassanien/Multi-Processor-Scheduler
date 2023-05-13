@@ -146,7 +146,7 @@ int RoundRobin::SumCT()
 	for (int i = 0; i < processescount; i++)
 	{
 		RDY_List.dequeue(p);
-		TotalCT = TotalCT + p->GetCT();
+		TotalCT = TotalCT + p->GetActualCT();
 		RDY_List.enqueue(p);
 	}
 	return TotalCT;

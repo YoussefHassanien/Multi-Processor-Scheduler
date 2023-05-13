@@ -1,3 +1,5 @@
-﻿  Scheduler.cpp
-D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\Data Structures Project\Scheduler.cpp(525,32): warning C4390: ';': empty controlled statement found; is this the intent?
+﻿  FCFS.cpp
+  RR.cpp
+  SJF.cpp
+  Generating Code...
   Data Structures Project.vcxproj -> D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\x64\Debug\Data Structures Project.exe

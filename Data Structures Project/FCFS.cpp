@@ -256,7 +256,7 @@ int FCFS::SumCT()
 		for (int i = 0; i < processescount; i++)
 		{
 			RDYList.DeleteFirst(p);
-			TotalCT = TotalCT + p->GetCT();
+			TotalCT = TotalCT + p->GetActualCT();
 			RDYList.InsertEnd(p);
 		}
 		return TotalCT;

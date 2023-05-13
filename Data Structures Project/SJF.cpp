@@ -116,13 +116,13 @@ int SJF::SumCT()
 	for (int i = 0; i < processescount; i++)
 	{
 		RDY_List.dequeue(p);
-		TotalCT = TotalCT + p->GetCT();
-		TempRDYList.enqueue(p,p->GetCT());
+		TotalCT = TotalCT + p->GetActualCT();
+		TempRDYList.enqueue(p,p->GetActualCT());
 	}
 	for (int i = 0; i < processescount; i++)
 	{
 		TempRDYList.dequeue(p);
-		RDY_List.enqueue(p, p->GetCT());
+		RDY_List.enqueue(p, p->GetActualCT());
 	}
 	return TotalCT;
 }

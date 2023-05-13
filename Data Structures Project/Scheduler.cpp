@@ -517,20 +517,20 @@ int Scheduler::GetMaxW()
 {
 	return MaxW;
 }
-void Scheduler::IntiateForking(Process*running)
+void Scheduler::IntiateForking(Process*Parent)
 {
-	if (running)
+	if (Parent)
 	{
-		Process* child = nullptr;
-		if (running->AddChild(child));
+		Process* Child = nullptr;
+		if (Parent->AddChild(Child));
 		{
 			LastProcessID++;
-			child = new Process(TimeStep, LastProcessID, running->GetCT());
-			running->AddChild(child);
-			child->SetParent(running);
+			Child = new Process(TimeStep, LastProcessID, Parent->GetCT());
+			Parent->AddChild(Child);
+			Child->SetParent(Parent);
 			Set_ShortestFCFS();
-			PArr[ShortestFCFSListIdx]->AddToRdy(child);
-			ParentsList.InsertEnd(running);
+			PArr[ShortestFCFSListIdx]->AddToRdy(Child);
+			ParentsList.InsertEnd(Parent);
 		}
 	}
 }
