@@ -312,6 +312,17 @@ void Scheduler::Simulation()
 
 		for (int i = 0; i < Processor_Count; i++)
 		{
+			//Process migration 
+			
+			/*if (FCFS* FCFSptr = dynamic_cast<FCFS*>(PArr[i]))  // the current processor is a FCFS processor
+			{
+				FCFSptr->FCFStoRR_Migration();
+			}
+			else if (RoundRobin* RRptr = dynamic_cast<RoundRobin*>(PArr[i])) // the current processor is a RR processor 
+			{
+				RRptr->RRtoSJF_Migration();
+			}*/
+
 			PArr[i]->ScheduleAlgo(TimeStep); //rdy to run and run to rdy
 
 		}
