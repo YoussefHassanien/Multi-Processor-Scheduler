@@ -21,7 +21,6 @@ private:
 		, IO_D //total IO Duration
 		,IO_R  //IO Request time
 		;
-	Scheduler* s;
 	LinkedQueue<IO*> IOqueue; //IOs Queue for each process
 	Process* Parent;   //a pointer to the parent process that have created this forked processes if it is a forked one
 	Process* FirstChild; //a pointer to the first forked child
@@ -62,7 +61,7 @@ public:
 	void PrintProcessInfo();                                         //Prints the Processes info
 	void DecrementCT();                                              //decrements the CT by one 
 	void IncrementRunningFor();                                      //Increments RunningFor by one 
-	int WTsofar();                                                   //Calculates the WT so far
+	int WTsofar(int timestep);                                                   //Calculates the WT so far
 	friend ostream& operator<<(ostream& output,Process &p);          //<< Operator overloading
     friend bool operator ==(Process& p1,Process& p2);                //== Operator Overloading 
 	friend bool operator==(int value,Process& p);                    //== Operator Overloading when the Process ID is sent instead of 2 Processes

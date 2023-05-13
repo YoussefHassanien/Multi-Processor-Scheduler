@@ -152,7 +152,7 @@ void Scheduler::readfileparameters()
 		}
 		for (int i = 0; i < RR_ProcessorsCnt; i++)
 		{
-			Processor* p = new RoundRobin(this,Processor_Count + 1, TimeSlice);
+			Processor* p = new RoundRobin(this,Processor_Count + 1, TimeSlice,RTF);
 			PArr[Processor_Count] = p;
 			Processor_Count++;
 		}
@@ -314,14 +314,14 @@ void Scheduler::Simulation()
 		{
 			//Process migration 
 			
-			/*if (FCFS* FCFSptr = dynamic_cast<FCFS*>(PArr[i]))  // the current processor is a FCFS processor
-			{
-				FCFSptr->FCFStoRR_Migration();
-			}
-			else if (RoundRobin* RRptr = dynamic_cast<RoundRobin*>(PArr[i])) // the current processor is a RR processor 
-			{
-				RRptr->RRtoSJF_Migration();
-			}*/
+			//if (FCFS* FCFSptr = dynamic_cast<FCFS*>(PArr[i]))  // the current processor is a FCFS processor
+			//{
+			//	FCFSptr->FCFStoRR_Migration();
+			//}
+			//else if (RoundRobin* RRptr = dynamic_cast<RoundRobin*>(PArr[i])) // the current processor is a RR processor 
+			//{
+			//	RRptr->RRtoSJF_Migration();
+			//}
 
 			PArr[i]->ScheduleAlgo(TimeStep); //rdy to run and run to rdy
 
@@ -563,61 +563,60 @@ void Scheduler::WorkStealing()
 }
 
 
-bool Scheduler::ParentKilling(Process* parent)
+void Scheduler::ParentKilling(Process* parent)
 {
-	if (!ParentsList.isEmpty()) //Checks if the parents list is empty or not
+	if (parent)
 	{
-		int x = 0;
-		if (ParentsList.Find(parent,x)) //Checks if the current running process is in the parents list or not
+		addToTrm(parent);
+
+		if (!ParentsList.isEmpty()) //Checks if the parents list is empty or not
 		{
-			if ((!parent->GetFirstChild()) && (!parent->GetSecondChild()))
-				return false;
-			
-			if (parent->GetFirstChild()) //Checks if the parent has first child
+			int x = 0;
+			if (ParentsList.Find(parent, x)) //Checks if the current running process is in the parents list or not
 			{
-				addToTrm(parent->GetFirstChild());
-				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+				if (parent->GetFirstChild()) //Checks if the parent has first child
 				{
-					if (PArr[i]->Search(parent->GetFirstChild())) //Checks if the child is in a ready queue of any FCFS processor
+					for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 					{
-						PArr[i]->DeleteProcessAtPosition(parent->GetFirstChild()); 
-					}
-					else if (PArr[i]->getRunning() == parent->GetFirstChild()) //Checks if the child is running in any FCFS processor
-					{
-						PArr[i]->SetRunning(nullptr); 
-						PArr[i]->setisbusy(false);
-						DecrementRunningCount();
+						if (PArr[i]->Search(parent->GetFirstChild())) //Checks if the child is in a ready queue of any FCFS processor
+						{
+							PArr[i]->DeleteProcessAtPosition(parent->GetFirstChild());
+						}
+						else if (PArr[i]->getRunning() == parent->GetFirstChild()) //Checks if the child is running in any FCFS processor
+						{
+							PArr[i]->SetRunning(nullptr);
+							PArr[i]->setisbusy(false);
+							DecrementRunningCount();
+						}
+
 					}
 					
 				}
-				
-				ParentKilling(parent->GetFirstChild());
-			} 
-			if (parent->GetSecondChild()) //Checks if the parent has second child
-			{
-				addToTrm(parent->GetSecondChild());
-
-				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+				if (parent->GetSecondChild()) //Checks if the parent has second child
 				{
-					if (PArr[i]->Search(parent->GetSecondChild()))
+
+					for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 					{
-						PArr[i]->DeleteProcessAtPosition(parent->GetSecondChild());
+						if (PArr[i]->Search(parent->GetSecondChild()))
+						{
+							PArr[i]->DeleteProcessAtPosition(parent->GetSecondChild());
+						}
+						else if (PArr[i]->getRunning() == parent->GetSecondChild())
+						{
+							PArr[i]->SetRunning(nullptr);
+							PArr[i]->setisbusy(false);
+							DecrementRunningCount();
+						}
 					}
-					else if (PArr[i]->getRunning() == parent->GetSecondChild())
-					{
-						PArr[i]->SetRunning(nullptr);
-						PArr[i]->setisbusy(false);
-						DecrementRunningCount();
-					}
+
 				}
-				
-				ParentKilling(parent->GetSecondChild());
+
 			}
-			return true;
+			ParentKilling(parent->GetFirstChild());
+			ParentKilling(parent->GetSecondChild());
 		}
-		return false;
+		
 	}
-	return false;
 }
 
 void Scheduler::IncrementTotalTRT(int trt)

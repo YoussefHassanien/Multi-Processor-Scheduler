@@ -5,11 +5,11 @@ class RoundRobin :public Processor
 {
 private:
 	LinkedQueue<Process*> RDY_List;                 //RDY list
-	const int TimeSlice;                                 //time slice
-	int stepscounter = 0;
+	const int TimeSlice, RTF;					    //time slice
+	//int stepscounter = 0;
 
 public:
-	RoundRobin(Scheduler* Sptr,int id,int ts);      //constructor
+	RoundRobin(Scheduler* Sptr,int id,int ts, int rtf);      //constructor
 	void AddToRdy(Process* p);                      //Adds a process to the processor ready list
 	void DeleteProcess(Process*& p);                //deletes a give process when it moves to another queue or to being blocked
 	void ScheduleAlgo(int timestep);                //Schedueling algorithm

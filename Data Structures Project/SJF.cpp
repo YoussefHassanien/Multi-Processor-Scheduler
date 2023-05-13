@@ -33,6 +33,7 @@ void SJF::ScheduleAlgo(int TimeStep)
 	//sets a process as running if the processor is idle
 	if (!isbusy && !RUNNING)
 	{
+		
 		RDY_List.dequeue(TempProcess);
 		processescount--;
 		RUNNING = TempProcess;
@@ -69,7 +70,6 @@ void SJF::ScheduleAlgo(int TimeStep)
 
 	else if (isbusy && !RUNNING->GetCT()) //same as if RUNNING->GetCT==0
 	{
-		s->addToTrm(RUNNING);
 		s->ParentKilling(RUNNING);
 		isbusy = false;
 		RUNNING = nullptr;

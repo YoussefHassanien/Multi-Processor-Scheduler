@@ -1,6 +1,6 @@
 #include "RR.h"
 
-RoundRobin::RoundRobin(Scheduler* Sptr,int id,int ts): Processor(Sptr),TimeSlice(ts)
+RoundRobin::RoundRobin(Scheduler* Sptr,int id,int ts, int rtf): Processor(Sptr),TimeSlice(ts),RTF(rtf)
 {
 	ID = id;
 }
@@ -28,13 +28,17 @@ void RoundRobin::ScheduleAlgo(int TimeStep)
 	//sets a process as running if the processor is idle
 	if (!isbusy && !RDY_List.isEmpty())
 	{
+		RRtoSJF_Migration();
 		RDY_List.dequeue(TempProcess);
-		processescount--;
-		RUNNING = TempProcess;
-		TempProcess->SetRT(TimeStep - TempProcess->GetAT());
-		isbusy = true;                 //Set the processor as busy
-		s->incrementRunningCount();
-		return;
+		if (TempProcess)
+		{
+			processescount--;
+			RUNNING = TempProcess;
+			TempProcess->SetRT(TimeStep - TempProcess->GetAT());
+			isbusy = true;                 //Set the processor as busy
+			s->incrementRunningCount();
+		}
+			return;
 	}
 	else if (isbusy && RUNNING->GetCT()) //Same as if RUNNING->GetCT!=0
 	{
@@ -87,7 +91,6 @@ void RoundRobin::ScheduleAlgo(int TimeStep)
 
 	else if (isbusy && !RUNNING->GetCT()) //same as if RUNNING->GetCT==0
 	{
-		s->addToTrm(RUNNING);
 		s->ParentKilling(RUNNING);
 		isbusy = false;
 		RUNNING = nullptr;
@@ -119,12 +122,12 @@ void RoundRobin::RRtoSJF_Migration()
 {  
 	Process* p;
 	RDY_List.peek(p);
-	if (p->GetCT() < s->GetRTF())
+	if (p->GetCT() < RTF)
 	{
 		RDY_List.dequeue(p);
 		processescount--;
 		s->FromRRtoShortestSJF(p);
-		RRtoSJF_Migration();
+		//RRtoSJF_Migration();
 	}
 }
 

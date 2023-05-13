@@ -64,9 +64,9 @@ void Process::IncrementRunningFor()
 	RunningFor++;
 }
 
-int Process::WTsofar()
+int Process::WTsofar(int timestep)
 {
-	return (s->getTimeStep()-AT-RunningFor);
+	return (timestep-AT-RunningFor);
 }
 
 void Process::SetOrph(bool orph)
