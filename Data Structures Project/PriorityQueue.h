@@ -55,7 +55,7 @@ public:
 		//insert the new node
 
 		//special case if this is the first node to insert 
-		//or the priority of the new node is less th<an the priority of the front node
+		//or the priority of the new node is less than the priority of the front node
 		else if (newNodePtr->getPriority() < frontPtr->getPriority())
 		{
 			temp = newNodePtr;

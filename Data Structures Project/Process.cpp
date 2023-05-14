@@ -1,12 +1,13 @@
 #include "Process.h"
 
-Process::Process(int at, int id, int ct, int n)
+Process::Process(int at, int id, int ct,int deadline, int n)
 {
 	SetAT(at);
 	SetID(id);
 	SetCT(ct);
 	SetN(n);
 	SetIO_D();
+	SetDeadline(deadline);
 	RT = 0;
 	Parent = nullptr;
 	FirstChild = nullptr;
@@ -55,6 +56,10 @@ void Process::SetN(int n)
 {
 	N = n;
 }
+void Process::SetDeadline(int dead)
+{
+	Deadline = dead;
+}
 void Process::DecrementCT()
 {
 	CT--;
@@ -74,6 +79,11 @@ void Process::SetParent(Process* parent)
 {
 	if(!Parent)
 	Parent = parent;
+}
+
+int Process::GetDeadline()
+{
+	return Deadline;
 }
 
 int Process::GetID()

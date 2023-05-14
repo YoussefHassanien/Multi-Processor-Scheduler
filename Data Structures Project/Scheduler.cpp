@@ -4,6 +4,7 @@
 #include "RR.h"
 #include "SJF.h"
 #include "SIGKILL.h"
+#include "EDF.h"
 #include <iomanip>
 
 //Constructor
@@ -75,6 +76,10 @@ void Scheduler::readfileparameters()
 		InFile >> rr;
 		RR_ProcessorsCnt = stoi(rr);
 
+		string edf;
+		InFile >> edf;
+		EDF_ProcessorCnt = stoi(edf);
+
 		string timeslice;
 		InFile >> timeslice;
 		TimeSlice = stoi(timeslice);
@@ -98,11 +103,12 @@ void Scheduler::readfileparameters()
 		{
 			//loop on the processes and read the data members of each
 			Process* p = new Process;
-			string AT, PID, CT, N;
-			InFile >> AT >> PID >> CT >> N;
+			string AT, PID, CT, Deadline, N;
+			InFile >> AT >> PID >> CT >> Deadline >> N;
 			p->SetAT(stoi(AT));
 			p->SetID(stoi(PID));
 			p->SetCT(stoi(CT));
+			p->SetDeadline(stoi(Deadline));
 			p->SetN(stoi(N));
 			for (int i = 0; i < stoi(N); i++)
 			{
@@ -161,6 +167,12 @@ void Scheduler::readfileparameters()
 		for (int i = 0; i < RR_ProcessorsCnt; i++)
 		{
 			Processor* p = new RoundRobin(this,Processor_Count + 1, TimeSlice,RTF);
+			PArr[Processor_Count] = p;
+			Processor_Count++;
+		}
+		for (int i = 0; i < EDF_ProcessorCnt; i++)
+		{
+			Processor* p = new EDF(this, Processor_Count + 1);
 			PArr[Processor_Count] = p;
 			Processor_Count++;
 		}
@@ -322,16 +334,6 @@ void Scheduler::Simulation()
 
 		for (int i = 0; i < Processor_Count; i++)
 		{
-			//Process migration 
-			
-			//if (FCFS* FCFSptr = dynamic_cast<FCFS*>(PArr[i]))  // the current processor is a FCFS processor
-			//{
-			//	FCFSptr->FCFStoRR_Migration();
-			//}
-			//else if (RoundRobin* RRptr = dynamic_cast<RoundRobin*>(PArr[i])) // the current processor is a RR processor 
-			//{
-			//	RRptr->RRtoSJF_Migration();
-			//}
 
 			PArr[i]->ScheduleAlgo(TimeStep); //rdy to run and run to rdy
 

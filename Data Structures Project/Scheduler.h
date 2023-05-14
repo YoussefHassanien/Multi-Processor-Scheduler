@@ -29,6 +29,7 @@ private:
 	int FCFS_ProcessorsCnt;                //Count of the FCFS processors
 	int RR_ProcessorsCnt;                  //Count of the RR processors 
 	int SJF_ProcessorsCnt;                 //Count of the SJF processors
+	int EDF_ProcessorCnt;				   //Count of the EDF processors
 	int TimeStep;                          //Time step
 	int TimeSlice;                         //Time slice
 	int LastProcessID;                     //processes count for all processes in the program

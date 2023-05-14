@@ -19,7 +19,8 @@ private:
 		, RunningFor //How long the process has been running so far
 		, Actual_CT //original ct
 		, IO_D //total IO Duration
-		,IO_R  //IO Request time
+		, IO_R  //IO Request time
+		, Deadline //deadline of process
 		;
 	LinkedQueue<IO*> IOqueue; //IOs Queue for each process
 	Process* Parent;   //a pointer to the parent process that have created this forked processes if it is a forked one
@@ -28,7 +29,7 @@ private:
 
 public:
 
-	Process(int at = 0, int id = 0, int ct = 0, int n = 0);          //Constructor
+	Process(int at = 0, int id = 0, int ct = 0, int deadline=0, int n = 0);          //Constructor
 	void SetID(int id);                                              //Setter for the process ID 
 	void SetAT(int at);                                              //Setter for the Arrival Time
 	void SetRT(int CPU_First_AT);                                    //Setter for the Arrival Time
@@ -37,7 +38,9 @@ public:
 	void SetTRT(int trt);                                            //Setter for the Turnarround time
 	void SetWT(int wt);                                              //Setter for the Wait Time
 	void SetN(int n);                                                //Setter for the Number of IOs
+	void SetDeadline(int dead);										 //Setter for the process deadline
 	void SetParent(Process* parent);                                 //Setter for the parent
+	int GetDeadline();											     //Getter for the Process Deadline
 	int GetID();                                                     //Getter for the process ID 
 	int GetAT();                                                     //Getter for the Arrival Time
 	int GetRT();                                                     //Getter for the Arrival Time
