@@ -52,10 +52,8 @@ public:
 	int GetRunningFor();                                             //Getter for how long the process has been running so far
 	void GetFirstIO(IO*& ioTemp);                                    //Getter for the front IO in the IOs queue
 	bool CheckIO_D();
-	bool AddChild(Process* child);                                   //Add a forked child to the process
-	//void AddIO(LinkedQueue<IO*>* ioq);                               
+	bool AddChild(Process* child);                                   //Add a forked child to the process                           
 	void AddIO(IO* io);                               
-	void PrintProcessInfo();                                         //Prints the Processes info
 	void DecrementCT();                                              //decrements the CT by one 
 	void IncrementRunningFor();                                      //Increments RunningFor by one 
 	int WTsofar(int timestep);                                                   //Calculates the WT so far

@@ -30,7 +30,7 @@ class Process;
 		virtual void AddToRdy(Process* p) = 0;                     //Adds a process to the processor ready list
 		virtual void DeleteProcess(Process*& p) = 0;               //deletes a given process when it moves to another queue or to being blocked 
 		virtual bool Search(Process* value) = 0;                   //Searches for a specific process in the processors ready lists
-		virtual void ScheduleAlgo(int) = 0;                           //Schedueling algorithm
+		virtual void ScheduleAlgo(int& x) = 0;                           //Schedueling algorithm
 		void setisbusy(bool b);                                    //sets the processor running state
 		Process* getRunning();                                     //gets the process in running state
 		void SetRunning(Process* proc);
@@ -44,8 +44,8 @@ class Process;
 		virtual int GetRDYListCount()=0;                           //Returns the number of ready lists
 		int GetTotalBT();                   // Getter for the total time of the busy state duration of the processor 
 		int GetTotalIT();                   //Getter for the total time of the idle state duration of the processor
-		int GetPLoad();                     // Getter for the Processor Load perecentage 
-		int GetPUtil();                     // Getter for the Processor Utilization Percentage
+		float GetPLoad(int TotalTRT);                     // Getter for the Processor Load perecentage 
+		void GetPUtil(float& PUtil);                     // Getter for the Processor Utilization Percentage
 		int GetTotalCT();                   //Getter for the total CT of all processes in the ready list
 		virtual int SumCT()=0;              //Sums the CT of all processes in the ready queue
 		virtual void ReturnFirst(Process *&p) = 0;		//Return the first process in each processor's ready list

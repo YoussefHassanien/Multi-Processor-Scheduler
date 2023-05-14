@@ -23,7 +23,7 @@ void SJF::DeleteProcess(Process*& p)
 }
 
 //Schedueling algorithm
-void SJF::ScheduleAlgo(int TimeStep)
+void SJF::ScheduleAlgo(int &TimeStep)
 {
 	IO* TempIO = nullptr;
 	Process* TempProcess = nullptr;
@@ -32,7 +32,12 @@ void SJF::ScheduleAlgo(int TimeStep)
 		TotalCT = 0;
 
 	if (RDY_List.isEmpty() && !RUNNING) //if there is nothing in the ready list and no running process
+	{
+		TotalIT++;
 		return;
+	}
+	else
+		TotalBT++;
 	
 	//sets a process as running if the processor is idle
 	if (!isbusy && !RUNNING)
@@ -41,7 +46,7 @@ void SJF::ScheduleAlgo(int TimeStep)
 		RDY_List.dequeue(TempProcess);
 		processescount--;
 		RUNNING = TempProcess;
-		TempProcess->SetRT(TimeStep - TempProcess->GetAT());
+		TempProcess->SetRT(TimeStep);
 		isbusy = true;                             //Set the processor as busy
 		s->incrementRunningCount();
 		return;
@@ -116,13 +121,13 @@ int SJF::SumCT()
 	for (int i = 0; i < processescount; i++)
 	{
 		RDY_List.dequeue(p);
-		TotalCT = TotalCT + p->GetActualCT();
-		TempRDYList.enqueue(p,p->GetActualCT());
+		TotalCT = TotalCT + p->GetCT();
+		TempRDYList.enqueue(p,p->GetCT());
 	}
 	for (int i = 0; i < processescount; i++)
 	{
 		TempRDYList.dequeue(p);
-		RDY_List.enqueue(p, p->GetActualCT());
+		RDY_List.enqueue(p, p->GetCT());
 	}
 	if (RUNNING)
 	TotalCT = TotalCT + RUNNING->GetCT();

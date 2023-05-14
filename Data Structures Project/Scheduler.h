@@ -45,8 +45,8 @@ private:
 	int AvgTRT;                            //Average Turnaround Time of all Processes
 	int AvgRTF;                            //Average RTF time of all Processes
 	int MigPercent;                        //Percentage of Process Migration due to RTF and MaxW
-	int StealedProcesses;                      //Percentage of Process moved by Work Steal
-	int KillPercent;                       //Percentage of Process Kill
+	int StealedProcesses;                  //Percentage of Process moved by Work Steal
+	int KilledCount;                       //Percentage of Processes Killing
 	int ForkPercent;                       //Percentage of Process Fork
 	int AvgUtil;                           //Average Utilization for all Processors
 	int StealLimitPercent;                 //This percentage should be less than 40% and if it exeeds this percentage the stealing between processor should start
@@ -56,6 +56,9 @@ private:
 	int ShortestRRListIdx;                 //Index of the RR processor with the shortest ready list
 	int LongestListIdx;                    //Index of the processor with the Longest ready list
 	int TotalTRT;                          //total TurnAround time for all processors in the system (used for PLoad)
+	int OriginalProcessesCount;            //Original Number of processes read from input file
+	int TotalMigFromFCFSToRR;              // Total Number of processes migrated from fcfs to rr
+	int TotalMigFromRRToSJF;               // Total Number of processes migrated from rr to fcfs
 
 
 public:
@@ -98,6 +101,9 @@ public:
 	void WorkStealing();
 	void ChildrenKilling(Process* parent);     //Kills a specific parent process and its children  
 	void IncrementTotalTRT(int trt);         //increments the total TRT with a process's TRT
+	void IncrementMaxW();                    //increments the no of processes migrated from fcfs to rr
+	void IncrementRTF();                    //increments the no of processes migrated from rr to sjf
 	int GetTotalTRT();                       //Getter for the total TRT
+	void IncrementKilledCount();				//incerement the count of killed processes
 };
 #endif

@@ -63,7 +63,7 @@ int FCFS::GetRDYListCount()
 }
 
 //Schedueling algorithm
-void FCFS::ScheduleAlgo(int TimeStep)
+void FCFS::ScheduleAlgo(int &TimeStep)
 {
 	int TempID = 0;
 	Process* TempProcess = nullptr;
@@ -76,7 +76,12 @@ void FCFS::ScheduleAlgo(int TimeStep)
 		TotalCT = 0;
 
 	if (RDYList.isEmpty() && !RUNNING) //if there is nothing in the ready list and no running process
+	{
+		TotalIT++;
 		return;
+	}
+	else
+		TotalBT++;
 		
 	KillingSignalsList.peek(TempKillSig);
 	if (TempKillSig)
@@ -94,6 +99,7 @@ void FCFS::ScheduleAlgo(int TimeStep)
 				s->addToTrm(KilledProcess);
 				s->ChildrenKilling(KilledProcess); //Killing the orphans operation
 				processescount--;
+				s->IncrementKilledCount();
 			}
 		}
 	}
@@ -125,6 +131,7 @@ void FCFS::ScheduleAlgo(int TimeStep)
 						isbusy = false;
 						RUNNING = nullptr;
 						s->DecrementRunningCount();
+						s->IncrementKilledCount();
 					}
 				}
 			}
@@ -133,7 +140,6 @@ void FCFS::ScheduleAlgo(int TimeStep)
 	else if (isbusy && RUNNING->GetCT()) //Same as if RUNNING->GetCT!=0
 	{
 		RUNNING->DecrementCT();
-		TotalBT++;
 		RUNNING->IncrementRunningFor();
 		if (RandomForkProb > 0 && RandomForkProb <= ForkProb)
 			s->IntiateForking(RUNNING); //Forking operation
@@ -150,6 +156,7 @@ void FCFS::ScheduleAlgo(int TimeStep)
 					isbusy = false;
 					RUNNING = nullptr;
 					s->DecrementRunningCount();
+					s->IncrementKilledCount();
 				}
 				else if (RUNNING->GetN())	/* the condition is same as if RUNNING->GetN()!=0 ,
 										 decrements the IO_R while the process is running*/
@@ -232,17 +239,22 @@ void FCFS::FCFStoRR_Migration(int timestep)
 	 
 	Process *p=nullptr;
 	RDYList.peek(p);
-	if (p) 
+	if (!p)
+		return;
+
+	if (p->GetParent())
+		return;
+	if (p->WTsofar(timestep) > s->GetMaxW())
 	{
-		if (p->WTsofar(timestep) > s->GetMaxW() && !p->GetParent())
-		{
-			RDYList.DeleteFirst(p);
-			processescount--;
-			s->FromFCFStoShortestRR(p);
-			//FCFStoRR_Migration(timestep);
-		}
+		RDYList.DeleteFirst(p);
+		processescount--;
+		s->FromFCFStoShortestRR(p);
+		FCFStoRR_Migration(timestep);
+		s->IncrementMaxW();
 	}
-}
+	else
+		return;
+	}
 
 bool FCFS::Search(Process* value)
 {
@@ -256,7 +268,7 @@ int FCFS::SumCT()
 		for (int i = 0; i < processescount; i++)
 		{
 			RDYList.DeleteFirst(p);
-			TotalCT = TotalCT + p->GetActualCT();
+			TotalCT = TotalCT + p->GetCT();
 			RDYList.InsertEnd(p);
 		}
 		if(RUNNING)
@@ -271,8 +283,11 @@ int FCFS::SumCT()
 
  void FCFS::ReturnFirst(Process*&p)
  {
-	 RDYList.DeleteFirst(p);
-	 RDYList.InsertBeg(p);
+	 if (!RDYList.isEmpty())
+	 {
+		 RDYList.DeleteFirst(p);
+		 RDYList.InsertBeg(p);
+	 }
  }
 
 //destructor

@@ -23,7 +23,7 @@ Scheduler::Scheduler(): UI(this)
 	AvgRTF = 0;
 	MigPercent = 0;
 	StealedProcesses = 0;
-	KillPercent = 0;
+	KilledCount = 0;
 	ForkPercent = 0;
 	AvgUtil = 0;
 	StealLimitPercent = 0;
@@ -31,11 +31,17 @@ Scheduler::Scheduler(): UI(this)
 	MaxW=0;
 	STL = 0;
 	Output = "OutputFile";
+	OriginalProcessesCount = 0;
 }
 
 //destructor
 Scheduler::~Scheduler()
 {
+	for (int i = 0; i < Processor_Count; i++)
+	{
+		delete PArr[i];
+		PArr[i] = nullptr;
+	}
 }
 
 
@@ -87,6 +93,7 @@ void Scheduler::readfileparameters()
 		string processes;
 		InFile >> processes;
 		LastProcessID = stoi(processes);
+		OriginalProcessesCount = LastProcessID;
 		for (int i = 0; i < LastProcessID; i++)
 		{
 			//loop on the processes and read the data members of each
@@ -136,7 +143,8 @@ void Scheduler::readfileparameters()
 			SIGKILL* SigKillPtr = new SIGKILL(intkillTime, intProcessID);
 			FCFS* TempFCFS = new FCFS(this, ForkProb);
 			TempFCFS->AddKillingSignal(SigKillPtr);
-			continue;
+			delete TempFCFS;
+			TempFCFS = nullptr;
 		}
 		for (int i = 0; i < FCFS_ProcessorsCnt; i++)
 		{
@@ -202,26 +210,28 @@ void Scheduler::PrintOutputFile() //still in progress
 	}
 	OutFile << "Processes: " << LastProcessID << endl;
 	OutFile << "Avg WT = " << TotalWT / LastProcessID << ",       Avg RT = " << TotalRT / LastProcessID << ",       Avg TRT = " << TotalTRT / LastProcessID << endl;
-	OutFile << "Migration %:" << "       RTF=" << "%,       MaxW=" << "%" << endl;   //TBC
-	OutFile << "Work Steal%: " <<((float) StealedProcesses/LastProcessID)*100<< "%" << endl;
-	OutFile << "Forked Processes :" << "%" << endl;   //TBC
-	OutFile << "Killed Processes :" << "%" << endl;   //TBC
+	OutFile << "Migration %:" << "       RTF=" <<(int)(((float)TotalMigFromRRToSJF/LastProcessID)*100) << "%,       MaxW=" << (int)(((float)TotalMigFromFCFSToRR / LastProcessID) * 100) << "%" << endl;   
+	OutFile << "Work Steal%: " <<(int)(((float) StealedProcesses)/LastProcessID*100)<< "%" << endl;
+	OutFile << "Forked Processes :" <<(int)(((float)(LastProcessID-OriginalProcessesCount)/LastProcessID)*100) <<"%" << endl;
+	OutFile << "Killed Processes :" << (int)(((float)(KilledCount) / LastProcessID) * 100) << "% " << endl;   //TBC
 	OutFile << endl << endl;
 	OutFile << "Processor: " << Processor_Count << " ["<<FCFS_ProcessorsCnt<<" FCFS, "<<SJF_ProcessorsCnt<<" SJF, "<<RR_ProcessorsCnt<<" RR]" << endl;
 	OutFile << "Processors Load" << endl;
 	for (int i = 0; i < Processor_Count; i++)
 	{
-		OutFile << "p" << PArr[i]->getID() << "=" << PArr[i]->GetPLoad() * 100 << "%,    ";
+		OutFile << "p" << PArr[i]->getID() << "=" << (int)(PArr[i]->GetPLoad(TotalTRT) * 100) << "%,    ";
 	}
 	OutFile << endl<<endl;
 	OutFile << "Processors Utiliz" << endl;
-	int TotalUtiliz = 0;
+	float TotalUtiliz = 0;
 	for (int i = 0; i < Processor_Count; i++)
 	{
-		OutFile << "p" << PArr[i]->getID() << "=" << PArr[i]->GetPUtil() * 100 << "%,    ";
-		TotalUtiliz += PArr[i]->GetPUtil() * 100;
+		float PUtil;
+		PArr[i]->GetPUtil(PUtil);
+		OutFile << "p" << PArr[i]->getID() << "=" << (int)(PUtil * 100) << "%,    ";
+		TotalUtiliz += PUtil;
 	}
-	OutFile << endl << "Avg utilization = " << ((float)TotalUtiliz / Processor_Count)*100<<"%";
+	OutFile << endl << "Avg utilization = " << (TotalUtiliz / Processor_Count)*100<<"%";
 
 }
 
@@ -436,7 +446,7 @@ void Scheduler::Set_ShortestListIdx()
 	ShortestListIdx = 0;
 	for (int i = 1; i < Processor_Count; i++)
 	{
-		if (PArr[i]->GetTotalCT() < PArr[ShortestListIdx]->GetTotalCT())
+		if (PArr[i]->SumCT() < PArr[ShortestListIdx]->SumCT())
 			ShortestListIdx = i;
 	}
 }
@@ -518,6 +528,10 @@ int Scheduler::GetMaxW()
 	return MaxW;
 }
 void Scheduler::IntiateForking(Process*Parent)
+
+
+
+
 {
 	if (Parent && (!Parent->GetFirstChild() || !Parent->GetSecondChild()))
 	{
@@ -539,7 +553,7 @@ void Scheduler::Set_LongestListIdx()
 	LongestListIdx = 0;
 	for (int i = 1; i < Processor_Count; i++)
 	{
-		if (PArr[i]->GetTotalCT() > PArr[LongestListIdx]->GetTotalCT())
+		if (PArr[i]->SumCT() > PArr[LongestListIdx]->SumCT())
 			LongestListIdx = i;
 	}
 }
@@ -557,13 +571,13 @@ void Scheduler::WorkStealing()
 		if (TimeStep % STL != 0)
 			return;
 		PArr[LongestListIdx]->ReturnFirst(p);
-		if (p && !p->GetParent()) 
-		{
+		if (!p || p->GetParent())
+			return;
 			PArr[LongestListIdx]->DeleteProcess(p);
 			PArr[ShortestListIdx]->AddToRdy(p);
 			StealedProcesses++;
-		}
-		//WorkStealing(); // calls the function recursively until one of the exit conditions is satisfied 
+		
+		WorkStealing(); // calls the function recursively until one of the exit conditions is satisfied 
 
 	
 }
@@ -584,6 +598,7 @@ void Scheduler::ChildrenKilling(Process* Parent)
 				{
 					addToTrm(Parent->GetFirstChild());
 					PArr[i]->DeleteProcessAtPosition(Parent->GetFirstChild());
+					KilledCount++;
 				}
 				else if (PArr[i]->getRunning() == Parent->GetFirstChild()) //Checks if the child is running in any FCFS processor
 				{
@@ -591,6 +606,7 @@ void Scheduler::ChildrenKilling(Process* Parent)
 					PArr[i]->SetRunning(nullptr);
 					PArr[i]->setisbusy(false);
 					DecrementRunningCount();
+					KilledCount++;
 				}
 			}
 			ChildrenKilling(Parent->GetFirstChild());
@@ -605,6 +621,7 @@ void Scheduler::ChildrenKilling(Process* Parent)
 				{
 					addToTrm(Parent->GetSecondChild());
 					PArr[i]->DeleteProcessAtPosition(Parent->GetSecondChild());
+					KilledCount++;
 				}
 				else if (PArr[i]->getRunning() == Parent->GetSecondChild()) //Checks if the child is running in any FCFS processor
 				{
@@ -612,6 +629,7 @@ void Scheduler::ChildrenKilling(Process* Parent)
 					PArr[i]->SetRunning(nullptr);
 					PArr[i]->setisbusy(false);
 					DecrementRunningCount();
+					KilledCount++;
 				}
 			}
 			ChildrenKilling(Parent->GetFirstChild());
@@ -626,9 +644,24 @@ void Scheduler::IncrementTotalTRT(int trt)
 	TotalTRT += trt;
 }
 
+void Scheduler::IncrementMaxW()
+{
+	TotalMigFromFCFSToRR++;
+}
+
+void Scheduler::IncrementRTF()
+{
+	TotalMigFromRRToSJF++;
+}
+
 int Scheduler::GetTotalTRT()
 {
 	return TotalTRT;
+}
+
+void Scheduler::IncrementKilledCount()
+{
+	KilledCount++;
 }
 
 

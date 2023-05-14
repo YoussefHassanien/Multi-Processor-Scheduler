@@ -7,12 +7,10 @@ Process::Process(int at, int id, int ct, int n)
 	SetCT(ct);
 	SetN(n);
 	SetIO_D();
-	/*if(n!=0)
-	IOqueue = new LinkedQueue<IO*>;*/
+	RT = 0;
 	Parent = nullptr;
 	FirstChild = nullptr;
 	SecondChild = nullptr;
-
 	Actual_CT = ct;
 	// Termination time should be sent when the process moves from the running queue to the termination queue inside a processor
 	// Response time should be calculated when the process moves from the ready queue to the running queue inside a processor
@@ -29,7 +27,10 @@ void Process::SetAT(int at)
 }
 void Process::SetRT(int CPU_First_AT)
 {
-	RT = CPU_First_AT - AT;
+	if (RT == 0)
+	{
+		RT = CPU_First_AT - AT;
+	}
 }
 void Process::SetCT(int ct)
 {
@@ -40,7 +41,7 @@ void Process::SetTT(int tt)
 {
 	TT = tt;
 	TRT = tt - AT;
-	WT = (tt - AT) - Actual_CT;
+	WT = (tt - AT) - (Actual_CT-CT);
 }
 void Process::SetTRT(int trt)
 {
@@ -124,12 +125,6 @@ Process*& Process::GetSecondChild()
 {
 	return SecondChild;
 }
-void Process::PrintProcessInfo()
-{
-	cout << "TT" << " " << " " << " " << " " << " " << "PID" << " " << " " << " " << " " << " " << "AT" << " " << " " << " " << " " << " " << "CT" << " " << " " << " " << " " << " " << "IO_D" << " " << " " << " " << " " << " " << "WT" << " " << " " << " " << " " << " " << "RT" << " " << " " << " " << " " << " " << "TRT" << endl;
-	cout << TT << " " << " " << " " << " " << " " << ID << " " << " " << " " << " " << " " << AT << " " << " " << " " << " " << " " << CT << " " << " " << " " << " " << " " << " hena feeh IOD" << " " << " " << " " << " " << " " << WT << " " << " " << " " << " " << " " << RT << " " << " " << " " << " " << " " << TRT << endl;
-}
-
 void Process::AddIO(IO* io)
 {
 	IOqueue.enqueue(io);
@@ -210,8 +205,6 @@ void Process::SetSecondChild(Process* p)
 
 Process::~Process()
 {
-	//delete IOqueue;
-	//IOqueue = nullptr;
 	delete Parent;
 	Parent = nullptr;
 	delete FirstChild;

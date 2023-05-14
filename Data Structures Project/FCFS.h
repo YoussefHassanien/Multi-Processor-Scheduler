@@ -16,7 +16,7 @@ public:
 	void AddToRdy(Process* p) override;             //Adds a process to the processor ready list
 	void DeleteProcess(Process*& p);                //deletes a give process when it moves to another queue or to being blocked
 	void DeleteProcessAtPosition(Process*& p);      //deletes a process in any place in the RDYList
-	void ScheduleAlgo(int timestep);                //Schedueling algorithm
+	void ScheduleAlgo(int &timestep);                //Schedueling algorithm
 	void DeleteProcessID(Process* p);               //Deletes a process ID from RDYListIDs
 	void AddToRdyIDs(Process* p);                   //Adds a process ID to RDYListIDs
 	void Print_List();                              //Prints ready list processes
