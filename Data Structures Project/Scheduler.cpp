@@ -225,9 +225,9 @@ void Scheduler::PrintOutputFile() //still in progress
 	OutFile << "Migration %:" << "       RTF=" <<(int)(((float)TotalMigFromRRToSJF/LastProcessID)*100) << "%,       MaxW=" << (int)(((float)TotalMigFromFCFSToRR / LastProcessID) * 100) << "%" << endl;   
 	OutFile << "Work Steal%: " <<(int)(((float) StealedProcesses)/LastProcessID*100)<< "%" << endl;
 	OutFile << "Forked Processes :" <<(int)(((float)(LastProcessID-OriginalProcessesCount)/LastProcessID)*100) <<"%" << endl;
-	OutFile << "Killed Processes :" << (int)(((float)(KilledCount) / LastProcessID) * 100) << "% " << endl;   //TBC
+	OutFile << "Killed Processes :" << (int)(((float)(KilledCount) / LastProcessID) * 100) << "% " << endl;   
 	OutFile << endl << endl;
-	OutFile << "Processor: " << Processor_Count << " ["<<FCFS_ProcessorsCnt<<" FCFS, "<<SJF_ProcessorsCnt<<" SJF, "<<RR_ProcessorsCnt<<" RR]" << endl;
+	OutFile << "Processor: " << Processor_Count << " ["<<FCFS_ProcessorsCnt<<" FCFS, "<<SJF_ProcessorsCnt<<" SJF, "<<RR_ProcessorsCnt<<" RR, " << EDF_ProcessorCnt << " EDF]" << endl;
 	OutFile << "Processors Load" << endl;
 	for (int i = 0; i < Processor_Count; i++)
 	{
