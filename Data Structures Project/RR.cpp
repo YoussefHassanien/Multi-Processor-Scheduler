@@ -9,19 +9,32 @@ void RoundRobin::AddToRdy(Process* p)
 {
 	RDY_List.enqueue(p);
 	processescount++;
+	TotalCT = TotalCT + p->GetCT();
 }
 
 void RoundRobin::DeleteProcess(Process*& p)
 {
 	RDY_List.dequeue(p);
 	processescount--;
+	TotalCT = TotalCT - p->GetCT();
 }
 
 //Schedueling algorithm
-void RoundRobin::ScheduleAlgo(int& TimeStep)
+void RoundRobin::ScheduleAlgo(int& TimeStep, int& stoptime)
 {
 	IO* TempIO = nullptr;
 	Process* TempProcess = nullptr;
+	if (isoverheating)
+	{
+		if (StoppedFor < stoptime)
+			StoppedFor++;
+		else if (StoppedFor == stoptime)
+		{
+			isoverheating = false;
+			StoppedFor = 0;
+		}
+		return;
+	}
 	if (RDY_List.isEmpty())
 		TotalCT = 0;
 
@@ -155,16 +168,35 @@ bool RoundRobin::Search(Process* value)
 
 int RoundRobin::SumCT()
 {
-	Process* p;
+	TotalCT = 0;
+	Process* p = nullptr;
+	if (RUNNING)
+		TotalCT = RUNNING->GetCT();
+	if (RDY_List.isEmpty())
+		return TotalCT;
+	else
+	{
+		for (int i = 0; i < processescount; i++)
+		{
+			RDY_List.dequeue(p);
+			TotalCT += p->GetCT();
+			RDY_List.enqueue(p);
+		}
+		return TotalCT;
+	}
+	/*Process* p=nullptr;
 	for (int i = 0; i < processescount; i++)
 	{
 		RDY_List.dequeue(p);
-		TotalCT = TotalCT + p->GetCT();
-		RDY_List.enqueue(p);
+		if (p)
+		{
+			TotalCT = TotalCT + p->GetCT();
+			RDY_List.enqueue(p);
+		}
 	}
 	if (RUNNING)
 	TotalCT = TotalCT + RUNNING->GetCT();
-	return TotalCT;
+	return TotalCT;*/
 }
 
 void RoundRobin::DeleteProcessAtPosition(Process*& p)
@@ -175,6 +207,26 @@ void RoundRobin::DeleteProcessAtPosition(Process*& p)
 void RoundRobin::ReturnFirst(Process*& p)
 {
 	RDY_List.peek(p);
+}
+
+
+void RoundRobin::EmptyProcessor()
+{
+	if (RUNNING)
+	{
+		s->AddToShortestRdyList(RUNNING);
+		RUNNING = NULL;
+		isbusy = false;
+		s->DecrementRunningCount();
+	}
+	while (!RDY_List.isEmpty())
+	{
+		Process* p = nullptr;
+		RDY_List.dequeue(p);
+		s->AddToShortestRdyList(p);
+	}
+	processescount = 0;
+	TotalCT = 0;
 }
 
 //destructor

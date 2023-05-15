@@ -8,17 +8,32 @@ EDF::EDF(Scheduler* Sptr, int id):Processor(Sptr)
 void EDF::AddToRdy(Process* p)
 {
 	RDY_List.enqueue(p,p->GetDeadline());
+	TotalCT = TotalCT + p->GetCT();
+	processescount++;
 }
 
 void EDF::DeleteProcess(Process*& p)
 {
 	RDY_List.dequeue(p);
+	TotalCT = TotalCT - p->GetCT();
+	processescount--;
 }
 
-void EDF::ScheduleAlgo(int& timestep)
+void EDF::ScheduleAlgo(int& timestep, int& stoptime)
 {
 	IO* TempIO = nullptr;
 	Process* TempProcess = nullptr;
+	if (isoverheating)
+	{
+		if (StoppedFor < stoptime)
+			StoppedFor++;
+		else if (StoppedFor == stoptime)
+		{
+			isoverheating = false;
+			StoppedFor = 0;
+		}
+		return;
+	}
 
 	if (RDY_List.isEmpty())
 		TotalCT = 0;
@@ -56,6 +71,7 @@ void EDF::ScheduleAlgo(int& timestep)
 				if (TempIO->GetRequest() >= 0)
 				{
 					TempIO->DecrementIO_R();
+
 				}
 				if (TempIO->GetRequest() == -1)
 				{
@@ -65,16 +81,48 @@ void EDF::ScheduleAlgo(int& timestep)
 
 					s->DecrementRunningCount();
 				}
+				else
+				{
+					RDY_List.peek(TempProcess);
+
+					if (TempProcess)
+					{
+						if (TempProcess->GetDeadline() < RUNNING->GetDeadline())
+						{
+							RDY_List.dequeue(TempProcess);
+							RDY_List.enqueue(RUNNING, RUNNING->GetDeadline());
+							RUNNING = TempProcess;
+						}
+					}
+				}
+			}
+			else
+			{
+				RDY_List.peek(TempProcess);
+
+				if (TempProcess)
+				{
+					if (TempProcess->GetDeadline() < RUNNING->GetDeadline())
+					{
+						RDY_List.dequeue(TempProcess);
+						RDY_List.enqueue(RUNNING, RUNNING->GetDeadline());
+						RUNNING = TempProcess;
+					}
+				}
 			}
 		}
-		RDY_List.peek(TempProcess);
-		if (TempProcess)
+		else
 		{
-			if (TempProcess->GetDeadline() < RUNNING->GetDeadline())
+			RDY_List.peek(TempProcess);
+
+			if (TempProcess)
 			{
-				RDY_List.dequeue(TempProcess);
-				RDY_List.enqueue(RUNNING, RUNNING->GetDeadline());
-				RUNNING = TempProcess;
+				if (TempProcess->GetDeadline() < RUNNING->GetDeadline())
+				{
+					RDY_List.dequeue(TempProcess);
+					RDY_List.enqueue(RUNNING, RUNNING->GetDeadline());
+					RUNNING = TempProcess;
+				}
 			}
 		}
 	}
@@ -112,27 +160,65 @@ bool EDF::Search(Process* value)
 
 int EDF::SumCT()
 {
-	Process* p;
-	PriorityQueue<Process*>TempRDYList;
-	for (int i = 0; i < processescount; i++)
-	{
-		RDY_List.dequeue(p);
-		TotalCT = TotalCT + p->GetCT();
-		TempRDYList.enqueue(p, p->GetDeadline());
-	}
-	for (int i = 0; i < processescount; i++)
-	{
-		TempRDYList.dequeue(p);
-		RDY_List.enqueue(p, p->GetDeadline());
-	}
+	TotalCT = 0;
+	Process* p = nullptr;
 	if (RUNNING)
-		TotalCT = TotalCT + RUNNING->GetCT();
-	return TotalCT;
+		TotalCT = RUNNING->GetCT();
+	if (RDY_List.isEmpty())
+		return TotalCT;
+	else
+	{
+		for (int i = 0; i < processescount; i++)
+		{
+			RDY_List.dequeue(p);
+			TotalCT += p->GetCT();
+			RDY_List.enqueue(p, p->GetDeadline());
+		}
+		return TotalCT;
+	}
+	//Process* p=nullptr;
+	//PriorityQueue<Process*>TempRDYList;
+	//for (int i = 0; i < processescount; i++)
+	//{
+	//	RDY_List.dequeue(p);
+	//	if (p)
+	//	{
+	//		TotalCT = TotalCT + p->GetCT();
+	//		RDY_List.enqueue(p, p->GetDeadline());
+	//	}
+	//}
+	///*for (int i = 0; i < processescount; i++)
+	//{
+	//	TempRDYList.dequeue(p);
+	//	RDY_List.enqueue(p, p->GetDeadline());
+	//}*/
+	//if (RUNNING)
+	//	TotalCT = TotalCT + RUNNING->GetCT();
+	//return TotalCT;
 }
 
 void EDF::DeleteProcessAtPosition(Process*& p)
 {
 	return;
+}
+
+void EDF::EmptyProcessor()
+{
+	if (RUNNING)
+	{
+		s->AddToShortestRdyList(RUNNING);
+		RUNNING = NULL;
+		isbusy = false;
+		s->DecrementRunningCount();
+	}
+	while (!RDY_List.isEmpty())
+	{
+		Process* p = nullptr;
+		RDY_List.dequeue(p);
+		s->AddToShortestRdyList(p);
+	}
+	processescount = 0;
+	TotalCT = 0;
 }
 
 void EDF::ReturnFirst(Process*& p)

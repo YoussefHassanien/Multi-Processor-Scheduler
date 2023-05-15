@@ -12,6 +12,7 @@ SJF::SJF(Scheduler* Sptr,int id) : Processor(Sptr)
 void SJF::AddToRdy(Process* p)
 {
 	RDY_List.enqueue(p, p->GetCT());
+	TotalCT = TotalCT + p->GetCT();
 	processescount++;
 }
 
@@ -19,15 +20,26 @@ void SJF::AddToRdy(Process* p)
 void SJF::DeleteProcess(Process*& p)
 {
 	RDY_List.dequeue(p);
+	TotalCT = TotalCT - p->GetCT();
 	processescount--;
 }
 
 //Schedueling algorithm
-void SJF::ScheduleAlgo(int &TimeStep)
+void SJF::ScheduleAlgo(int &TimeStep, int& stoptime)
 {
 	IO* TempIO = nullptr;
 	Process* TempProcess = nullptr;
-
+	if (isoverheating)
+	{
+		if (StoppedFor < stoptime)
+			StoppedFor++;
+		else if (StoppedFor == stoptime)
+		{
+			isoverheating = false;
+			StoppedFor = 0;
+		}
+		return;
+	}
 	if (RDY_List.isEmpty())
 		TotalCT = 0;
 
@@ -116,22 +128,41 @@ bool SJF::Search(Process* value)
 
 int SJF::SumCT()
 {
-	Process* p;
-	PriorityQueue<Process*>TempRDYList;
-	for (int i = 0; i < processescount; i++)
-	{
-		RDY_List.dequeue(p);
-		TotalCT = TotalCT + p->GetCT();
-		TempRDYList.enqueue(p,p->GetCT());
-	}
-	for (int i = 0; i < processescount; i++)
-	{
-		TempRDYList.dequeue(p);
-		RDY_List.enqueue(p, p->GetCT());
-	}
+	TotalCT = 0;
+	Process* p=nullptr;
 	if (RUNNING)
-	TotalCT = TotalCT + RUNNING->GetCT();
-	return TotalCT;
+		TotalCT = RUNNING->GetCT();
+	if (RDY_List.isEmpty())
+		return TotalCT;
+	else
+	{
+		for (int i = 0; i < processescount; i++)
+		{
+			RDY_List.dequeue(p);
+			TotalCT += p->GetCT();
+			RDY_List.enqueue(p, p->GetCT());
+		}
+		return TotalCT;
+	}
+	//PriorityQueue<Process*>TempRDYList;
+	//for (int i = 0; i < processescount; i++)
+	//{
+	//	RDY_List.dequeue(p);
+	//	if (p)
+	//	{
+	//	
+	//	TotalCT = TotalCT + p->GetCT();
+	//	RDY_List.enqueue(p, p->GetCT());
+	//}
+	//}
+	///*for (int i = 0; i < processescount; i++)
+	//{
+	//	TempRDYList.dequeue(p);
+	//	RDY_List.enqueue(p, p->GetCT());
+	//}*/
+	//if (RUNNING)
+	//TotalCT = TotalCT + RUNNING->GetCT();
+	//return TotalCT;
 }
 
 void SJF::DeleteProcessAtPosition(Process*& p)
@@ -142,6 +173,24 @@ void SJF::DeleteProcessAtPosition(Process*& p)
 void SJF::ReturnFirst(Process*& p)
 {
 	RDY_List.peek(p);
+}
+void SJF::EmptyProcessor()
+{
+	if (RUNNING)
+	{
+		s->AddToShortestRdyList(RUNNING);
+		RUNNING = NULL;
+		isbusy = false;
+		s->DecrementRunningCount();
+	}
+	while (!RDY_List.isEmpty())
+	{
+		Process* p = nullptr;
+		RDY_List.dequeue(p);
+		s->AddToShortestRdyList(p);
+	}
+	processescount = 0;
+	TotalCT = 0;
 }
 //destructor
 SJF::~SJF()

@@ -11,6 +11,7 @@ void FCFS::AddToRdy(Process* p)
 {
 	RDYList.InsertEnd(p);
 	processescount++;
+	TotalCT = TotalCT + p->GetCT();
 	AddToRdyIDs(p);
 }
 
@@ -25,6 +26,7 @@ void FCFS::DeleteProcess(Process*& p)
 {
 	RDYList.DeleteFirst(p);
 	processescount--;
+	TotalCT = TotalCT - p->GetCT();
 	DeleteProcessID(p);
 }
 
@@ -63,7 +65,7 @@ int FCFS::GetRDYListCount()
 }
 
 //Schedueling algorithm
-void FCFS::ScheduleAlgo(int &TimeStep)
+void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 {
 	int TempID = 0;
 	Process* TempProcess = nullptr;
@@ -71,7 +73,17 @@ void FCFS::ScheduleAlgo(int &TimeStep)
 	IO* TempIO = nullptr;
 	SIGKILL* TempKillSig = nullptr;
 	int RandomForkProb = s->generaterandom(1, 100);
-
+	if (isoverheating)
+	{
+		if (StoppedFor < stoptime)
+			StoppedFor++;
+		else if (StoppedFor == stoptime)
+		{
+			isoverheating = false;
+			StoppedFor = 0;
+		}
+		return;
+	}
 	if (RDYList.isEmpty())
 		TotalCT = 0;
 
@@ -173,6 +185,7 @@ void FCFS::ScheduleAlgo(int &TimeStep)
 						if (TempIO->GetRequest() == -1)
 						{
 							s->addtoblocklist(RUNNING);
+							//RUNNING->IncrementIO_D(TempIO->GetDuration());
 							isbusy = false;
 							RUNNING = nullptr;
 							s->DecrementRunningCount();
@@ -264,21 +277,47 @@ bool FCFS::Search(Process* value)
 
 int FCFS::SumCT()
 {
-		Process* p;
+	TotalCT = 0;
+	Process* p = nullptr;
+	if (RUNNING)
+		TotalCT = RUNNING->GetCT();
+	if (RDYList.isEmpty())
+		return TotalCT;
+	else
+	{
 		for (int i = 0; i < processescount; i++)
 		{
 			RDYList.DeleteFirst(p);
-			TotalCT = TotalCT + p->GetCT();
+			TotalCT += p->GetCT();
 			RDYList.InsertEnd(p);
 		}
-		if(RUNNING)
-		TotalCT = TotalCT + RUNNING->GetCT();
 		return TotalCT;
+	}
+	
 }
 
  void FCFS::AddKillingSignal(SIGKILL* killsignal)
  {
 	 KillingSignalsList.enqueue(killsignal);
+ }
+
+ void FCFS::EmptyProcessor()
+ {
+	 if (RUNNING)
+	 {
+		 s->AddToShortestRdyList(RUNNING);
+		 RUNNING = NULL;
+		 isbusy = false;
+		 s->DecrementRunningCount();
+	 }
+	 while (!RDYList.isEmpty())
+	 {
+		 Process* p = nullptr;
+		 RDYList.DeleteFirst(p);
+		 s->AddToShortestRdyList(p);
+	 }
+	 processescount = 0;
+	 TotalCT = 0;
  }
 
  void FCFS::ReturnFirst(Process*&p)

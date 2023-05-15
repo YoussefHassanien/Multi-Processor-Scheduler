@@ -23,6 +23,8 @@ class Process;
 		int PLoad; //Processor Load perecentage 
 		int PUtil; //Processor Utilization Percentage
 		int TotalCT; //Sum of the CT of all processes in the ready list
+		bool isoverheating;
+		int StoppedFor;      //indicator of how much time the processor have been in stop mode
 
 	public:
 
@@ -30,7 +32,7 @@ class Process;
 		virtual void AddToRdy(Process* p) = 0;                     //Adds a process to the processor ready list
 		virtual void DeleteProcess(Process*& p) = 0;               //deletes a given process when it moves to another queue or to being blocked 
 		virtual bool Search(Process* value) = 0;                   //Searches for a specific process in the processors ready lists
-		virtual void ScheduleAlgo(int& x) = 0;                           //Schedueling algorithm
+		virtual void ScheduleAlgo(int& x, int& stoptime) = 0;                           //Schedueling algorithm
 		void setisbusy(bool b);                                    //sets the processor running state
 		Process* getRunning();                                     //gets the process in running state
 		void SetRunning(Process* proc);
@@ -49,6 +51,9 @@ class Process;
 		int GetTotalCT();                   //Getter for the total CT of all processes in the ready list
 		virtual int SumCT()=0;              //Sums the CT of all processes in the ready queue
 		virtual void ReturnFirst(Process *&p) = 0;		//Return the first process in each processor's ready list
+		virtual void EmptyProcessor() = 0;             // Emties the running process and the rdylist
+		void setOverHeating(bool b);                  // setter for overheating state
+		bool getOverHeating();                        //getter for overheating state
 		~Processor();                       //Destructor
 	};
 #endif

@@ -60,6 +60,7 @@ private:
 	int OriginalProcessesCount;            //Original Number of processes read from input file
 	int TotalMigFromFCFSToRR;              // Total Number of processes migrated from fcfs to rr
 	int TotalMigFromRRToSJF;               // Total Number of processes migrated from rr to fcfs
+	int StopTime;
 
 
 public:
@@ -106,5 +107,7 @@ public:
 	void IncrementRTF();                    //increments the no of processes migrated from rr to sjf
 	int GetTotalTRT();                       //Getter for the total TRT
 	void IncrementKilledCount();				//incerement the count of killed processes
+	void AddToShortestRdyList(Process*& p);      // adds the passed process to the shortest rdylist
+
 };
 #endif

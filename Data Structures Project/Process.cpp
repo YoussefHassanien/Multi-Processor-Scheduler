@@ -6,13 +6,13 @@ Process::Process(int at, int id, int ct,int deadline, int n)
 	SetID(id);
 	SetCT(ct);
 	SetN(n);
-	SetIO_D();
 	SetDeadline(deadline);
 	RT = 0;
 	Parent = nullptr;
 	FirstChild = nullptr;
 	SecondChild = nullptr;
 	Actual_CT = ct;
+	IO_D = 0;
 	// Termination time should be sent when the process moves from the running queue to the termination queue inside a processor
 	// Response time should be calculated when the process moves from the ready queue to the running queue inside a processor
 	// Turnaround duration should be calculated when the termination time arrives
@@ -158,6 +158,7 @@ bool Process::CheckIO_D()
 	else
 	{
 		tempIO->Duration--;
+		IO_D++;
 		return false;
 	}
 }
@@ -185,7 +186,6 @@ int Process::GetActualCT()
 
 void Process::SetIO_D()
 {
-	IO_D = 0;
 	if (N != 0)
 	{
 		for (int i = 0; i < N; i++)
@@ -211,6 +211,11 @@ void Process::SetFirstChild(Process* p)
 void Process::SetSecondChild(Process* p)
 {
 	SecondChild = p;
+}
+
+void Process::IncrementIO_D(int io_D)
+{
+	IO_D+=io_D;
 }
 
 Process::~Process()

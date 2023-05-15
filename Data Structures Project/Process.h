@@ -68,6 +68,7 @@ public:
 	int GetIO_D();													
 	void SetFirstChild(Process*p);
 	void SetSecondChild(Process*p);
+	void IncrementIO_D(int io_D);                                           //increments the io-d for a process when it goes to blk state 
 	~Process();                                                      //Destructor
 };
 

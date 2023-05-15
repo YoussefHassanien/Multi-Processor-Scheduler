@@ -7,6 +7,7 @@ Processor::Processor(Scheduler* Sptr)
 {
 	s=Sptr;
 	isbusy = false;
+	isoverheating = false;
 	RUNNING = nullptr;
 	processescount = 0;
 	TotalBT = 0;  
@@ -14,6 +15,7 @@ Processor::Processor(Scheduler* Sptr)
 	PLoad = 0;
 	PUtil = 0;
 	TotalCT = 0;
+	StoppedFor = 0;
 }
 
 //gets the process in running state
@@ -83,6 +85,20 @@ int Processor::GetTotalCT()
 
 
 
+void Processor::setOverHeating(bool b)
+{
+	isoverheating = b;
+	if (b == true)
+	{
+		EmptyProcessor();
+	}
+}
+
+bool Processor::getOverHeating()
+{
+	return isoverheating;
+}
+
 //Destructor
 Processor::~Processor()
 {
@@ -91,9 +107,16 @@ Processor::~Processor()
 //Operator overloading
 ostream& operator<<(ostream& output, Processor& p)
 {
-
-		output << "Processor " << p.getID() << " " << p.Get_Processor_Type() << ":" << p.GetRDYListCount() << " RDY: ";
+	if (p.getOverHeating())
+	{
+		output << "Processor " << p.getID() << " " << p.Get_Processor_Type() << "[OVER_HEATING]" << ":" << p.GetRDYListCount() << " RDY: ";
 		p.Print_List();
+	}
+	else
+	{
+		output << "Processor " << p.getID() << " " << p.Get_Processor_Type() <<  ":" << p.GetRDYListCount() << " RDY: ";
+		p.Print_List();
+	}
 
 
 	return output;

@@ -30,6 +30,7 @@ Scheduler::Scheduler(): UI(this)
 	StealLimitPercent = 0;
 	RTF=0;
 	MaxW=0;
+	StopTime = 0;
 	STL = 0;
 	Output = "OutputFile";
 	OriginalProcessesCount = 0;
@@ -83,6 +84,9 @@ void Scheduler::readfileparameters()
 		string timeslice;
 		InFile >> timeslice;
 		TimeSlice = stoi(timeslice);
+		string stoptime;
+		InFile >> stoptime;
+		StopTime = stoi(stoptime);
 		string rtf;
 		InFile >> rtf;
 		RTF = stoi(rtf);
@@ -334,8 +338,10 @@ void Scheduler::Simulation()
 
 		for (int i = 0; i < Processor_Count; i++)
 		{
-
-			PArr[i]->ScheduleAlgo(TimeStep); //rdy to run and run to rdy
+			int random= generaterandom(1, 100);
+			if (random <= 2)
+				PArr[i]->setOverHeating(true);
+			PArr[i]->ScheduleAlgo(TimeStep,StopTime); //rdy to run and run to rdy
 
 		}
 		//BLK to RDY
@@ -343,6 +349,7 @@ void Scheduler::Simulation()
 		{
 			for (int i = 0; i < BLKCount; i++)
 			{
+
 				blocklist.peek(TempProcess);
 				if (TempProcess->CheckIO_D())  //CheckIO_D needs further modifications
 				{
@@ -352,7 +359,6 @@ void Scheduler::Simulation()
 					BLKCount--;
 				}
 			}
-
 		}
 	WorkStealing();
 	UI.printInterface(TimeStep);
@@ -370,14 +376,6 @@ void Scheduler::AddtoRdyLists(Process*p)
 		{
 			newlist.dequeue(p);
 
-			for (int i = 0; i < Processor_Count; i++)
-			{
-				if (PArr[i]->SumCT() == 0)
-				{
-					PArr[i]->AddToRdy(p);
-					return;
-				}
-			}
 			Set_ShortestListIdx();
 			PArr[ShortestListIdx]->AddToRdy(p);
 		}
@@ -445,10 +443,18 @@ void Scheduler::PrintRunningList()
 }
 void Scheduler::Set_ShortestListIdx()
 {
+	for (int i = 0; i < Processor_Count; i++)
+	{
+		if (PArr[i]->GetTotalCT() == 0 && !PArr[i]->getOverHeating())
+		{
+			ShortestListIdx = i;
+			return;
+		}
+	}
 	ShortestListIdx = 0;
 	for (int i = 1; i < Processor_Count; i++)
 	{
-		if (PArr[i]->SumCT() < PArr[ShortestListIdx]->SumCT())
+		if (!PArr[i]->getOverHeating() && PArr[i]->GetTotalCT() < PArr[ShortestListIdx]->GetTotalCT())
 			ShortestListIdx = i;
 	}
 }
@@ -462,9 +468,17 @@ int Scheduler::Get_ShortestLlistIdx()
 //Setter for the Shortest FCFS List Index
 void Scheduler::Set_ShortestFCFS()
 {
+	for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+	{
+		if (PArr[i]->GetTotalCT() == 0 && !PArr[i]->getOverHeating())
+		{
+			ShortestFCFSListIdx = i;
+			return;
+		}
+	}
 	ShortestFCFSListIdx = 0;
 	for (int i = 0; i < FCFS_ProcessorsCnt; i++)
-		if (PArr[i]->SumCT() < PArr[ShortestFCFSListIdx]->SumCT())
+		if (!PArr[i]->getOverHeating() && PArr[i]->GetTotalCT() < PArr[ShortestFCFSListIdx]->GetTotalCT())
 			ShortestFCFSListIdx = i;
 }
 
@@ -477,9 +491,17 @@ int Scheduler::Get_ShortestFCFS()
 //Setter for the Shortest SJF List Index
 void Scheduler::Set_ShortestSJF()
 {
+	for (int i = FCFS_ProcessorsCnt; i < (FCFS_ProcessorsCnt + SJF_ProcessorsCnt); i++)
+	{
+		if (PArr[i]->GetTotalCT() == 0 && !PArr[i]->getOverHeating())
+		{
+			ShortestSJFListIdx = i;
+			return;
+		}
+	}
 	ShortestSJFListIdx = FCFS_ProcessorsCnt;
 	for (int i = FCFS_ProcessorsCnt; i < (FCFS_ProcessorsCnt+SJF_ProcessorsCnt); i++)
-		if (PArr[i]->SumCT() < PArr[ShortestSJFListIdx]->SumCT())
+		if (!PArr[i]->getOverHeating() && PArr[i]->GetTotalCT() < PArr[ShortestSJFListIdx]->GetTotalCT() )
 			ShortestSJFListIdx = i;
 }
 
@@ -492,9 +514,17 @@ int Scheduler::Get_ShortestSJF()
 //Setter for the Shortest RR List Index
 void Scheduler::Set_ShortestRR()
 {
+	for (int i = SJF_ProcessorsCnt; i < (FCFS_ProcessorsCnt+SJF_ProcessorsCnt + RR_ProcessorsCnt); i++)
+	{
+		if (PArr[i]->GetTotalCT() == 0 && !PArr[i]->getOverHeating())
+		{
+			ShortestRRListIdx = i;
+			return;
+		}
+	}
 	ShortestRRListIdx = SJF_ProcessorsCnt;
-	for (int i = SJF_ProcessorsCnt; i < Processor_Count; i++)
-		if (PArr[i]->SumCT() < PArr[ShortestRRListIdx]->SumCT())
+	for (int i = SJF_ProcessorsCnt; i < (FCFS_ProcessorsCnt + SJF_ProcessorsCnt + RR_ProcessorsCnt); i++)
+		if (!PArr[i]->getOverHeating() && PArr[i]->GetTotalCT() < PArr[ShortestRRListIdx]->GetTotalCT())
 			ShortestRRListIdx = i;
 }
 
@@ -555,7 +585,7 @@ void Scheduler::Set_LongestListIdx()
 	LongestListIdx = 0;
 	for (int i = 1; i < Processor_Count; i++)
 	{
-		if (PArr[i]->SumCT() > PArr[LongestListIdx]->SumCT())
+		if (!PArr[i]->getOverHeating() && PArr[i]->GetTotalCT() > PArr[LongestListIdx]->GetTotalCT() )
 			LongestListIdx = i;
 	}
 }
@@ -563,24 +593,38 @@ void Scheduler::Set_LongestListIdx()
 
 void Scheduler::WorkStealing()
 {
+	if (TimeStep % STL != 0)
+		return;
+	else
+	{
 		float Steal_Limit;
 		Process* p = NULL;
-		Set_ShortestListIdx(); //loops on the processors array to set the shortest index to the shortest list
-		Set_LongestListIdx(); //loops on the processors array to set the longest index to the longest list
-		Steal_Limit = (float)(PArr[LongestListIdx]->SumCT() - PArr[ShortestListIdx]->SumCT()) / PArr[LongestListIdx]->SumCT();
-		if (Steal_Limit < 0.4)
-			return;
-		if (TimeStep % STL != 0)
-			return;
-		PArr[LongestListIdx]->ReturnFirst(p);
-		if (!p || p->GetParent())
-			return;
-			PArr[LongestListIdx]->DeleteProcess(p);
-			PArr[ShortestListIdx]->AddToRdy(p);
-			StealedProcesses++;
+		do
+		{
+			Set_ShortestListIdx(); //loops on the processors array to set the shortest index to the shortest list
+			Set_LongestListIdx(); //loops on the processors array to set the longest index to the longest list
+			Steal_Limit = (float)(PArr[LongestListIdx]->GetTotalCT() - PArr[ShortestListIdx]->GetTotalCT()) / PArr[LongestListIdx]->GetTotalCT();
+			if(Steal_Limit < 0.4)
+				return;
+			else
+			{
+				PArr[LongestListIdx]->ReturnFirst(p);
+				if (!p || p->GetParent())
+					return;
+				else
+				{
+					PArr[LongestListIdx]->DeleteProcess(p);
+					PArr[ShortestListIdx]->AddToRdy(p);
+					StealedProcesses++;
+					Set_ShortestListIdx(); //loops on the processors array to set the shortest index to the shortest list
+					Set_LongestListIdx(); //loops on the processors array to set the longest index to the longest list
+					Steal_Limit = (float)(PArr[LongestListIdx]->GetTotalCT() - PArr[ShortestListIdx]->GetTotalCT()) / PArr[LongestListIdx]->GetTotalCT();
+				}
+			}
+		} while (Steal_Limit > 0.4);
 		
-		WorkStealing(); // calls the function recursively until one of the exit conditions is satisfied 
-
+	}
+	
 	
 }
 
@@ -664,6 +708,12 @@ int Scheduler::GetTotalTRT()
 void Scheduler::IncrementKilledCount()
 {
 	KilledCount++;
+}
+
+void Scheduler::AddToShortestRdyList(Process*& p)
+{
+	Set_ShortestListIdx();
+	PArr[ShortestListIdx]->AddToRdy(p);
 }
 
 
