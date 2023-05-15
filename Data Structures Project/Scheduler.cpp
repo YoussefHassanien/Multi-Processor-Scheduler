@@ -39,11 +39,19 @@ Scheduler::Scheduler(): UI(this)
 //destructor
 Scheduler::~Scheduler()
 {
+	Process* p = nullptr;
 	for (int i = 0; i < Processor_Count; i++)
 	{
 		delete PArr[i];
 		PArr[i] = nullptr;
 	}
+	for (int i = 0; i < TerminatedProcesses; i++)
+	{
+		
+		terminatedlist.dequeue(p);
+		delete p;
+	}
+	p = nullptr;
 }
 
 
@@ -561,9 +569,6 @@ int Scheduler::GetMaxW()
 }
 void Scheduler::IntiateForking(Process*Parent)
 
-
-
-
 {
 	if (Parent && (!Parent->GetFirstChild() || !Parent->GetSecondChild()))
 	{
@@ -624,8 +629,6 @@ void Scheduler::WorkStealing()
 		} while (Steal_Limit > 0.4);
 		
 	}
-	
-	
 }
 
 
@@ -712,8 +715,16 @@ void Scheduler::IncrementKilledCount()
 
 void Scheduler::AddToShortestRdyList(Process*& p)
 {
-	Set_ShortestListIdx();
-	PArr[ShortestListIdx]->AddToRdy(p);
+	if (p->GetParent())
+	{
+		Set_ShortestFCFS();
+		PArr[ShortestFCFSListIdx]->AddToRdy(p);
+	}
+	else
+	{
+		Set_ShortestListIdx();
+		PArr[ShortestListIdx]->AddToRdy(p);
+	}
 }
 
 

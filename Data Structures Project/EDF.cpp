@@ -158,44 +158,7 @@ bool EDF::Search(Process* value)
 	return RDY_List.Find(value);
 }
 
-int EDF::SumCT()
-{
-	TotalCT = 0;
-	Process* p = nullptr;
-	if (RUNNING)
-		TotalCT = RUNNING->GetCT();
-	if (RDY_List.isEmpty())
-		return TotalCT;
-	else
-	{
-		for (int i = 0; i < processescount; i++)
-		{
-			RDY_List.dequeue(p);
-			TotalCT += p->GetCT();
-			RDY_List.enqueue(p, p->GetDeadline());
-		}
-		return TotalCT;
-	}
-	//Process* p=nullptr;
-	//PriorityQueue<Process*>TempRDYList;
-	//for (int i = 0; i < processescount; i++)
-	//{
-	//	RDY_List.dequeue(p);
-	//	if (p)
-	//	{
-	//		TotalCT = TotalCT + p->GetCT();
-	//		RDY_List.enqueue(p, p->GetDeadline());
-	//	}
-	//}
-	///*for (int i = 0; i < processescount; i++)
-	//{
-	//	TempRDYList.dequeue(p);
-	//	RDY_List.enqueue(p, p->GetDeadline());
-	//}*/
-	//if (RUNNING)
-	//	TotalCT = TotalCT + RUNNING->GetCT();
-	//return TotalCT;
-}
+
 
 void EDF::DeleteProcessAtPosition(Process*& p)
 {

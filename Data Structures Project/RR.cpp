@@ -166,38 +166,7 @@ bool RoundRobin::Search(Process* value)
 	return RDY_List.Find(value);
 }
 
-int RoundRobin::SumCT()
-{
-	TotalCT = 0;
-	Process* p = nullptr;
-	if (RUNNING)
-		TotalCT = RUNNING->GetCT();
-	if (RDY_List.isEmpty())
-		return TotalCT;
-	else
-	{
-		for (int i = 0; i < processescount; i++)
-		{
-			RDY_List.dequeue(p);
-			TotalCT += p->GetCT();
-			RDY_List.enqueue(p);
-		}
-		return TotalCT;
-	}
-	/*Process* p=nullptr;
-	for (int i = 0; i < processescount; i++)
-	{
-		RDY_List.dequeue(p);
-		if (p)
-		{
-			TotalCT = TotalCT + p->GetCT();
-			RDY_List.enqueue(p);
-		}
-	}
-	if (RUNNING)
-	TotalCT = TotalCT + RUNNING->GetCT();
-	return TotalCT;*/
-}
+
 
 void RoundRobin::DeleteProcessAtPosition(Process*& p)
 {

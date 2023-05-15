@@ -22,6 +22,7 @@ private:
 		, IO_R  //IO Request time
 		, Deadline //deadline of process
 		;
+	bool RT_Flag;
 	LinkedQueue<IO*> IOqueue; //IOs Queue for each process
 	Process* Parent;   //a pointer to the parent process that have created this forked processes if it is a forked one
 	Process* FirstChild; //a pointer to the first forked child
@@ -64,11 +65,9 @@ public:
     friend bool operator ==(Process& p1,Process& p2);                //== Operator Overloading 
 	friend bool operator==(int value,Process& p);                    //== Operator Overloading when the Process ID is sent instead of 2 Processes
 	int GetActualCT();
-	void SetIO_D();			
 	int GetIO_D();													
 	void SetFirstChild(Process*p);
 	void SetSecondChild(Process*p);
-	void IncrementIO_D(int io_D);                                           //increments the io-d for a process when it goes to blk state 
 	~Process();                                                      //Destructor
 };
 

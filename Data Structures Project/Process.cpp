@@ -13,6 +13,7 @@ Process::Process(int at, int id, int ct,int deadline, int n)
 	SecondChild = nullptr;
 	Actual_CT = ct;
 	IO_D = 0;
+	RT_Flag = false;
 	// Termination time should be sent when the process moves from the running queue to the termination queue inside a processor
 	// Response time should be calculated when the process moves from the ready queue to the running queue inside a processor
 	// Turnaround duration should be calculated when the termination time arrives
@@ -28,9 +29,10 @@ void Process::SetAT(int at)
 }
 void Process::SetRT(int CPU_First_AT)
 {
-	if (RT == 0)
+	if (!RT_Flag)
 	{
 		RT = CPU_First_AT - AT;
+		RT_Flag = true;
 	}
 }
 void Process::SetCT(int ct)
@@ -148,11 +150,13 @@ void Process::GetFirstIO(IO*& ioTemp)
 
 bool Process::CheckIO_D()
 {
-	IO* tempIO;
+	IO* tempIO=nullptr;
 	IOqueue.peek(tempIO);
 	if (tempIO->Duration==0)
 	{
 		IOqueue.dequeue(tempIO);
+		delete tempIO;
+		tempIO = nullptr;
 		return true;
 	}
 	else
@@ -184,20 +188,6 @@ int Process::GetActualCT()
 }
 
 
-void Process::SetIO_D()
-{
-	if (N != 0)
-	{
-		for (int i = 0; i < N; i++)
-		{
-			IO* io = nullptr;
-			IOqueue.dequeue(io);
-			IO_D = IO_D + io->GetDuration();
-			IOqueue.enqueue(io);
-		}
-	}
-}
-
 int Process::GetIO_D()
 {
 	return IO_D;
@@ -213,19 +203,10 @@ void Process::SetSecondChild(Process* p)
 	SecondChild = p;
 }
 
-void Process::IncrementIO_D(int io_D)
-{
-	IO_D+=io_D;
-}
 
 Process::~Process()
 {
-	delete Parent;
-	Parent = nullptr;
-	delete FirstChild;
-	FirstChild = nullptr;
-	delete SecondChild;
-	SecondChild = nullptr;
+	
 }
 
 ostream& operator<<(ostream& output, Process& p)

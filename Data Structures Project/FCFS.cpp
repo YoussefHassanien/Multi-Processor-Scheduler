@@ -275,26 +275,7 @@ bool FCFS::Search(Process* value)
 	return RDYList.Find(value,x);
 }
 
-int FCFS::SumCT()
-{
-	TotalCT = 0;
-	Process* p = nullptr;
-	if (RUNNING)
-		TotalCT = RUNNING->GetCT();
-	if (RDYList.isEmpty())
-		return TotalCT;
-	else
-	{
-		for (int i = 0; i < processescount; i++)
-		{
-			RDYList.DeleteFirst(p);
-			TotalCT += p->GetCT();
-			RDYList.InsertEnd(p);
-		}
-		return TotalCT;
-	}
-	
-}
+
 
  void FCFS::AddKillingSignal(SIGKILL* killsignal)
  {
