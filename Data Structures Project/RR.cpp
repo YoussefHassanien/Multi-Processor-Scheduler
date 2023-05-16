@@ -142,7 +142,15 @@ int RoundRobin::GetRDYListCount()
 //Controls the process migration from RR processor to SJF processor
 void RoundRobin::RRtoSJF_Migration()
 {  
-	Process* p=nullptr;
+	Process* p;
+	while (RDY_List.peek(p) && !p->GetParent() && p->GetCT() < RTF)
+	{
+		RDY_List.dequeue(p);
+		processescount--;
+		s->FromRRtoShortestSJF(p);
+		s->IncrementRTF();
+	}
+	/*Process* p=nullptr;
 	RDY_List.peek(p);
 	if (!p)
 		return;
@@ -158,7 +166,7 @@ void RoundRobin::RRtoSJF_Migration()
 		s->IncrementRTF();
 	}
 	else
-		return;
+		return;*/
 }
 
 bool RoundRobin::Search(Process* value)
