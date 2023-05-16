@@ -249,8 +249,16 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 //Controls the process migration from FCFS processor to RR processor
 void FCFS::FCFStoRR_Migration(int timestep)
 {
+	Process* p = nullptr;
+	while (RDYList.peek(p) && !p->GetParent() && p->WTsofar(timestep) > s->GetMaxW())
+	{
+		RDYList.DeleteFirst(p);
+		processescount--;
+		s->FromFCFStoShortestRR(p);
+		s->IncrementMaxW();
+	}
 	 
-	Process *p=nullptr;
+	/*Process *p=nullptr;
 	RDYList.peek(p);
 	if (!p)
 		return;
@@ -266,8 +274,9 @@ void FCFS::FCFStoRR_Migration(int timestep)
 		s->IncrementMaxW();
 	}
 	else
-		return;
-	}
+		return;*/ 
+	
+}
 
 bool FCFS::Search(Process* value)
 {
