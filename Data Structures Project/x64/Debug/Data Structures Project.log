@@ -1,5 +1,4 @@
-﻿  Process.cpp
-  Scheduler.cpp
-C:\Data Struct\Data-Structure-Project\Data Structures Project\Scheduler.cpp(576,31): warning C4390: ';': empty controlled statement found; is this the intent?
-  Generating Code...
+﻿  Scheduler.cpp
+C:\Data Struct\Data-Structure-Project\Data Structures Project\Scheduler.cpp(258,10): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Data Struct\Data-Structure-Project\Data Structures Project\Scheduler.cpp(577,31): warning C4390: ';': empty controlled statement found; is this the intent?
   Data Structures Project.vcxproj -> C:\Data Struct\Data-Structure-Project\x64\Debug\Data Structures Project.exe

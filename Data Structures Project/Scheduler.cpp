@@ -255,7 +255,8 @@ void Scheduler::PrintOutputFile() //still in progress
 		OutFile << "p" << PArr[i]->getID() << "=" << (int)(PUtil * 100) << "%,    ";
 		TotalUtiliz += PUtil;
 	}
-	OutFile << endl << "Avg utilization = " << (TotalUtiliz / Processor_Count)*100<<"%";
+	float b = round(((TotalUtiliz / Processor_Count) * 100) * 100.0) / 100.0;
+	OutFile << endl << "Avg utilization = " << b<<"%";
 
 }
 
