@@ -614,23 +614,24 @@ void Scheduler::WorkStealing()
 			Set_LongestListIdx(); //loops on the processors array to set the longest index to the longest list
 			Steal_Limit = (float)(PArr[LongestListIdx]->GetTotalCT() - PArr[ShortestListIdx]->GetTotalCT()) / PArr[LongestListIdx]->GetTotalCT();
 			if(Steal_Limit <= 0.4)
-				return;
+				break;
 			else
 			{
 				PArr[LongestListIdx]->ReturnFirst(p);
 				if (!p || p->GetParent())
-					return;
+					break;
 				else
 				{
 					PArr[LongestListIdx]->DeleteProcess(p);
 					PArr[ShortestListIdx]->AddToRdy(p);
 					StealedProcesses++;
+					cout << endl << "[WORK STEALING DONE]" << endl;
 					Set_ShortestListIdx(); //loops on the processors array to set the shortest index to the shortest list
 					Set_LongestListIdx(); //loops on the processors array to set the longest index to the longest list
 					Steal_Limit = (float)(PArr[LongestListIdx]->GetTotalCT() - PArr[ShortestListIdx]->GetTotalCT()) / PArr[LongestListIdx]->GetTotalCT();
 				}
 			}
-		} while (Steal_Limit > 0.4);
+		} while (Steal_Limit > 0.4 && PArr[LongestListIdx]->GetTotalCT()!=0 && PArr[ShortestListIdx]->GetTotalCT()!=0);
 		
 	}
 }
