@@ -61,6 +61,8 @@ private:
 	int TotalMigFromFCFSToRR;              // Total Number of processes migrated from fcfs to rr
 	int TotalMigFromRRToSJF;               // Total Number of processes migrated from rr to fcfs
 	int StopTime;
+	int FinishedBeforeDL;                  // no of processes finished before deadline
+
 
 
 public:
@@ -108,6 +110,7 @@ public:
 	int GetTotalTRT();                       //Getter for the total TRT
 	void IncrementKilledCount();				//incerement the count of killed processes
 	void AddToShortestRdyList(Process*& p);      // adds the passed process to the shortest rdylist
+	
 
 };
 #endif

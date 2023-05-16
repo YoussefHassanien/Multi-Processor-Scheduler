@@ -238,6 +238,7 @@ void Scheduler::PrintOutputFile() //still in progress
 	OutFile << "Work Steal%: " <<(int)(((float) StealedProcesses)/LastProcessID*100)<< "%" << endl;
 	OutFile << "Forked Processes :" <<(int)(((float)(LastProcessID-OriginalProcessesCount)/LastProcessID)*100) <<"%" << endl;
 	OutFile << "Killed Processes :" << (int)(((float)(KilledCount) / LastProcessID) * 100) << "% " << endl;   
+	OutFile << "Processes finished before their deadline :" << (int)(((float)(FinishedBeforeDL) / LastProcessID) * 100) << "% " << endl;
 	OutFile << endl << endl;
 	OutFile << "Processor: " << Processor_Count << " ["<<FCFS_ProcessorsCnt<<" FCFS, "<<SJF_ProcessorsCnt<<" SJF, "<<RR_ProcessorsCnt<<" RR, " << EDF_ProcessorCnt << " EDF]" << endl;
 	OutFile << "Processors Load" << endl;
@@ -281,6 +282,8 @@ void Scheduler::addToTrm(Process* p)
 		terminatedlist.enqueue(p);
 		TerminatedProcesses++;
 		p->SetTT(TimeStep); //sets the termination time of the process with the current timestep;
+		if (TimeStep < p->GetDeadline())
+			FinishedBeforeDL++;
 		IncrementTotalTRT(p->GetTRT());  //increments the total TRT
 	}
 	
@@ -610,7 +613,7 @@ void Scheduler::WorkStealing()
 			Set_ShortestListIdx(); //loops on the processors array to set the shortest index to the shortest list
 			Set_LongestListIdx(); //loops on the processors array to set the longest index to the longest list
 			Steal_Limit = (float)(PArr[LongestListIdx]->GetTotalCT() - PArr[ShortestListIdx]->GetTotalCT()) / PArr[LongestListIdx]->GetTotalCT();
-			if(Steal_Limit < 0.4)
+			if(Steal_Limit <= 0.4)
 				return;
 			else
 			{
