@@ -32,6 +32,7 @@ private:
 	int EDF_ProcessorCnt;				   //Count of the EDF processors
 	int TimeStep;                          //Time step
 	int TimeSlice;                         //Time slice
+	int StopTime;                          //number of timesteps the processor spends overheating
 	int LastProcessID;                     //processes count for all processes in the program
 	int RTF;                               //RTF read from the input file
 	int MaxW;                              //MaxW read from the input file
@@ -60,7 +61,6 @@ private:
 	int OriginalProcessesCount;            //Original Number of processes read from input file
 	int TotalMigFromFCFSToRR;              // Total Number of processes migrated from fcfs to rr
 	int TotalMigFromRRToSJF;               // Total Number of processes migrated from rr to fcfs
-	int StopTime;
 	int FinishedBeforeDL;                  // no of processes finished before deadline
 
 

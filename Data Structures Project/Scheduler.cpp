@@ -351,7 +351,7 @@ void Scheduler::Simulation()
 		for (int i = 0; i < Processor_Count; i++)
 		{
 			int random= generaterandom(1, 100);
-			if (random <= 2)
+			if (random == 1)
 				PArr[i]->setOverHeating(true);
 			PArr[i]->ScheduleAlgo(TimeStep,StopTime); //rdy to run and run to rdy
 

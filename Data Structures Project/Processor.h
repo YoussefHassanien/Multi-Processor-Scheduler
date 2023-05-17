@@ -23,7 +23,7 @@ class Process;
 		int PLoad; //Processor Load perecentage 
 		int PUtil; //Processor Utilization Percentage
 		int TotalCT; //Sum of the CT of all processes in the ready list
-		bool isoverheating;
+		bool isoverheating;  //indicates the state of the processor either stopped or working
 		int StoppedFor;      //indicator of how much time the processor have been in stop mode
 
 	public:

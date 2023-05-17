@@ -147,23 +147,7 @@ void RoundRobin::RRtoSJF_Migration()
 		s->FromRRtoShortestSJF(p);
 		s->IncrementRTF();
 	}
-	/*Process* p=nullptr;
-	RDY_List.peek(p);
-	if (!p)
-		return;
-
-	if (p->GetParent())
-		return;
-	if (p->GetCT() < RTF)
-	{
-		RDY_List.dequeue(p);
-		processescount--;
-		s->FromRRtoShortestSJF(p);
-		RRtoSJF_Migration();
-		s->IncrementRTF();
-	}
-	else
-		return;*/
+	
 }
 
 bool RoundRobin::Search(Process* value)
