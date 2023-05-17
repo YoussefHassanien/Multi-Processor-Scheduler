@@ -74,15 +74,12 @@ public:
 	void addtonewlist(Process* p);        //Adds a process to the NEW list 
 	void addtoblocklist(Process*& p);     //Adds a process to the BLK list
 	void addToTrm(Process* p);            //Adds a process to the terminated list
-	int getprocessorcount();              //Getter for the total number of processors 
 	void incrementprocessorcount();       //increments the count of processors once a new processor is declared
 	int generaterandom(int min, int max); //Generates a random number between a max and a min value
-	int getTimeStep();                    //Getter for the timestep
 	bool AllIsTerminated();               //checks that all ready lists are empty and all processors are idle
 	void Simulation();                    //Simulation function
 	void AddtoRdyLists(Process*p);        //Moves the process from NEW list to RDY list
 	void PrintProcessorList();            //Prints the processor list
-	int getBLKCount();                    //Getter for the count of blocked processes
 	void incrementRunningCount();         //Increments the number of running processes by one 
 	void DecrementRunningCount();         //Decrements the number of running processes by one 
 	void PrintBLKList();                  //Prints the BLK list
@@ -107,7 +104,6 @@ public:
 	void IncrementTotalTRT(int trt);         //increments the total TRT with a process's TRT
 	void IncrementMaxW();                    //increments the no of processes migrated from fcfs to rr
 	void IncrementRTF();                    //increments the no of processes migrated from rr to sjf
-	int GetTotalTRT();                       //Getter for the total TRT
 	void IncrementKilledCount();				//incerement the count of killed processes
 	void AddToShortestRdyList(Process*& p);      // adds the passed process to the shortest rdylist
 	

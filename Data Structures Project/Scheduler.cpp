@@ -289,11 +289,7 @@ void Scheduler::addToTrm(Process* p)
 	
 }
 
-//Getter for the total number of processors 
-int Scheduler::getprocessorcount()
-{
-	return Processor_Count;
-}
+
 
 //increments the count of processors once a new processor is declared
 void Scheduler::incrementprocessorcount()
@@ -313,12 +309,6 @@ int Scheduler::generaterandom(int min, int max)
 	
 	//Generate and return the Rabdom Number
 	return dis(gen);
-}
-
-//Getter for the timestep
-int Scheduler::getTimeStep()
-{
-	return TimeStep;
 }
 
 
@@ -401,12 +391,6 @@ void Scheduler::PrintProcessorList()
 	}
 }
 
-
-//Getter for the count of blocked processes
-int Scheduler::getBLKCount()
-{
-	return BLKCount;
-}
 
 
 //Increments the number of running processes by one 
@@ -703,10 +687,6 @@ void Scheduler::IncrementRTF()
 	TotalMigFromRRToSJF++;
 }
 
-int Scheduler::GetTotalTRT()
-{
-	return TotalTRT;
-}
 
 void Scheduler::IncrementKilledCount()
 {

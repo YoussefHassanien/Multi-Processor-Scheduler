@@ -6,7 +6,7 @@
   SJF.cpp
   Scheduler.cpp
 C:\Data Struct\Data-Structure-Project\Data Structures Project\Scheduler.cpp(259,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Data Struct\Data-Structure-Project\Data Structures Project\Scheduler.cpp(576,31): warning C4390: ';': empty controlled statement found; is this the intent?
+C:\Data Struct\Data-Structure-Project\Data Structures Project\Scheduler.cpp(560,31): warning C4390: ';': empty controlled statement found; is this the intent?
   Source.cpp
   UI_Info.cpp
   Generating Code...
