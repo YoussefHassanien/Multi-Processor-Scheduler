@@ -346,6 +346,21 @@ void Scheduler::Simulation()
 			PArr[i]->ScheduleAlgo(TimeStep,StopTime); //rdy to run and run to rdy
 
 		}
+		FCFS TempFCFS(this, ForkProb, 0);
+		SIGKILL* TempKillSig = nullptr;
+		do
+		{
+			TempFCFS.KillingSigTime(TempKillSig, TimeStep);
+			if (TempKillSig)
+			{
+				for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+				{
+					if (PArr[i]->KillingSigAction(TempKillSig))
+						break;
+				}
+			}
+		} 
+		while (TempKillSig);
 		//checks if there are no FCFS processors in the first place 
 		if (FCFS_ProcessorsCnt)
 		{

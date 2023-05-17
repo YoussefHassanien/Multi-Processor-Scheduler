@@ -8,6 +8,7 @@ class Process;
 #include <iostream>
 #include"Scheduler.h"
 #include "Process.h"
+#include"SigKill.h"
 
 	class Processor
 	{
@@ -54,6 +55,7 @@ class Process;
 		virtual bool NothingToExecute() = 0;           //checks if the processor's running state and RDYList are empty
 		void setOverHeating(bool b);                  // setter for overheating state
 		bool getOverHeating();                        //getter for overheating state
+		virtual bool KillingSigAction(SIGKILL* KillingSig)=0;
 		~Processor();                       //Destructor
 	};
 #endif

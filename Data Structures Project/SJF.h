@@ -28,6 +28,7 @@ public:
 	bool NothingToExecute();                         //checks if the processor's running state and RDYList are empty
 	void ReturnFirst(Process*& p);
 	void EmptyProcessor();
+	bool KillingSigAction(SIGKILL* KillingSig);
 	~SJF();                            //Destructor
 	
 };

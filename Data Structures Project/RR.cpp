@@ -192,6 +192,11 @@ void RoundRobin::EmptyProcessor()
 	TotalCT = 0;
 }
 
+bool RoundRobin::KillingSigAction(SIGKILL* KillingSig)
+{
+	return false;
+}
+
 //destructor
 RoundRobin::~RoundRobin()
 {

@@ -166,6 +166,11 @@ void EDF::ReturnFirst(Process*& p)
 	RDY_List.peek(p);
 }
 
+bool EDF::KillingSigAction(SIGKILL* KillingSig)
+{
+	return false;
+}
+
 EDF::~EDF()
 {
 }

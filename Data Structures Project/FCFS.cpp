@@ -97,30 +97,6 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 	else
 		TotalBT++;
 		
-	KillingSignalsList.peek(TempKillSig); //check kill signal for processes in the ready list
-	if (TempKillSig)
-	{
-		int position = 0;
-
-		if (TempKillSig->getTime() == TimeStep)
-		{
-			if (RDYListIDs.Find(TempKillSig->getID(), position))
-			{
-				int id = 0;  //dummy integer
-				KillingSignalsList.dequeue(TempKillSig);
-				delete TempKillSig;
-				TempKillSig = NULL;
-				RDYList.DeleteNodeAtPosition(KilledProcess, position);
-				RDYListIDs.DeleteNodeAtPosition(id, position);
-				s->addToTrm(KilledProcess);
-				s->ChildrenKilling(KilledProcess); //Killing the orphans operation
-				processescount--;
-				KillSigFound = true;
-				s->IncrementKilledCount();
-			}
-		}
-	}
-	
 	if ((!isbusy) && (!RDYList.isEmpty())) //sets a process as running if the processor is idle
 	{
 		FCFStoRR_Migration(TimeStep);
@@ -136,27 +112,6 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 
 			if (RandomForkProb > 0 && RandomForkProb <= ForkProb) //Forking condition
 				s->IntiateForking(RUNNING); //Forking operation
-
-			KillingSignalsList.peek(TempKillSig);			//checks the kill signal for the running process
-			if (TempKillSig)
-			{
-				if (TempKillSig->getTime() == TimeStep) //Killing Signals Operation
-				{
-					if (TempKillSig->getID() == *RUNNING)
-					{
-						KillingSignalsList.dequeue(TempKillSig);
-						delete TempKillSig;
-						TempKillSig = NULL;
-						s->addToTrm(RUNNING);
-						s->ChildrenKilling(RUNNING); //Killing the orphans operation
-						isbusy = false;
-						RUNNING = nullptr;
-						s->DecrementRunningCount();
-						s->IncrementKilledCount();
-						KillSigFound = true;
-					}
-				}
-			}
 		}
 	}
 	else if (isbusy && RUNNING->GetCT()) //Same as if RUNNING->GetCT!=0
@@ -167,28 +122,6 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 		if (RandomForkProb > 0 && RandomForkProb <= ForkProb)
 			s->IntiateForking(RUNNING); //Forking operation
 
-		KillingSignalsList.peek(TempKillSig);
-		if (TempKillSig)
-		{
-			if (TempKillSig->getTime() == TimeStep) //Killing Signals Operation
-			{
-				if (TempKillSig->getID() == *RUNNING)
-				{
-					KillingSignalsList.dequeue(TempKillSig);
-					delete TempKillSig;
-					TempKillSig = NULL;
-					s->addToTrm(RUNNING);
-					s->ChildrenKilling(RUNNING); //Killing the orphans operation
-					isbusy = false;
-					RUNNING = nullptr;
-					s->DecrementRunningCount();
-					s->IncrementKilledCount();
-					KillSigFound = true;
-					return;
-				}
-			}
-
-		}
 		 if (RUNNING->GetN())	/* the condition is same as if RUNNING->GetN()!=0 , 
 				                         decrements the IO_R while the process is running*/ 
 		 {
@@ -283,6 +216,62 @@ bool FCFS::Search(Process* value)
 			 }
 		 }
 	 }
+ }
+
+ void FCFS::KillingSigTime(SIGKILL*& KillingSig,int TimeStep)
+ {
+	 SIGKILL* TempKillSig = nullptr;
+	 KillingSignalsList.peek(TempKillSig);
+	 if (TempKillSig)
+	 {
+		 if (TempKillSig->getTime() == TimeStep)
+			 KillingSignalsList.dequeue(KillingSig);
+		 else
+			 KillingSig = nullptr;
+	 }
+	 else
+		 KillingSig = nullptr;
+ }
+
+ bool FCFS::KillingSigAction(SIGKILL* KillingSig)
+ {
+	 if (KillingSig)
+	 {
+		 Process*KilledProcess=nullptr;
+		 int Position=0;
+		 if (RDYListIDs.Find(KillingSig->getID(), Position))
+		 {
+			 int id = 0;  //dummy integer
+			 RDYList.DeleteNodeAtPosition(KilledProcess, Position);
+			 RDYListIDs.DeleteNodeAtPosition(id, Position);
+			 s->addToTrm(KilledProcess);
+			 s->ChildrenKilling(KilledProcess); //Killing the orphans operation
+			 processescount--;
+			 s->IncrementKilledCount();
+			 return true;
+		 }
+		 else
+			 if (RUNNING)
+			 {
+				 if (KillingSig->getID() == *RUNNING)
+				 {
+					 s->addToTrm(RUNNING);
+					 s->ChildrenKilling(RUNNING); //Killing the orphans operation
+					 isbusy = false;
+					 RUNNING = nullptr;
+					 s->DecrementRunningCount();
+					 s->IncrementKilledCount();
+					 return true;
+				 }
+				 else
+					 return false;
+			 }
+			 else
+				 return false;
+	 }
+	 else
+		 return false;
+	
  }
 
  void FCFS::ReturnFirst(Process*&p)

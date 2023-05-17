@@ -156,6 +156,10 @@ void SJF::EmptyProcessor()
 	processescount = 0;
 	TotalCT = 0;
 }
+bool SJF::KillingSigAction(SIGKILL* KillingSig)
+{
+	return false;
+}
 //destructor
 SJF::~SJF()
 {

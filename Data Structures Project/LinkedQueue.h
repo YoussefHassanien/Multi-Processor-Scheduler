@@ -4,7 +4,6 @@
 #define LINKED_QUEUE_
 
 #include "Node.h"
-#include <vector>
 using namespace std;
 
 

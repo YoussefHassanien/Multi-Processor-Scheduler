@@ -5,7 +5,6 @@ class Processor;
 #include"Process.h"
 #include<iostream>
 #include "Node.h"
-#include <vector>
 using namespace std;
 
 template <typename T>

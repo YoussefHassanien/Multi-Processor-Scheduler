@@ -1,6 +1,2 @@
 ﻿  FCFS.cpp
-  Scheduler.cpp
-C:\Data Struct\Data-Structure-Project\Data Structures Project\Scheduler.cpp(259,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Data Struct\Data-Structure-Project\Data Structures Project\Scheduler.cpp(598,31): warning C4390: ';': empty controlled statement found; is this the intent?
-  Generating Code...
-  Data Structures Project.vcxproj -> C:\Data Struct\Data-Structure-Project\x64\Debug\Data Structures Project.exe
+  Data Structures Project.vcxproj -> D:\Education\Data Structure and Algorithims\Data Structure Project\Data Structure Project (Multi Core Processor)\x64\Debug\Data Structures Project.exe

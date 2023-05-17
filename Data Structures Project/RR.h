@@ -21,6 +21,7 @@ public:
 	void DeleteProcessAtPosition(Process*& p);      //deletes a process in any place in the RDYList
 	void ReturnFirst(Process*& p);
 	void EmptyProcessor();
+	bool KillingSigAction(SIGKILL* KillingSig);
 	~RoundRobin();                                  //Destructor
 
 };
