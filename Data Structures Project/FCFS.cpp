@@ -1,11 +1,9 @@
 #include "FCFS.h"
 LinkedQueue<SIGKILL*> FCFS::KillingSignalsList;
-bool FCFS::KillSigFound;
 //Constructor
 FCFS::FCFS(Scheduler*Sptr,int forkprob, int id): Processor(Sptr),ForkProb(forkprob)
 {
 	ID = id;
-	KillSigFound = false;          //sets it initially to false 
 }
 
 //adds a process in the ready list
@@ -194,28 +192,6 @@ bool FCFS::Search(Process* value)
 	 }
 	 processescount = 0;
 	 TotalCT = 0;
- }
-
- void FCFS::ControllingKillSignals(int timestep)
- {
-	 if (KillSigFound)
-	 {
-		 KillSigFound = false;
-	 }
-	 else
-	 {
-		 SIGKILL* tempkillsig = nullptr;
-		 KillingSignalsList.peek(tempkillsig);
-		 if (tempkillsig)
-		 {
-			 if (tempkillsig->getTime() == timestep)
-			 {
-				 KillingSignalsList.dequeue(tempkillsig);
-				 delete tempkillsig;
-				 tempkillsig = NULL;
-			 }
-		 }
-	 }
  }
 
  void FCFS::KillingSigTime(SIGKILL*& KillingSig,int TimeStep)
