@@ -30,7 +30,6 @@ public:
 	void EmptyProcessor();
 	void KillingSigTime(SIGKILL*&KillingSig,int TimeStep); //Checks if the current timestep is the one which we should do the Killing Signal
 	bool KillingSigAction(SIGKILL* KillingSig);            //The Action of Killing itself 
-	~FCFS();                                               //Destructor
-	         
+	~FCFS();                                               //Destructor 
 };
 
