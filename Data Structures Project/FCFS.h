@@ -13,6 +13,7 @@ private:
 	const int ForkProb;             //Forking probability 
 public:
 	FCFS(Scheduler* Sptr,int forkprob, int id = 0);    //constructor
+	static bool KillSigFound;                         // indicates if the process requiring kill signal was found in FCFS processors
 	void AddToRdy(Process* p) override;             //Adds a process to the processor ready list
 	void DeleteProcess(Process*& p);                //deletes a give process when it moves to another queue or to being blocked
 	void DeleteProcessAtPosition(Process*& p);      //deletes a process in any place in the RDYList
@@ -25,8 +26,10 @@ public:
 	void FCFStoRR_Migration(int timestep);                      //Controls the process migration from FCFS processor to RR processor
 	bool Search(Process* value);                    //Searches for a specific process in the ready list
 	void ReturnFirst(Process*& p);
+	bool NothingToExecute();                         //checks if the processor's running state and RDYList are empty
 	static void AddKillingSignal(SIGKILL*killsignal);   //enqueue a killing in the Killing Signals List
 	void EmptyProcessor();
+	void ControllingKillSignals(int timestep);
 	~FCFS();                                        //Destructor
 	         
 };

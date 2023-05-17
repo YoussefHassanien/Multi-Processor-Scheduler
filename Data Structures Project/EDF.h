@@ -26,6 +26,7 @@ public:
 	int GetRDYListCount();             //Returns the number of processes in the ready list
 	bool Search(Process* value);       //Searches for a specific process in the ready list
 	void DeleteProcessAtPosition(Process*& p);      //deletes a process in any place in the RDYList
+	bool NothingToExecute();                         //checks if the processor's running state and RDYList are empty
 	void EmptyProcessor();
 	void ReturnFirst(Process*& p);
 	~EDF();                            //Destructor

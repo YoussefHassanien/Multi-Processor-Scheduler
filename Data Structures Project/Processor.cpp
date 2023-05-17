@@ -90,7 +90,10 @@ void Processor::setOverHeating(bool b)
 	isoverheating = b;
 	if (b == true)
 	{
-		EmptyProcessor();
+		if (!NothingToExecute())
+			EmptyProcessor();
+		else
+			isoverheating = false;
 	}
 }
 

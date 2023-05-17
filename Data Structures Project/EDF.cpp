@@ -57,7 +57,7 @@ void EDF::ScheduleAlgo(int& timestep, int& stoptime)
 	if (RDY_List.isEmpty())
 		TotalCT = 0;
 
-	if (RDY_List.isEmpty() && !RUNNING) //if there is nothing in the ready list and no running process
+	if (NothingToExecute()) //if there is nothing in the ready list and no running process
 	{
 		TotalIT++;
 		return;
@@ -135,6 +135,11 @@ bool EDF::Search(Process* value)
 void EDF::DeleteProcessAtPosition(Process*& p)
 {
 	return;
+}
+
+bool EDF::NothingToExecute()
+{
+	return(!RUNNING && RDY_List.isEmpty());
 }
 
 void EDF::EmptyProcessor()

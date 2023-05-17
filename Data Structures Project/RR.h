@@ -17,6 +17,7 @@ public:
 	int GetRDYListCount();                          //Returns the number of processes in the ready list
 	void RRtoSJF_Migration();                       //Controls the process migration from RR processor to SJF processor
 	bool Search(Process* value);                    //Searches for a specific process in the ready list
+	bool NothingToExecute();                         //checks if the processor's running state and RDYList are empty
 	void DeleteProcessAtPosition(Process*& p);      //deletes a process in any place in the RDYList
 	void ReturnFirst(Process*& p);
 	void EmptyProcessor();

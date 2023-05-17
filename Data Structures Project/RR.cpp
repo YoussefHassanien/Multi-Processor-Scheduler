@@ -38,7 +38,7 @@ void RoundRobin::ScheduleAlgo(int& TimeStep, int& stoptime)
 	if (RDY_List.isEmpty())
 		TotalCT = 0;
 
-	if (RDY_List.isEmpty() && !RUNNING) //if there is nothing in the ready list and no running process
+	if (NothingToExecute()) //if there is nothing in the ready list and no running process
 	{
 		TotalIT++;
 		return;
@@ -153,6 +153,11 @@ void RoundRobin::RRtoSJF_Migration()
 bool RoundRobin::Search(Process* value)
 {
 	return RDY_List.Find(value);
+}
+
+bool RoundRobin::NothingToExecute()
+{
+	return(!RUNNING && RDY_List.isEmpty());
 }
 
 

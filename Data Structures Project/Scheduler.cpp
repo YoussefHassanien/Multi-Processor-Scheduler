@@ -346,6 +346,13 @@ void Scheduler::Simulation()
 			PArr[i]->ScheduleAlgo(TimeStep,StopTime); //rdy to run and run to rdy
 
 		}
+		//checks if there are no FCFS processors in the first place 
+		if (FCFS_ProcessorsCnt)
+		{
+			FCFS tempFCFS(this, ForkProb, 0);
+			tempFCFS.ControllingKillSignals(TimeStep);
+		}
+		
 		//BLK to RDY
 		if (!blocklist.isEmpty()) //check BLK list
 		{
@@ -443,7 +450,14 @@ void Scheduler::Set_ShortestListIdx()
 			return;
 		}
 	}
-	ShortestListIdx = 0;
+	for (int i = 0; i < Processor_Count; i++)
+	{
+		if (!PArr[i]->getOverHeating())
+		{
+			ShortestListIdx = i;
+			break;
+		}
+	}
 	for (int i = 1; i < Processor_Count; i++)
 	{
 		if (!PArr[i]->getOverHeating() && PArr[i]->GetTotalCT() < PArr[ShortestListIdx]->GetTotalCT())
@@ -468,10 +482,20 @@ void Scheduler::Set_ShortestFCFS()
 			return;
 		}
 	}
-	ShortestFCFSListIdx = 0;
+
 	for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+	{
+		if (!PArr[i]->getOverHeating())
+		{
+			ShortestFCFSListIdx = i;
+			break;
+		}
+	}
+	for (int i = 0; i < FCFS_ProcessorsCnt; i++)
+	{
 		if (!PArr[i]->getOverHeating() && PArr[i]->GetTotalCT() < PArr[ShortestFCFSListIdx]->GetTotalCT())
 			ShortestFCFSListIdx = i;
+	}
 }
 
 //Getter for the Shortest FCFS List Index
@@ -491,7 +515,14 @@ void Scheduler::Set_ShortestSJF()
 			return;
 		}
 	}
-	ShortestSJFListIdx = FCFS_ProcessorsCnt;
+	for (int i = FCFS_ProcessorsCnt; i < (FCFS_ProcessorsCnt + SJF_ProcessorsCnt); i++)
+	{
+		if (!PArr[i]->getOverHeating())
+		{
+			ShortestSJFListIdx = i;
+			break;
+		}
+	}
 	for (int i = FCFS_ProcessorsCnt; i < (FCFS_ProcessorsCnt+SJF_ProcessorsCnt); i++)
 		if (!PArr[i]->getOverHeating() && PArr[i]->GetTotalCT() < PArr[ShortestSJFListIdx]->GetTotalCT() )
 			ShortestSJFListIdx = i;
@@ -514,7 +545,14 @@ void Scheduler::Set_ShortestRR()
 			return;
 		}
 	}
-	ShortestRRListIdx = SJF_ProcessorsCnt;
+	for (int i = SJF_ProcessorsCnt; i < (FCFS_ProcessorsCnt + SJF_ProcessorsCnt + RR_ProcessorsCnt); i++)
+	{
+		if (!PArr[i]->getOverHeating())
+		{
+			ShortestRRListIdx = i;
+			break;
+		}
+	}
 	for (int i = SJF_ProcessorsCnt; i < (FCFS_ProcessorsCnt + SJF_ProcessorsCnt + RR_ProcessorsCnt); i++)
 		if (!PArr[i]->getOverHeating() && PArr[i]->GetTotalCT() < PArr[ShortestRRListIdx]->GetTotalCT())
 			ShortestRRListIdx = i;

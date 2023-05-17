@@ -51,6 +51,7 @@ class Process;
 		int GetTotalCT();                   //Getter for the total CT of all processes in the ready list
 		virtual void ReturnFirst(Process *&p) = 0;		//Return the first process in each processor's ready list
 		virtual void EmptyProcessor() = 0;             // Emties the running process and the rdylist
+		virtual bool NothingToExecute() = 0;           //checks if the processor's running state and RDYList are empty
 		void setOverHeating(bool b);                  // setter for overheating state
 		bool getOverHeating();                        //getter for overheating state
 		~Processor();                       //Destructor

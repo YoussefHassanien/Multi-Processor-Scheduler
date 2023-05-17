@@ -1,9 +1,11 @@
 #include "FCFS.h"
 LinkedQueue<SIGKILL*> FCFS::KillingSignalsList;
+bool FCFS::KillSigFound;
 //Constructor
 FCFS::FCFS(Scheduler*Sptr,int forkprob, int id): Processor(Sptr),ForkProb(forkprob)
 {
 	ID = id;
+	KillSigFound = false;          //sets it initially to false 
 }
 
 //adds a process in the ready list
@@ -87,7 +89,7 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 	if (RDYList.isEmpty())
 		TotalCT = 0;
 
-	if (RDYList.isEmpty() && !RUNNING) //if there is nothing in the ready list and no running process
+	if (NothingToExecute()) //if there is nothing in the ready list and no running process
 	{
 		TotalIT++;
 		return;
@@ -106,11 +108,14 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 			{
 				int id = 0;  //dummy integer
 				KillingSignalsList.dequeue(TempKillSig);
+				delete TempKillSig;
+				TempKillSig = NULL;
 				RDYList.DeleteNodeAtPosition(KilledProcess, position);
 				RDYListIDs.DeleteNodeAtPosition(id, position);
 				s->addToTrm(KilledProcess);
 				s->ChildrenKilling(KilledProcess); //Killing the orphans operation
 				processescount--;
+				KillSigFound = true;
 				s->IncrementKilledCount();
 			}
 		}
@@ -140,12 +145,15 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 					if (TempKillSig->getID() == *RUNNING)
 					{
 						KillingSignalsList.dequeue(TempKillSig);
+						delete TempKillSig;
+						TempKillSig = NULL;
 						s->addToTrm(RUNNING);
 						s->ChildrenKilling(RUNNING); //Killing the orphans operation
 						isbusy = false;
 						RUNNING = nullptr;
 						s->DecrementRunningCount();
 						s->IncrementKilledCount();
+						KillSigFound = true;
 					}
 				}
 			}
@@ -167,12 +175,15 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 				if (TempKillSig->getID() == *RUNNING)
 				{
 					KillingSignalsList.dequeue(TempKillSig);
+					delete TempKillSig;
+					TempKillSig = NULL;
 					s->addToTrm(RUNNING);
 					s->ChildrenKilling(RUNNING); //Killing the orphans operation
 					isbusy = false;
 					RUNNING = nullptr;
 					s->DecrementRunningCount();
 					s->IncrementKilledCount();
+					KillSigFound = true;
 					return;
 				}
 			}
@@ -252,6 +263,28 @@ bool FCFS::Search(Process* value)
 	 TotalCT = 0;
  }
 
+ void FCFS::ControllingKillSignals(int timestep)
+ {
+	 if (KillSigFound)
+	 {
+		 KillSigFound = false;
+	 }
+	 else
+	 {
+		 SIGKILL* tempkillsig = nullptr;
+		 KillingSignalsList.peek(tempkillsig);
+		 if (tempkillsig)
+		 {
+			 if (tempkillsig->getTime() == timestep)
+			 {
+				 KillingSignalsList.dequeue(tempkillsig);
+				 delete tempkillsig;
+				 tempkillsig = NULL;
+			 }
+		 }
+	 }
+ }
+
  void FCFS::ReturnFirst(Process*&p)
  {
 	 if (!RDYList.isEmpty())
@@ -259,6 +292,12 @@ bool FCFS::Search(Process* value)
 		 RDYList.DeleteFirst(p);
 		 RDYList.InsertBeg(p);
 	 }
+ }
+
+ bool FCFS::NothingToExecute()
+ {
+	 return(!RUNNING && RDYList.isEmpty());
+		
  }
 
 //destructor

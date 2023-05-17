@@ -43,7 +43,7 @@ void SJF::ScheduleAlgo(int &TimeStep, int& stoptime)
 	if (RDY_List.isEmpty())
 		TotalCT = 0;
 
-	if (RDY_List.isEmpty() && !RUNNING) //if there is nothing in the ready list and no running process
+	if (NothingToExecute()) //if there is nothing in the ready list and no running process
 	{
 		TotalIT++;
 		return;
@@ -127,6 +127,11 @@ bool SJF::Search(Process* value)
 void SJF::DeleteProcessAtPosition(Process*& p)
 {
 	return;
+}
+
+bool SJF::NothingToExecute()
+{
+	return(!RUNNING && RDY_List.isEmpty());
 }
 
 void SJF::ReturnFirst(Process*& p)
