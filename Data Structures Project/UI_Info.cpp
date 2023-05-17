@@ -32,31 +32,33 @@ UI_Info::UI_Info(Scheduler* Sptr)
 	S->setfilename(FLName);
 
 }
-void UI_Info::printInterface(int timestep)
+void UI_Info::printInterface(int timestep, int blkcnt, int termcnt)
 {
 	if (InterfaceMode == 0)
-		PrintInteractiveMode(timestep);
+		PrintInteractiveMode(timestep,blkcnt,termcnt);
 	else if (InterfaceMode == 1)
-		PrintStep_By_StepMode(timestep);
+		PrintStep_By_StepMode(timestep, blkcnt, termcnt);
 	else
 		PrintSilentMode();
 }
-void UI_Info::PrintInteractiveMode(int timestep)
+void UI_Info::PrintInteractiveMode(int timestep, int blkcnt, int termcnt)
 {
 	cout << "current timestep: " << timestep << endl;
 	cout << "------------------------- RDY Processes ------------------------- " << endl;
 	S->PrintProcessorList();
 	cout << "------------------------- BLK Processes ------------------------- " << endl;
+	cout << blkcnt << " BLK: ";
 	S->PrintBLKList();
 	cout << endl << "------------------------- RUN Processes ------------------------- " << endl;
 	S->PrintRunningList();
 	cout << endl << "------------------------- TRM Processes ------------------------- " << endl;
+	cout << termcnt << " TRM: ";
 	S->PrintTRMList();
 	cout << endl<<"PRESS ANY KEY TO MOVE TO THE NEXT STEP !" << endl;
 	system("pause");
 }
 
-void UI_Info::PrintStep_By_StepMode(int timestep)
+void UI_Info::PrintStep_By_StepMode(int timestep, int blkcnt, int termcnt)
 {
 	cout << "current timestep: " << timestep << endl;
 	cout << "------------------------- RDY Processes ------------------------- " << endl;

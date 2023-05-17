@@ -65,7 +65,7 @@ int FCFS::GetRDYListCount()
 }
 
 //Schedueling algorithm
-void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
+void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime, int rrcnt, int sjfcnt)
 {
 	int TempID = 0;
 	Process* TempProcess = nullptr;
@@ -97,7 +97,7 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 		
 	if ((!isbusy) && (!RDYList.isEmpty())) //sets a process as running if the processor is idle
 	{
-		FCFStoRR_Migration(TimeStep);
+		FCFStoRR_Migration(TimeStep, rrcnt);
 		RDYList.DeleteFirst(TempProcess);
 		if (TempProcess) 
 		{
@@ -149,15 +149,19 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 
 
 //Controls the process migration from FCFS processor to RR processor
-void FCFS::FCFStoRR_Migration(int timestep)
+void FCFS::FCFStoRR_Migration(int timestep,int rrcnt)
 {
 	Process* p = nullptr;
 	while (RDYList.peek(p) && !p->GetParent() && p->WTsofar(timestep) > s->GetMaxW())
 	{
-		RDYList.DeleteFirst(p);
-		processescount--;
-		s->FromFCFStoShortestRR(p);
-		s->IncrementMaxW();
+		if (rrcnt && s->FromFCFStoShortestRR(p) )
+		{
+			RDYList.DeleteFirst(p);
+			processescount--;
+			s->IncrementMaxW();
+		}
+		else
+			return;
 	}
 	 
 }

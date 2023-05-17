@@ -19,7 +19,7 @@ public:
 	SJF(Scheduler* Sptr,int id);       //constructor
 	void AddToRdy(Process* p);         //Adds a process to the processor ready list
 	void DeleteProcess(Process*& p);   //deletes a give process when it moves to another queue or to being blocked
-	void ScheduleAlgo(int& timestep, int& stoptime);   //Schedueling algorithm
+	void ScheduleAlgo(int& timestep, int& stoptime, int rrcnt, int sjfcnt);   //Schedueling algorithm
 	void Print_List();                 //Prints ready list processes
 	string Get_Processor_Type();       //Returns the processor type
 	int GetRDYListCount();             //Returns the number of processes in the ready list

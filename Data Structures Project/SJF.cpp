@@ -25,7 +25,7 @@ void SJF::DeleteProcess(Process*& p)
 }
 
 //Schedueling algorithm
-void SJF::ScheduleAlgo(int &TimeStep, int& stoptime)
+void SJF::ScheduleAlgo(int &TimeStep, int& stoptime, int rrcnt, int sjfcnt)
 {
 	IO* TempIO = nullptr;
 	Process* TempProcess = nullptr;

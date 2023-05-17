@@ -343,7 +343,7 @@ void Scheduler::Simulation()
 			int random= generaterandom(1, 100);
 			if (random == 1)
 				PArr[i]->setOverHeating(true);
-			PArr[i]->ScheduleAlgo(TimeStep,StopTime); //rdy to run and run to rdy
+			PArr[i]->ScheduleAlgo(TimeStep,StopTime,RR_ProcessorsCnt,SJF_ProcessorsCnt); //rdy to run and run to rdy
 
 		}
 		if (FCFS_ProcessorsCnt)
@@ -376,7 +376,7 @@ void Scheduler::Simulation()
 				}
 		}
 	WorkStealing();
-	UI.printInterface(TimeStep);
+	UI.printInterface(TimeStep,BLKCount,TerminatedProcesses);
 	TimeStep++;
 	}
 	PrintOutputFile();
@@ -427,7 +427,7 @@ void Scheduler::DecrementRunningCount()
 //Prints the BLK list
 void Scheduler::PrintBLKList()
 {
-	cout << BLKCount << " BLK: ";
+	
 	blocklist.Print();
 }
 
@@ -435,7 +435,7 @@ void Scheduler::PrintBLKList()
 //Prints the TRM list
 void Scheduler::PrintTRMList()
 {
-	cout << TerminatedProcesses << " TRM: ";
+	
 	terminatedlist.Print();
 }
 
@@ -468,7 +468,7 @@ void Scheduler::Set_ShortestListIdx()
 			break;
 		}
 	}
-	for (int i = 1; i < Processor_Count; i++)
+	for (int i = 0; i < Processor_Count; i++)
 	{
 		if (!PArr[i]->getOverHeating() && PArr[i]->GetTotalCT() < PArr[ShortestListIdx]->GetTotalCT())
 			ShortestListIdx = i;
@@ -575,17 +575,27 @@ int Scheduler::Get_ShortestRR()
 }
 
 //Takes the running process from the RR processor and inserts it in the shortest SJF RDY queue
-void Scheduler::FromRRtoShortestSJF(Process* p)
+bool Scheduler::FromRRtoShortestSJF(Process* p)
 {
 	Set_ShortestSJF();
-	PArr[ShortestSJFListIdx]->AddToRdy(p);
+	if (!PArr[ShortestSJFListIdx]->getOverHeating())
+	{
+		PArr[ShortestSJFListIdx]->AddToRdy(p);
+		return true;
+	}
+	return false;
 }
 
 //Takes the running process from the RR processor and inserts it in the shortest SJF RDY queue
-void Scheduler::FromFCFStoShortestRR(Process* p)
+bool Scheduler::FromFCFStoShortestRR(Process* p)
 {
 	Set_ShortestRR();
-	PArr[ShortestRRListIdx]->AddToRdy(p);
+	if (!PArr[ShortestRRListIdx]->getOverHeating())
+	{
+		PArr[ShortestRRListIdx]->AddToRdy(p);
+		return true;
+	}
+	return false;
 }
 
 //Getter for RTF 

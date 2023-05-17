@@ -38,7 +38,7 @@ void EDF::DeleteProcess(Process*& p)
 	processescount--;
 }
 
-void EDF::ScheduleAlgo(int& timestep, int& stoptime)
+void EDF::ScheduleAlgo(int& timestep, int& stoptime, int rrcnt, int sjfcnt)
 {
 	IO* TempIO = nullptr;
 	Process* TempProcess = nullptr;

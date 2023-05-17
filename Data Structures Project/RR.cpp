@@ -20,7 +20,7 @@ void RoundRobin::DeleteProcess(Process*& p)
 }
 
 //Schedueling algorithm
-void RoundRobin::ScheduleAlgo(int& TimeStep, int& stoptime)
+void RoundRobin::ScheduleAlgo(int& TimeStep, int& stoptime, int rrcnt, int sjfcnt)
 {
 	IO* TempIO = nullptr;
 	Process* TempProcess = nullptr;
@@ -49,7 +49,7 @@ void RoundRobin::ScheduleAlgo(int& TimeStep, int& stoptime)
 	//sets a process as running if the processor is idle
 	if (!isbusy && !RDY_List.isEmpty())
 	{
-		RRtoSJF_Migration();
+		RRtoSJF_Migration(sjfcnt);
 		RDY_List.dequeue(TempProcess);
 		if (TempProcess)
 		{
@@ -137,15 +137,19 @@ int RoundRobin::GetRDYListCount()
 }
 
 //Controls the process migration from RR processor to SJF processor
-void RoundRobin::RRtoSJF_Migration()
+void RoundRobin::RRtoSJF_Migration(int sjfcnt)
 {  
 	Process* p;
 	while (RDY_List.peek(p) && !p->GetParent() && p->GetCT() < RTF)
-	{
-		RDY_List.dequeue(p);
-		processescount--;
-		s->FromRRtoShortestSJF(p);
-		s->IncrementRTF();
+	{ 
+		if (sjfcnt && s->FromRRtoShortestSJF(p))
+		{
+			RDY_List.dequeue(p);
+			processescount--;
+			s->IncrementRTF();
+		}
+		else
+			return;
 	}
 	
 }

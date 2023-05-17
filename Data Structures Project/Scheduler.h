@@ -93,8 +93,8 @@ public:
 	int Get_ShortestSJF();                //Getter for the Shortest SJF List Index
 	int Get_ShortestRR();                 //Getter for the Shortest RR List Index
 	void Set_ShortestRR();                //Setter for the Shortest RR List Index 
-	void FromRRtoShortestSJF(Process*p);  //Takes the running process from the RR processor and inserts it in the shortest SJF RDY queue
-	void FromFCFStoShortestRR(Process* p);//Takes the running process from the FCFS processor and inserts it in the shortest RR RDY queue
+	bool FromRRtoShortestSJF(Process*p);  //Takes the running process from the RR processor and inserts it in the shortest SJF RDY queue
+	bool FromFCFStoShortestRR(Process* p);//Takes the running process from the FCFS processor and inserts it in the shortest RR RDY queue
 	int GetRTF();                         //Getter for the RTF
 	int GetMaxW();                        //Getter for the MaxW
 	void IntiateForking(Process* running);//The Function that checks if the running process in the FCFS will fork or not then makes all the necessary operations if it will

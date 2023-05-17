@@ -16,13 +16,13 @@ public:
 	void AddToRdy(Process* p) override;             //Adds a process to the processor ready list
 	void DeleteProcess(Process*& p);                //deletes a give process when it moves to another queue or to being blocked
 	void DeleteProcessAtPosition(Process*& p);      //deletes a process in any place in the RDYList
-	void ScheduleAlgo(int &timestep, int& stoptime);         //Schedueling algorithm
+	void ScheduleAlgo(int &timestep, int& stoptime, int rrcnt, int sjfcnt);         //Schedueling algorithm
 	void DeleteProcessID(Process* p);                //Deletes a process ID from RDYListIDs
 	void AddToRdyIDs(Process* p);                    //Adds a process ID to RDYListIDs
 	void Print_List();                               //Prints ready list processes
 	string Get_Processor_Type();                     //Returns the processor type
 	int GetRDYListCount();                           //Returns the number of processes in the ready list
-	void FCFStoRR_Migration(int timestep);           //Controls the process migration from FCFS processor to RR processor
+	void FCFStoRR_Migration(int timestep, int rrcnt);           //Controls the process migration from FCFS processor to RR processor
 	bool Search(Process* value);                     //Searches for a specific process in the ready list
 	void ReturnFirst(Process*& p);
 	bool NothingToExecute();                         //checks if the processor's running state and RDYList are empty
