@@ -14,6 +14,7 @@ Process::Process(int at, int id, int ct,int deadline, int n)
 	Actual_CT = ct;
 	IO_D = 0;
 	RT_Flag = false;
+	RunningFor = 0;
 	// Termination time should be sent when the process moves from the running queue to the termination queue inside a processor
 	// Response time should be calculated when the process moves from the ready queue to the running queue inside a processor
 	// Turnaround duration should be calculated when the termination time arrives

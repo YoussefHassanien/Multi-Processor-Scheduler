@@ -359,18 +359,14 @@ void Scheduler::Simulation()
 		//BLK to RDY
 		if (!blocklist.isEmpty()) //check BLK list
 		{
-			for (int i = 0; i < BLKCount; i++)
-			{
-
 				blocklist.peek(TempProcess);
-				if (TempProcess->CheckIO_D())  //CheckIO_D needs further modifications
+				if (TempProcess->CheckIO_D())  
 				{
 					blocklist.dequeue(TempProcess);
 					Set_ShortestListIdx();
 					PArr[ShortestListIdx]->AddToRdy(TempProcess);
 					BLKCount--;
 				}
-			}
 		}
 	WorkStealing();
 	UI.printInterface(TimeStep);
@@ -625,12 +621,12 @@ void Scheduler::WorkStealing()
 					PArr[LongestListIdx]->DeleteProcess(p);
 					PArr[ShortestListIdx]->AddToRdy(p);
 					StealedProcesses++;
-					Set_ShortestListIdx(); //loops on the processors array to set the shortest index to the shortest list
-					Set_LongestListIdx(); //loops on the processors array to set the longest index to the longest list
+					if (LongestListIdx == ShortestListIdx)
+						break;
 					Steal_Limit = (float)(PArr[LongestListIdx]->GetTotalCT() - PArr[ShortestListIdx]->GetTotalCT()) / PArr[LongestListIdx]->GetTotalCT();
 				}
 			}
-		} while (Steal_Limit > 0.4 && PArr[LongestListIdx]->GetTotalCT()!=0 && PArr[ShortestListIdx]->GetTotalCT()!=0);
+		} while (Steal_Limit > 0.4 && PArr[LongestListIdx]->GetTotalCT()!=0);
 		
 	}
 }

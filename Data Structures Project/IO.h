@@ -11,7 +11,6 @@ public:
 	void SetDuration(int io_d);               //Setter for the duration
 	int GetRequest();                         //Getter for the request time
 	int GetDuration();                        //Getter for the duration 
-	void DecrementIO_R();					  //Decrements the IO request time
 	~IO();                                    //Destructor
 
 };

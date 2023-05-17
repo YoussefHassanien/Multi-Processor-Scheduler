@@ -71,18 +71,15 @@ void RoundRobin::ScheduleAlgo(int& TimeStep, int& stoptime)
 			RUNNING->GetFirstIO(TempIO);
 			if (TempIO)
 			{
-				if (TempIO->GetRequest() >= 0)
-				{
-					TempIO->DecrementIO_R();
-				}
-				if (TempIO->GetRequest() == -1)
+
+				if (TempIO->GetRequest() == RUNNING->GetRunningFor())
 				{
 					s->addtoblocklist(RUNNING);
 					isbusy = false;
 					RUNNING = nullptr;
 					s->DecrementRunningCount();
 				}
-				else  if (!(TimeStep % TimeSlice))   //the current timestep is the Round Robin timeslice
+				else  if (!((TimeStep-1) % TimeSlice))   //the current timestep is the Round Robin timeslice
 				{
 					RDY_List.enqueue(RUNNING);               //The process goes back to the beginning of the RDY list
 					processescount++;
@@ -91,7 +88,7 @@ void RoundRobin::ScheduleAlgo(int& TimeStep, int& stoptime)
 					s->DecrementRunningCount();
 				}
 			}
-			else if (!(TimeStep % TimeSlice))   //the current timestep is the Round Robin timeslice
+			else if (!((TimeStep - 1) % TimeSlice))   //the current timestep is the Round Robin timeslice
 			{
 				RDY_List.enqueue(RUNNING);               //The process goes back to the beginning of the RDY list
 				processescount++;
@@ -100,7 +97,7 @@ void RoundRobin::ScheduleAlgo(int& TimeStep, int& stoptime)
 				s->DecrementRunningCount();
 			}
 		}
-		else if (!(TimeStep % TimeSlice))   //the current timestep is the Round Robin timeslice
+		else if (!((TimeStep - 1) % TimeSlice))   //the current timestep is the Round Robin timeslice
 		{
 			RDY_List.enqueue(RUNNING);               //The process goes back to the beginning of the RDY list
 			processescount++;

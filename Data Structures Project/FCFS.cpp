@@ -95,7 +95,7 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 	else
 		TotalBT++;
 		
-	KillingSignalsList.peek(TempKillSig);
+	KillingSignalsList.peek(TempKillSig); //check kill signal for processes in the ready list
 	if (TempKillSig)
 	{
 		int position = 0;
@@ -128,9 +128,11 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 			RUNNING = TempProcess;
 			isbusy = true;                                  //Set the processor as busy
 			s->incrementRunningCount();
+
 			if (RandomForkProb > 0 && RandomForkProb <= ForkProb) //Forking condition
 				s->IntiateForking(RUNNING); //Forking operation
-			KillingSignalsList.peek(TempKillSig);
+
+			KillingSignalsList.peek(TempKillSig);			//checks the kill signal for the running process
 			if (TempKillSig)
 			{
 				if (TempKillSig->getTime() == TimeStep) //Killing Signals Operation
@@ -153,8 +155,10 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 	{
 		RUNNING->DecrementCT();
 		RUNNING->IncrementRunningFor();
+
 		if (RandomForkProb > 0 && RandomForkProb <= ForkProb)
 			s->IntiateForking(RUNNING); //Forking operation
+
 		KillingSignalsList.peek(TempKillSig);
 		if (TempKillSig)
 		{
@@ -169,63 +173,18 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 					RUNNING = nullptr;
 					s->DecrementRunningCount();
 					s->IncrementKilledCount();
-				}
-				else if (RUNNING->GetN())	/* the condition is same as if RUNNING->GetN()!=0 ,
-										 decrements the IO_R while the process is running*/
-				{
-					RUNNING->GetFirstIO(TempIO);
-					if (TempIO)
-					{
-						if (TempIO->GetRequest() >= 0)
-						{
-							TempIO->DecrementIO_R();
-						}
-
-
-						if (TempIO->GetRequest() == -1)
-						{
-							s->addtoblocklist(RUNNING);
-							//RUNNING->IncrementIO_D(TempIO->GetDuration());
-							isbusy = false;
-							RUNNING = nullptr;
-							s->DecrementRunningCount();
-						}
-					}
+					return;
 				}
 			}
-			else if (RUNNING->GetN())	/* the condition is same as if RUNNING->GetN()!=0 , 
-				                         decrements the IO_R while the process is running*/ 
-			{
-				RUNNING->GetFirstIO(TempIO);
-				if (TempIO)
-				{
-					if (TempIO->GetRequest() >= 0)
-					{
-						TempIO->DecrementIO_R();
-					}
 
-
-					if (TempIO->GetRequest() == -1)
-					{
-						s->addtoblocklist(RUNNING);
-						isbusy = false;
-						RUNNING = nullptr;
-						s->DecrementRunningCount();
-					}
-				}
-			}
 		}
-		else if (RUNNING->GetN())	/* the condition is same as if RUNNING->GetN()!=0 , 
+		 if (RUNNING->GetN())	/* the condition is same as if RUNNING->GetN()!=0 , 
 				                         decrements the IO_R while the process is running*/ 
-		{
+		 {
 			RUNNING->GetFirstIO(TempIO);
 			if (TempIO)
 			{
-				if (TempIO->GetRequest() >= 0)
-				{
-					TempIO->DecrementIO_R();
-				}
-				if (TempIO->GetRequest() == -1)
+				if (TempIO->GetRequest() == RUNNING->GetRunningFor())
 				{
 					s->addtoblocklist(RUNNING);
 					isbusy = false;
@@ -233,7 +192,8 @@ void FCFS::ScheduleAlgo(int &TimeStep, int& stoptime)
 					s->DecrementRunningCount();
 				}
 			}
-		}
+		
+		 }
 	}	
 	else if (isbusy && !RUNNING->GetCT()) //same as if RUNNING->GetCT==0
 	{
@@ -258,24 +218,6 @@ void FCFS::FCFStoRR_Migration(int timestep)
 		s->IncrementMaxW();
 	}
 	 
-	/*Process *p=nullptr;
-	RDYList.peek(p);
-	if (!p)
-		return;
-
-	if (p->GetParent())
-		return;
-	if (p->WTsofar(timestep) > s->GetMaxW())
-	{
-		RDYList.DeleteFirst(p);
-		processescount--;
-		s->FromFCFStoShortestRR(p);
-		FCFStoRR_Migration(timestep);
-		s->IncrementMaxW();
-	}
-	else
-		return;*/ 
-	
 }
 
 bool FCFS::Search(Process* value)

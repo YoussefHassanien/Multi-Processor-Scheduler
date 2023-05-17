@@ -74,11 +74,7 @@ void SJF::ScheduleAlgo(int &TimeStep, int& stoptime)
 			RUNNING->GetFirstIO(TempIO);
 			if (TempIO)
 			{
-				if (TempIO->GetRequest() >= 0)
-				{
-					TempIO->DecrementIO_R();
-				}
-				if (TempIO->GetRequest() == -1)
+				if (TempIO->GetRequest() == RUNNING->GetRunningFor())
 				{
 					s->addtoblocklist(RUNNING);
 					isbusy = false;

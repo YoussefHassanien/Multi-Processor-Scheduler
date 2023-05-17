@@ -7,9 +7,28 @@ EDF::EDF(Scheduler* Sptr, int id):Processor(Sptr)
 
 void EDF::AddToRdy(Process* p)
 {
-	RDY_List.enqueue(p,p->GetDeadline());
-	TotalCT = TotalCT + p->GetCT();
-	processescount++;
+	if (RUNNING)
+	{
+		if (p->GetDeadline() < RUNNING->GetDeadline())
+		{
+			RDY_List.enqueue(RUNNING, RUNNING->GetDeadline());
+			TotalCT = TotalCT + RUNNING->GetCT();
+			processescount++;
+			RUNNING = p;
+		}
+		else
+		{
+			RDY_List.enqueue(p, p->GetDeadline());
+			TotalCT = TotalCT + p->GetCT();
+			processescount++;
+		}
+	}
+	else
+	{
+		RDY_List.enqueue(p, p->GetDeadline());
+		TotalCT = TotalCT + p->GetCT();
+		processescount++;
+	}	
 }
 
 void EDF::DeleteProcess(Process*& p)
@@ -68,60 +87,13 @@ void EDF::ScheduleAlgo(int& timestep, int& stoptime)
 			RUNNING->GetFirstIO(TempIO);
 			if (TempIO)
 			{
-				if (TempIO->GetRequest() >= 0)
-				{
-					TempIO->DecrementIO_R();
-
-				}
-				if (TempIO->GetRequest() == -1)
+				if (TempIO->GetRequest() == RUNNING->GetRunningFor())
 				{
 					s->addtoblocklist(RUNNING);
 					isbusy = false;
 					RUNNING = nullptr;
 
 					s->DecrementRunningCount();
-				}
-				else
-				{
-					RDY_List.peek(TempProcess);
-
-					if (TempProcess)
-					{
-						if (TempProcess->GetDeadline() < RUNNING->GetDeadline())
-						{
-							RDY_List.dequeue(TempProcess);
-							RDY_List.enqueue(RUNNING, RUNNING->GetDeadline());
-							RUNNING = TempProcess;
-						}
-					}
-				}
-			}
-			else
-			{
-				RDY_List.peek(TempProcess);
-
-				if (TempProcess)
-				{
-					if (TempProcess->GetDeadline() < RUNNING->GetDeadline())
-					{
-						RDY_List.dequeue(TempProcess);
-						RDY_List.enqueue(RUNNING, RUNNING->GetDeadline());
-						RUNNING = TempProcess;
-					}
-				}
-			}
-		}
-		else
-		{
-			RDY_List.peek(TempProcess);
-
-			if (TempProcess)
-			{
-				if (TempProcess->GetDeadline() < RUNNING->GetDeadline())
-				{
-					RDY_List.dequeue(TempProcess);
-					RDY_List.enqueue(RUNNING, RUNNING->GetDeadline());
-					RUNNING = TempProcess;
 				}
 			}
 		}
