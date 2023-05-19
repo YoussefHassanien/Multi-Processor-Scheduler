@@ -191,6 +191,7 @@ void Scheduler::readfileparameters()
 	}
 	else {
 		cout << "file not oppened" << endl; //failed to load the file 
+		exit(0);
 	}
 }
 
