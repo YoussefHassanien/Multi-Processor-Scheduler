@@ -10,11 +10,11 @@ Processor::Processor(Scheduler* Sptr)
 	isoverheating = false;
 	RUNNING = nullptr;
 	processescount = 0;
-	TotalBT = 0;  
-	TotalIT = 0; 
-	PLoad = 0;
-	PUtil = 0;
-	TotalCT = 0;
+	TotalBT = 0;		
+	TotalIT = 0;		
+	PLoad = 0;			
+	PUtil = 0;			
+	TotalCT = 0;		
 	StoppedFor = 0;
 }
 

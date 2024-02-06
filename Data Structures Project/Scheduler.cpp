@@ -245,7 +245,7 @@ void Scheduler::PrintOutputFile() //still in progress
 	OutFile << "Processors Load" << endl;
 	for (int i = 0; i < Processor_Count; i++)
 	{
-		OutFile << "p" << PArr[i]->getID() << "=" << (int)(PArr[i]->GetPLoad(TotalTRT) * 100) << "%,    ";
+		OutFile << "p" << PArr[i]->getID() << "=" << round(((PArr[i]->GetPLoad(TotalTRT) * 100) * 100.0))/100.0 << "%,    ";
 	}
 	OutFile << endl<<endl;
 	OutFile << "Processors Utiliz" << endl;
@@ -254,7 +254,7 @@ void Scheduler::PrintOutputFile() //still in progress
 	{
 		float PUtil;
 		PArr[i]->GetPUtil(PUtil);
-		OutFile << "p" << PArr[i]->getID() << "=" << (int)(PUtil * 100) << "%,    ";
+		OutFile << "p" << PArr[i]->getID() << "=" << round(((PUtil * 100) * 100.0))/100.0 << "%,    ";
 		TotalUtiliz += PUtil;
 	}
 	float AvgUtil = round(((TotalUtiliz / Processor_Count) * 100) * 100.0) / 100.0;          //to round it to 2 decimal places only 

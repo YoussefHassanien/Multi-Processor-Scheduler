@@ -13,19 +13,19 @@ class Process;
 	class Processor
 	{
 	protected:
-		Process* RUNNING;    //the process in the running state
-		bool isbusy; //indicator if there is a process in the running state (busy=1,idle=0)
-		string Type; //stirng indicating the processor type
-		int ID;      //needs initialization and incrementation 
-		int processescount; //number of processes in the ready queue of the processor
+		Process* RUNNING;		//the process in the running state
+		bool isbusy;			//indicator if there is a process in the running state (busy=1,idle=0)
+		string Type;			//stirng indicating the processor type
+		int ID;					//needs initialization and incrementation 
+		int processescount;		//number of processes in the ready queue of the processor
 		Scheduler* s;
-		int TotalBT; //the total time of the busy state duration of the processor 
-		int TotalIT; //the total time of the idle state duration of the processor
-		int PLoad; //Processor Load perecentage 
-		int PUtil; //Processor Utilization Percentage
-		int TotalCT; //Sum of the CT of all processes in the ready list
-		bool isoverheating;  //indicates the state of the processor either stopped or working
-		int StoppedFor;      //indicator of how much time the processor have been in stop mode
+		int TotalBT;			//the total time of the busy state duration of the processor 
+		int TotalIT;			//the total time of the idle state duration of the processor
+		int PLoad;				//Processor Load perecentage 
+		int PUtil;				//Processor Utilization Percentage
+		int TotalCT;			//Sum of the CT of all processes in the ready list
+		bool isoverheating;		//indicates the state of the processor either stopped or working
+		int StoppedFor;			//indicator of how much time the processor have been in stop mode
 
 	public:
 
@@ -45,11 +45,11 @@ class Process;
 		friend ostream& operator<<(ostream& output, Processor& p); //Operator overloading
 		virtual string Get_Processor_Type() = 0;                   //Returns the processor type
 		virtual int GetRDYListCount()=0;                           //Returns the number of ready lists
-		int GetTotalBT();                   // Getter for the total time of the busy state duration of the processor 
-		int GetTotalIT();                   //Getter for the total time of the idle state duration of the processor
-		float GetPLoad(int TotalTRT);                     // Getter for the Processor Load perecentage 
-		void GetPUtil(float& PUtil);                     // Getter for the Processor Utilization Percentage
-		int GetTotalCT();                   //Getter for the total CT of all processes in the ready list
+		int GetTotalBT();										// Getter for the total time of the busy state duration of the processor 
+		int GetTotalIT();										//Getter for the total time of the idle state duration of the processor
+		float GetPLoad(int TotalTRT);							// Getter for the Processor Load perecentage 
+		void GetPUtil(float& PUtil);							// Getter for the Processor Utilization Percentage
+		int GetTotalCT();										//Getter for the total CT of all processes in the ready list
 		virtual void ReturnFirst(Process *&p) = 0;		//Return the first process in each processor's ready list
 		virtual void EmptyProcessor() = 0;             // Emties the running process and the rdylist
 		virtual bool NothingToExecute() = 0;           //checks if the processor's running state and RDYList are empty
