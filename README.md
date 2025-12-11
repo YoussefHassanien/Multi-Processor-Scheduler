@@ -85,10 +85,10 @@ To add a new scheduling algorithm:
 
 ## Authors
 
-- [Youssef Hassanien]
-- [Doha El Beltagy]
-- [Ayah Al Shahid]
-- [Chahd El Zalaki]
+- Youssef Hassanien
+- Doha El Beltagy
+- Ayah Al Shahid
+- Chahd El Zalaki
 
 ## License
 
